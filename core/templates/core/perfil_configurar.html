@@ -1,0 +1,104 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div id="volver-perfil">
+    <a href="{% url 'perfil' %}"><i class="bi bi-arrow-left-short" id="flecha"></i></a> PERFIL
+</div>
+<div class="contenido">
+    <div id="grid1">
+        <div class="subir-foto">
+            <div id="foto-perfil">
+                <h2> Juanito Perez </h2>
+                <br>
+            <div>
+                <img src="{% static 'core/img/fotoperfil.jpg' %}" alt="foto de perfil" id="fotoperfil">
+            </div>
+                <br>
+                <label for="subir-pp">Editar foto de perfil</label>
+                <input type="file" class="subir-pp" name="subir-pp" accept="image/png, image/jpeg"></input>
+            </div>
+        </div>
+        <div class="datos-perfil" id="datos-perfil">
+            <div class="pregunta">
+                <label for="acc1">Datos personales<i class="bi bi-plus-circle" id="icon-edit"></i></label>
+                <input type="radio" name="accordion" id="acc1" checked>
+                <div class="contacc">
+
+                    <form method="POST" enctype="multipart/form-data" id="DatosPersonalesForm" class="DatosPersonalesForm">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="nom_usuario">Nombre de usuario</label>
+                            {{ per_form.nom_usuario }} 
+                        </div>
+                        <div class="form-group">
+                            <label for="nombres">Nombres</label>
+                            {{ per_form.nombres }} 
+                        </div>
+                        <div class="form-group">
+                            <label for="apellido_paterno">Apellido Paterno</label>
+                            {{ per_form.apellido_paterno }}
+                        </div>
+                        <div class="form-group">
+                            <label for="apellido_materno">Apellido Materno</label>
+                            {{ per_form.apellido_materno }}
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Correo electrónico</label>
+                            {{ per_form.email }}
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Contraseña</label>
+                            {{ per_form.password }}
+                        </div> 
+                        <div class="botonesform">
+                            <button type="submit" class="btn btn-primary" id="DatosPersonalesbtn">Guardar cambios</button>
+                        </div>
+                    </form> 
+
+                   
+                </div>
+            </div>
+            {% if user.usuario.tipousuario == "psicologo" %} 
+            <div class="pregunta">
+                
+                <label for="acc2">Datos profesionales<i class="bi bi-plus-circle" id="icon-edit"></i></label>
+                <input type="radio" name="accordion" id="acc2">
+                <div class="contacc">
+                    <form method="POST" enctype="multipart/form-data" id="DatosProfesionalesForm" class="DatosProfesionalesForm">
+                        {{ prof_form }}
+                        {% csrf_token %}
+                        <div class="botonesform">
+                            <button type="submit" class="btn btn-primary" id="DatosProfesionalesbtn">Guardar cambios</button>
+                        </div>
+                    </form> 
+                    
+                </div>
+            </div>
+            {% endif %}  
+        </div>       
+
+        <div class="eliminar-perfil">
+            <button id="btneliminar">Eliminar cuenta</button>
+        </div>
+
+        <div class="bg-modal" id="modal-eliminar">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h1>Eliminar perfil</h1>
+                <p>¿Estás seguro/a de que quieres eliminar tu cuenta?</p>
+                <div>
+                    <form method="POST" id="EliminarForm" class="EliminarForm">
+                        {{ eliminar_form }} 
+                        {% csrf_token %}
+                        <button type="submit" id="Eliminarbtn">Eliminar cuenta</button>
+                    </form> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+

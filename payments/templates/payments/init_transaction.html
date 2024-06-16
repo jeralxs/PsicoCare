@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Iniciar Transacción</title>
+</head>
+<body>
+    <h1>Iniciar Transacción</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="amount">Monto:</label>
+        <input type="text" name="amount" id="amount" required>
+        <button type="submit">Pagar</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,90 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div id="volver-inicio">
+    <a href="{% url 'index' %}"><i class="bi bi-arrow-left-short" id="flecha"></i></a> INICIO
+</div>
+<div class="contenido">
+    <div id="grid1">
+        <div class="subir-foto">
+            <div id="foto-perfil">
+                <h2> {{user.username}} </h2>
+                <br>
+            <div>
+                <img src="{% static 'core/img/fotoperfil.jpg' %}" alt="foto de perfil" id="fotoperfil">
+            </div>
+            </div>
+        </div>
+
+        <div class="datos-perfil">Datos personales
+            <div class="pregunta">
+                
+                <div>Nombre: {{user.first_name}} {{user.last_name}} </div>
+                <div>Correo: {{user.email}} </div>
+                <div>Teléfono: {{user.usuario.telefono}} </div>
+                <div>Contraseña: *********</div>
+            </div>
+            {% if user.usuario.tipousuario == "paciente" %} 
+            Preferencias y necesidades
+            <div class="pregunta">
+                Género de tu psicólog@
+                <div> Mujer </div>
+            </div>
+            <div class="pregunta">
+                Corriente teórica
+                <div> Cognitivo-conductual</div>
+            </div>
+            <div class="pregunta">
+                Dignóstico
+                <div>Bipolaridad</div>
+            </div>
+            <div class="pregunta">
+                Áreas problemáticas
+                <div>acoso, problemas de autoestima</div>
+            </div>
+            <div class="pregunta">
+                Rango de precio
+                <div>30000-40000</div>
+            </div>
+            <div class="pregunta">
+                Cobertura de salud
+                <div>isapre</div>
+            </div>
+            {% endif %}  
+            {% if user.usuario.tipousuario == "psicologo" %}  
+            <div class="pregunta">
+                Rango etario de trabajo
+                <div>adolescentes</div>
+            </div>
+            <div class="pregunta">
+                Corriente teórica
+                <div>cognitivo-conductual</div>
+            </div>
+            <div class="pregunta">
+                Especialidad diagnóstica
+                <div>bipolaridad</div>
+            </div>
+            <div class="pregunta">
+                Áreas con las que trabaja
+                <div>acoso, problemas de autoestima</div>
+            </div>
+            <div class="pregunta">
+                Rango de precio por sesión
+                <div>30000-40000</div>
+            </div>
+            <div class="pregunta">
+                Cobertura de salud que acepta
+                <div>isapre</div>
+            </div>
+            {% endif %}  
+        </div>
+        
+        <div class="editar-perfil">
+            <a id="hrefeditar" href="{% url 'perfil_configurar' %}"><i class="bi bi-pencil" id="lapiz"></i>editar perfil</a>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+

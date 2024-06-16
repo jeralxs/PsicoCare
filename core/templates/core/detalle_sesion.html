@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h2>Detalles de la Sesión</h2>
+    <ul>
+        <li><strong>ID Sesión:</strong> {{ event_details.id }}</li>
+        <li><strong>Resumen:</strong> {{ event_details.summary }}</li>
+        <li><strong>Hora de inicio:</strong> {{ event_details.start.dateTime }} ({{ event_details.start.timeZone }})</li>
+        <li><strong>Hora de fin:</strong> {{ event_details.end.dateTime }} ({{ event_details.end.timeZone }})</li>
+        <li><strong>Estado:</strong> {{ event_details.status }}</li>
+    </ul>
+</div>
+{% endblock %}

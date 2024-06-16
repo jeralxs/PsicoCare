@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="background">
+        <img src="{% static 'core/img/background1.jpg' %}" alt="background">
+
+    </div>
+    <div class="text-box">
+        <h1>Bienvenido/a a PsicoCare, tu destino confiable para el bienestar mental.</h1>
+        <p>Con nuestra plataforma de terapia en línea, te ofrecemos acceso rápido y conveniente a una red de 
+            psicólogos profesionales, listos para brindarte el apoyo y la orientación que necesitas, todo desde 
+            la comodidad y privacidad de tu hogar. Descubre cómo podemos ayudarte a comenzar tu viaje hacia una mente 
+            más sana y equilibrada hoy mismo.</p>
+        <button class="start-button">Comienza aquí</button>
+    </div>
+
+{% endblock content %}

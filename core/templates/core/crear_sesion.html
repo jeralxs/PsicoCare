@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 mt-5">
+            <h2 class="text-center">Crear Nueva Sesión</h2>
+            <form method="post" action="{% url 'crear_sesion' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="summary" class="form-label">Resumen:</label>
+                    <input type="text" class="form-control" id="summary" name="summary" required>
+                </div>
+                <div class="mb-3">
+                    <label for="start_time" class="form-label">Hora de inicio:</label>
+                    <input type="text" class="form-control" id="start_time" name="start_time" placeholder="YYYY-MM-DDTHH:MM:SS±HH:MM" required>
+                </div>
+                <div class="mb-3">
+                    <label for="end_time" class="form-label">Hora de fin:</label>
+                    <input type="text" class="form-control" id="end_time" name="end_time" placeholder="YYYY-MM-DDTHH:MM:SS±HH:MM" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="timezone" class="form-label">Zona horaria:</label>
+                    <input type="text" class="form-control" id="timezone" name="timezone" required>
+                </div>
+                <div class="mb-3">
+                    <label for="attendees" class="form-label">Asistentes:</label>
+                    <input type="text" class="form-control" id="attendees" name="attendees">
+                </div>
+                <button type="submit" class="btn btn-primary">Crear Evento</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
