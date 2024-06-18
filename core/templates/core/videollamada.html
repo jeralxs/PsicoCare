@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+<div class=videollamada>
     <h1>Videollamada de Google Meet</h1>
     <!-- <iframe src="{{ response }}" width="800" height="600" frameborder="0" allowfullscreen></iframe> -->
     {% if response %}
@@ -9,4 +10,24 @@
     {% else %}
         <p>Error al crear la reunión</p>
     {% endif %}
+
+</div>
+
+    <style>
+        body {
+            background-color: lightgrey;
+        }
+        a {
+        text-decoration: none;
+        font-family: 'Lexend', sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        color: black;
+        }
+        .videollamada {
+            margin-left: 150px;
+        }
+        
+
+    </style>
 {% endblock content %}

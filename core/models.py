@@ -320,8 +320,8 @@ class Mensaje(models.Model):
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f'{self.author.username} - {self.timestamp}'
+    # def __str__(self):
+    #     return f'{self.author.username} - {self.timestamp}'
 
 # from typing import List, Dict
 # from collections import defaultdict

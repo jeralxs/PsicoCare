@@ -17,6 +17,14 @@
         body {
             background-color: lightgrey;
         }
+        a {
+        text-decoration: none;
+        font-family: 'Lexend', sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        color: black;
+        }
+
     </style>
 </head>
 <body>
@@ -36,9 +44,9 @@
             </div>
             <div class="navbar-left">
                 <div class="left-up"> 
-                    <i class="bi bi-house"></i>
+                    <a href="{% url 'home' %}"><i class="bi bi-house"></i>
                     <i class="bi bi-heart"></i>
-                    <i class="bi bi-envelope"><a href="{% url 'chat' %}"></a></i>
+                    <a href="{% url 'chat' %}"><i class="bi bi-envelope"></i></a>
                     <i class="bi bi-bell-fill"></i>
                 </div>
                 <div class="left-down"> 
@@ -66,7 +74,7 @@
                     <p>Configura tu información personal</p> 
                     <br>
                     <div class="botoneshome">
-                        <button class="btn btn-primary" id="perfil-homebtn">Ver perfil</button>
+                        <button class="btn btn-primary" id="perfil-homebtn"><a href="{% url 'perfil' %}">Ver perfil</a></button>
                     </div>
                 </div>
             </div>
@@ -80,7 +88,7 @@
                     <p>Revisa los horarios disponibles</p> 
                     <br>
                     <div class="botoneshome">
-                        <button class="btn btn-primary" id="perfil-homebtn">Agendar sesión</button>
+                        <button class="btn btn-primary" id="perfil-homebtn"><a href="{% url 'crear_sesion' %}">Agendar sesión</a></button>
                     </div>
                 </div>
             </div>
@@ -94,7 +102,7 @@
                     <p>Consulta información de tus sesiones pasadas</p> 
                     <br>
                     <div class="botoneshome">
-                        <button class="btn btn-primary" id="perfil-homebtn">Ver historial</button>
+                        <button class="btn btn-primary" id="perfil-homebtn"><a href="{% url 'listar_sesiones' %}">Ver historial</a></button>
                     </div>
                 </div>
             </div>
@@ -108,7 +116,7 @@
                     <p>Hoy tienes sesión a las 10:00 con Sandra Villareal</p> 
                     <br>
                     <div class="botoneshome">
-                        <button class="btn btn-primary" id="perfil-homebtn">Ingresar a la sesión</button>
+                        <button class="btn btn-primary" id="perfil-homebtn"><a href="{% url 'videollamada' %}">Ingresar a la sesión</a></button>
                     </div>
                 </div>
             </div>
@@ -122,7 +130,7 @@
                     <p>Para ayudarle a tener un mejor alcance</p> 
                     <br>
                     <div class="botoneshome">
-                        <button class="btn btn-primary" id="perfil-homebtn">Escribir reseña</button>
+                        <button class="btn btn-primary" id="perfil-homebtn"><a href="{% url 'resena' %}">Escribir reseña</a></button>
                     </div>
                 </div>
             </div>
@@ -136,7 +144,7 @@
                     <p>aaaaa</p> 
                     <br>
                     <div class="botoneshome">
-                        <button class="btn btn-primary" id="perfil-homebtn">Contacta a soporte</button>
+                        <button class="btn btn-primary" id="perfil-homebtn"><a href="{% url 'soporte' %}">Contacta a soporte</a></button>
                     </div>
                 </div>
             </div>

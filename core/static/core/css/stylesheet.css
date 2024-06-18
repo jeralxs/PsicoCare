@@ -10,6 +10,10 @@ body {
 
 a {
     text-decoration: none;
+    font-family: 'Lexend', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    color: #EAF2E0;
 }
 
 li {
@@ -24,6 +28,18 @@ ul {
     display: inline;
 }
 
+.container {
+    position: absolute; 
+    padding: 40px;
+    right: 6%;
+    top: 17%;
+    bottom: 10%;
+    width: 80%;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    background-color: #ffffff; 
+}
 .container-fluid {
     padding-top: 10px;
     width: 100%;
@@ -1086,18 +1102,7 @@ details summary::marker {
 .test-next {
     margin-left: 50px;
 }
-.FormTestPaciente {
-    position: absolute; 
-    padding: 40px;
-    right: 6%;
-    top: 17%;
-    bottom: 10%;
-    width: 80%;
-    border-radius: 8px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    background-color: #ffffff; 
-}
+
 .FormTestPaciente select {
     width: 12%;
     height: fit-content;

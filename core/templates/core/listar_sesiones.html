@@ -4,10 +4,16 @@
 {% block content %}
 <div class="container">
     <h1>Listado de Sesiones</h1>
+    sesión de ejemplo $50000 <button class="btn btn-primary" id="perfil-homebtn"><a href="{% url 'pagos' %}">pagar</a></button>
+    {% if sesiones %}
     <ul class="list-group">
         {% for sesion in sesiones %}
             <li class="list-group-item">{{ sesion.id }} - {{ sesion.summary }} - {{ sesion.start.dateTime }} - {{ sesion.status }} - {{ sesion.htmlLink }}</li>
         {% endfor %}
     </ul>
+    {% else %}
+    <p>No se encontraron sesiones.</p>
+    {% endif %}
+    
 </div>
 {% endblock content %}

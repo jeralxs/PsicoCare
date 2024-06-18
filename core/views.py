@@ -3,7 +3,7 @@ from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
-from .forms import FormRegistro, IngresarForm, DatosPersonalesForm,DatosProfesionalesForm,EliminarForm,PasswordResetForm,FormTestPaciente,Generopsicologo, FormularioMensaje, FormRegistroPsi
+from .forms import FormRegistro, IngresarForm, DatosPersonalesForm,DatosProfesionalesForm,EliminarForm,PasswordResetForm,FormTestPaciente,Generopsicologo, FormularioMensaje, FormRegistroPsi, Tiposesion, Corrientepsicologica, Diagnostico, Motivosesion, Rangoprecio, Coberturasalud
 from django.contrib import messages
 from .models import Usuario, Test
 # from .google_meet import main, create_space
@@ -39,6 +39,11 @@ from django.shortcuts import render
 def index(request):
     return render(request, 'core/index.html')
 
+def resena(request):
+    return render(request, 'core/resena.html')
+
+def soporte(request):
+    return render(request, 'core/soporte.html')
 
 @login_required
 def perfil(request):
@@ -78,9 +83,10 @@ from .forms import FormTestPaciente
 #     else:
 #         form = FormTestPaciente()  # Remove request=request here as well
 #     return render(request, 'core/test.html', {'form': form})
-
+@login_required
 def matching(request):
     return render(request, 'core/matching.html')
+        
 
 # def test(request):
 #     if request.method == 'POST':
@@ -96,37 +102,59 @@ def matching(request):
 #     else:
 #         form = FormTestPaciente()
 #     return render(request, 'core/test.html', {'form': form})
-
+ # Test.objects.create(
+            #     generopsicologo_idgeneropsicologo=Generopsicologo.objects.filter(idgeneropsicologo__in=generopsicologo),
+            #     tiposesion_idtiposesion=Tiposesion.objects.filter(idtiposesion__in=tiposesion),
+            #     corrientepsicologica_idcorrientepsicologica=Corrientepsicologica.objects.filter(idcorrientepsicologica__in=corriente),
+            #     diagnostico_iddiagnostico=Diagnostico.objects.filter(iddiagnostico__in=diagnostico),
+            #     motivosesion_idmotivosesion=Motivosesion.objects.filter(idmotivosesion__in=motivosesion),
+            #     rangoprecio_idrangoprecio=Rangoprecio.objects.filter(idrangoprecio__in=rangoprecio),
+            #     coberturasalud_idcoberturasalud=Coberturasalud.objects.filter(idcoberturasalud__in=coberturasalud),
+            #     idusuariotest=idusuario,
+            # )
+  # if request.user.is_authenticated:
+            #     idusuario = Usuario.objects.all().get(user=request.user)
+@login_required(login_url='ingresar')
 def test(request):
     if request.method == 'POST':
-        form = FormTestPaciente(request.POST)
+        form = FormTestPaciente(request.POST, user=request.user)
         if form.is_valid():
             test = form.save(commit=False)
-            generopsicologo = form.cleaned_data['generopsicologo_idgeneropsicologo']
-            tiposesion = form.cleaned_data['tiposesion_idtiposesion']
-            corriente = form.cleaned_data['corriente_idcorriente']
-            diagnostico = form.cleaned_data['diagnostico_iddiagnostico']
-            motivosesion = form.cleaned_data['motivosesion_idmotivosesion']
-            rangoprecio = form.cleaned_data['rangoprecio_idrangoprecio']
-            coberturasalud = form.cleaned_data['coberturasalud_id']
             if request.user.is_authenticated:
-                idusuario = Usuario.objects.all().get(user=request.user)
+                usuario = Usuario.objects.get(user=request.user)
+                test.idusuariotest = usuario  
+                test.save()
+                form.save_m2m()
+                return redirect('matching')
+            else:
                 
-            Test.objects.create(
-                generopsicologo_idgeneropsicologo=Generopsicologo.objects.filter(idgeneropsicologo__in=generopsicologo),
-                tiposesion_idtiposesion=tiposesion,
-                corrientepsicologica_idcorrientepsicologica=corriente,
-                diagnostico_iddiagnostico=diagnostico,
-                motivosesion_idmotivosesion=motivosesion,
-                rangoprecio_idrangoprecio=rangoprecio,
-                coberturasalud_idcoberturasalud=coberturasalud,
-                idusuariotest=idusuario,
-            )
-            return redirect('matching')
+                return redirect('ingresar') 
+        else:
+            
+            print("Formulario no válido:")
+            print(form.errors)
+            print(request.POST)
     else:
-        form = FormTestPaciente(request.POST)
+        form = FormTestPaciente(user=request.user)
 
     return render(request, 'core/test.html', {'form': form})
+# def test(request):
+#     if request.method == 'POST':
+#         form = FormTestPaciente(request.POST)
+#         if form.is_valid():
+          
+#             test = form.save(commit=False) 
+
+#             if request.user.is_authenticated:
+#                 usuario = Usuario.objects.get(user=request.user)
+#                 test.idusuariotest_id = usuario.idusuario 
+#                 test.save()    
+           
+#             return redirect('matching')
+#     else:
+#         form = FormTestPaciente(request.POST)
+
+#     return render(request, 'core/test.html', {'form': form})
 @login_required
 def perfil_configurar(request):
     per_form = DatosPersonalesForm()

@@ -1,7 +1,7 @@
 from django.urls import path, include
 from django.views.generic.base import TemplateView
 from django.contrib.auth import views as auth_views
-from .views import index, perfil, registro, ingresar, home, recuperar_contrasena, perfil_configurar, test, videollamada, matching, pagos,chat, registro_psicologo
+from .views import index, perfil, registro, ingresar, home, recuperar_contrasena, perfil_configurar, test, videollamada, matching, pagos,chat, registro_psicologo, soporte, resena
 from core import views
 
 urlpatterns = [
@@ -26,6 +26,8 @@ urlpatterns = [
     path('chat/<int:conversation_id>/', views.chat_view, name='chat_view'),
     path('send_message/', views.send_message, name='send_message'),
     path('chat', chat, name='chat'),
+    path('soporte', soporte, name='soporte'),
+    path('resena', resena, name='resena'),
     path('logout', views.logout_view, name='logout'),
 
 

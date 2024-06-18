@@ -3,7 +3,7 @@
 
 {% block content %}
 <div id="volver-inicio">
-    <a href="{% url 'index' %}"><i class="bi bi-arrow-left-short" id="flecha"></i></a> INICIO
+    <a href="{% url 'home' %}"><i class="bi bi-arrow-left-short" id="flecha"></i></a> INICIO
 </div>
 <div class="contenido">
     <div id="grid1">
@@ -55,7 +55,7 @@
             {% if user.usuario.tipousuario == "psicologo" %}  
             <div class="pregunta">
                 Rango etario de trabajo
-                <div>adolescentes</div>
+                <div>{{user.psicologo}}</div>
             </div>
             <div class="pregunta">
                 Corriente teórica
