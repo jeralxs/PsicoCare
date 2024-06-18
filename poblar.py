@@ -29,8 +29,15 @@ def drop_sequences(cursor):
         "testpsicologo_seq", "ticketsoporte_seq", "tiposesion_seq"
     ]
     for seq_name in sequences:
-        cursor.execute(f"DROP SEQUENCE {seq_name}")
+        cursor.execute(f"SELECT sequence_name FROM user_sequences WHERE sequence_name = '{seq_name.upper()}'")
+        sequence_exists = cursor.fetchone()
 
+        if not sequence_exists:
+            # Si no existe
+            print(f"Secuencia {seq_name} NO EXISTE.")
+        else:
+            cursor.execute(f"DROP SEQUENCE {seq_name}")
+            print(f"Secuencia {seq_name} ELIMINADA.")
 def create_sequences(cursor):
     sequences = [
         "usuario_seq", "agenda_seq", "coberturassalud_seq", 
