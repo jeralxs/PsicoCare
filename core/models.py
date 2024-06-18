@@ -10,7 +10,7 @@ class Administrador(models.Model):
 
 
 class Agenda(models.Model):
-    idagenda = models.IntegerField(primary_key=True)
+    idagenda = models.AutoField(primary_key=True)
     notasadicionales = models.CharField(max_length=512)
     usuario_idusuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='usuario_idusuario')
 
@@ -21,7 +21,7 @@ class Agenda(models.Model):
 
 
 class Coberturasalud(models.Model):
-    idcoberturasalud = models.IntegerField(primary_key=True)
+    idcoberturasalud = models.AutoField(primary_key=True)
     coberturasalud = models.CharField(max_length=40, blank=True, null=True)
 
     class Meta:
@@ -30,7 +30,7 @@ class Coberturasalud(models.Model):
 
 
 class Corrientepsicologica(models.Model):
-    idcorrientepsicologica = models.IntegerField(primary_key=True)
+    idcorrientepsicologica = models.AutoField(primary_key=True)
     corrientepsicologica = models.CharField(max_length=40)
     descripcion = models.CharField(max_length=128)
 
@@ -40,7 +40,7 @@ class Corrientepsicologica(models.Model):
 
 
 class Diadisponible(models.Model):
-    iddiadisponible = models.IntegerField(primary_key=True)
+    iddiadisponible = models.AutoField(primary_key=True)
     fechahora = models.DateField()
     agenda_idagenda = models.ForeignKey(Agenda, models.DO_NOTHING, db_column='agenda_idagenda')
 
@@ -50,7 +50,7 @@ class Diadisponible(models.Model):
 
 
 class Diagnostico(models.Model):
-    iddiagnostico = models.IntegerField(primary_key=True)
+    iddiagnostico = models.AutoField(primary_key=True)
     diagnostico = models.CharField(max_length=64)
     descripcion = models.CharField(max_length=128)
 
@@ -60,7 +60,7 @@ class Diagnostico(models.Model):
 
 
 class Estadosesion(models.Model):
-    idestadosesion = models.IntegerField(primary_key=True)
+    idestadosesion = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=40)
     descripcion = models.CharField(max_length=128)
 
@@ -70,7 +70,7 @@ class Estadosesion(models.Model):
 
 
 class Estadousuario(models.Model):
-    idestadousuario = models.IntegerField(primary_key=True)
+    idestadousuario = models.AutoField(primary_key=True)
     estadousuario = models.CharField(max_length=64, blank=True, null=True)
     descripcion = models.CharField(max_length=128)
 
@@ -79,15 +79,15 @@ class Estadousuario(models.Model):
         db_table = 'estadousuario'
 
 class Genero(models.Model):
-    idgenero = models.IntegerField(primary_key=True)
+    idgenero = models.AutoField(primary_key=True)
     n_genero = models.CharField(max_length=64)
 
     class Meta:
         managed = False
-        db_table = 'generopsicologo'
+        db_table = 'genero'
 
 class Generopsicologo(models.Model):
-    idgeneropsicologo = models.IntegerField(primary_key=True)
+    idgeneropsicologo = models.AutoField(primary_key=True)
     genero = models.CharField(max_length=40)
 
     class Meta:
@@ -96,7 +96,7 @@ class Generopsicologo(models.Model):
 
 
 class Mensaje(models.Model):
-    idmensaje = models.IntegerField(primary_key=True)
+    idmensaje = models.AutoField(primary_key=True)
     fechahora = models.DateField()
     contenido = models.CharField(max_length=512)
     usuario_idusuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='usuario_idusuario')
@@ -107,7 +107,7 @@ class Mensaje(models.Model):
 
 
 class Metodopago(models.Model):
-    idmetodopago = models.IntegerField(primary_key=True)
+    idmetodopago = models.AutoField(primary_key=True)
     metodopago = models.CharField(max_length=40)
     descripcion = models.CharField(max_length=128)
     habilitado = models.CharField(max_length=1)
@@ -118,7 +118,7 @@ class Metodopago(models.Model):
 
 
 class Motivosesion(models.Model):
-    idmotivosesion = models.IntegerField(primary_key=True)
+    idmotivosesion = models.AutoField(primary_key=True)
     motivosesion = models.CharField(max_length=64)
     descripcion = models.CharField(max_length=128)
 
@@ -128,7 +128,7 @@ class Motivosesion(models.Model):
 
 
 class Notificacion(models.Model):
-    idnotificacion = models.IntegerField(primary_key=True)
+    idnotificacion = models.AutoField(primary_key=True)
     fechahora = models.DateField()
     asunto = models.CharField(max_length=128)
     detalle = models.CharField(max_length=256, blank=True, null=True)
@@ -139,12 +139,7 @@ class Notificacion(models.Model):
         db_table = 'notificacion'
 
 
-class Paciente(models.Model):
-    pac_idusuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='pac_idusuario')
 
-    class Meta:
-        managed = False
-        db_table = 'paciente'
 
 
 class Pacientepsicologo(models.Model):
@@ -158,7 +153,7 @@ class Pacientepsicologo(models.Model):
 
 
 class Pago(models.Model):
-    idpago = models.IntegerField(primary_key=True)
+    idpago = models.AutoField(primary_key=True)
     fechahora = models.DateField()
     montototal = models.IntegerField()
     sesion_idsesion = models.ForeignKey('Sesion', models.DO_NOTHING, db_column='sesion_idsesion')
@@ -169,21 +164,9 @@ class Pago(models.Model):
         db_table = 'pago'
 
 
-class Psicologo(models.Model):
-    psi_idusuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='psi_idusuario')
-    idcorrientepsicologica = models.ForeignKey(Corrientepsicologica, models.DO_NOTHING, db_column='idcorrientepsicologica')
-    iddiagnostico = models.ForeignKey(Diagnostico, models.DO_NOTHING, db_column='iddiagnostico')
-    idmotivosesion = models.ForeignKey(Motivosesion, models.DO_NOTHING, db_column='idmotivosesion')
-    numeroregistrolicencia = models.BigIntegerField(blank=True, null=True)
-    tarifasesion = models.IntegerField()
-
-    class Meta:
-        managed = False
-        db_table = 'psicologo'
-
 
 class Rangoetario(models.Model):
-    idrangoetario = models.IntegerField(primary_key=True)
+    idrangoetario = models.AutoField(primary_key=True)
     rangoetario = models.CharField(max_length=40)
 
     class Meta:
@@ -192,7 +175,7 @@ class Rangoetario(models.Model):
 
 
 class Rangoprecio(models.Model):
-    idrangoprecio = models.IntegerField(primary_key=True)
+    idrangoprecio = models.AutoField(primary_key=True)
     montominimo = models.IntegerField()
     montomaximo = models.IntegerField()
 
@@ -202,7 +185,7 @@ class Rangoprecio(models.Model):
 
 
 class Resena(models.Model):
-    idresena = models.FloatField(primary_key=True)
+    idresena = models.AutoField(primary_key=True)
     puntuacion = models.BooleanField()
     comentarios = models.CharField(max_length=512)
     sesion_idsesion = models.ForeignKey('Sesion', models.DO_NOTHING, db_column='sesion_idsesion')
@@ -213,7 +196,7 @@ class Resena(models.Model):
 
 
 class Sesion(models.Model):
-    idsesion = models.IntegerField(primary_key=True)
+    idsesion = models.AutoField(primary_key=True)
     fechahora = models.DateField()
     notas = models.CharField(max_length=1024, blank=True, null=True)
     estadosesion_idestadosesion = models.ForeignKey(Estadosesion, models.DO_NOTHING, db_column='estadosesion_idestadosesion')
@@ -234,13 +217,13 @@ class Superusuario(models.Model):
 
 
 class Test(models.Model):
-    idtest = models.IntegerField(primary_key=True)
+    idtest = models.AutoField(primary_key=True)
     generopsicologo_idgeneropsicologo = models.ForeignKey(Generopsicologo, models.DO_NOTHING, db_column='generopsicologo_idgeneropsicologo')
     rangoetario_idrangoetario = models.ForeignKey(Rangoetario, models.DO_NOTHING, db_column='rangoetario_idrangoetario')
-    corrientepsicologica_idcorrientepsicologica = models.ForeignKey(Corrientepsicologica, models.DO_NOTHING, db_column='corrientepsicologica_idcorrientepsicologica')
+    corriente_idcorriente = models.ForeignKey(Corrientepsicologica, models.DO_NOTHING, db_column='corriente_idcorriente')
     rangoprecio_idrangoprecio = models.ForeignKey(Rangoprecio, models.DO_NOTHING, db_column='rangoprecio_idrangoprecio')
     motivosesion_idmotivosesion = models.ForeignKey(Motivosesion, models.DO_NOTHING, db_column='motivosesion_idmotivosesion')
-    coberturasalud_idcoberturasalud = models.ForeignKey(Coberturasalud, models.DO_NOTHING, db_column='coberturasalud_idcoberturasalud')
+    coberturasalud_id  = models.ForeignKey(Coberturasalud, models.DO_NOTHING, db_column='coberturasalud_id ')
     diagnostico_iddiagnostico = models.ForeignKey(Diagnostico, models.DO_NOTHING, db_column='diagnostico_iddiagnostico')
     tiposesion_idtiposesion = models.ForeignKey('Tiposesion', models.DO_NOTHING, db_column='tiposesion_idtiposesion')
     idusuariotest = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='idusuariotest')
@@ -269,7 +252,7 @@ class Testpsicologo(models.Model):
 
 
 class Ticketsoporte(models.Model):
-    idticketsoporte = models.IntegerField(primary_key=True)
+    idticketsoporte = models.AutoField(primary_key=True)
     fechahora = models.DateField()
     contenido = models.CharField(max_length=512)
     usuario_idusuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='usuario_idusuario')
@@ -280,7 +263,7 @@ class Ticketsoporte(models.Model):
 
 
 class Tiposesion(models.Model):
-    idtiposesion = models.IntegerField(primary_key=True)
+    idtiposesion = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=64)
     descripcion = models.CharField(max_length=128, blank=True, null=True)
 
@@ -290,7 +273,7 @@ class Tiposesion(models.Model):
 
 
 class Usuario(models.Model):
-    idusuario = models.IntegerField(primary_key=True)
+    idusuario = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, models.DO_NOTHING)
     genero_idgenero = models.ForeignKey(Genero, models.DO_NOTHING, db_column='genero_idgenero')
     foto = models.CharField(max_length=200, blank=True, null=True)
@@ -302,6 +285,43 @@ class Usuario(models.Model):
     class Meta:
         managed = False
         db_table = 'usuario'
+
+class Psicologo(models.Model):
+    idpsicologo = models.AutoField(primary_key=True)
+    psi_idusuario = models.ForeignKey(Usuario, models.DO_NOTHING, db_column='psi_idusuario')
+    rangoetario_idrangoetario = models.ForeignKey(Rangoetario, models.DO_NOTHING, db_column='rangoetario_idrangoetario')
+    corriente_idcorriente = models.ForeignKey(Corrientepsicologica, models.DO_NOTHING, db_column='corriente_idcorriente')
+    rangoprecio_idrangoprecio = models.ForeignKey(Rangoprecio, models.DO_NOTHING, db_column='rangoprecio_idrangoprecio')
+    motivosesion_idmotivosesion = models.ForeignKey(Motivosesion, models.DO_NOTHING, db_column='motivosesion_idmotivosesion')
+    coberturasalud_id = models.ForeignKey(Coberturasalud, models.DO_NOTHING, db_column='coberturasalud_id')
+    diagnostico_iddiagnostico = models.ForeignKey(Diagnostico, models.DO_NOTHING, db_column='diagnostico_iddiagnostico')
+    tiposesion_idtiposesion = models.ForeignKey('Tiposesion', models.DO_NOTHING, db_column='tiposesion_idtiposesion')
+    numeroregistrolicencia = models.BigIntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'psicologo'
+
+class Paciente(models.Model):
+    idpaciente = models.AutoField(primary_key=True)
+    pac_idusuario = models.ForeignKey(Usuario, models.DO_NOTHING, db_column='pac_idusuario')
+
+    class Meta:
+        managed = False
+        db_table = 'paciente'
+
+
+class Conversation(models.Model):
+    participants = models.ManyToManyField(User, related_name='conversations')
+
+class Mensaje(models.Model):
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='mensajes')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.author.username} - {self.timestamp}'
 
 # from typing import List, Dict
 # from collections import defaultdict

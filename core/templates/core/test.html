@@ -5,49 +5,131 @@
 <div id="volver-inicio">
     <a href="{% url 'index' %}"><i class="bi bi-arrow-left-short" id="flecha"></i></a> TEST
 </div>
-<form method="POST" enctype="multipart/form-data" id="FormTestPaciente" class="FormTestPaciente">
+
+{% comment %} <form method="POST" enctype="multipart/form-data" id="FormTestPaciente" class="FormTestPaciente">
     {% csrf_token %}
     <div class="test-paciente">
         <div class="content-test" id="content-1" data-id='1' style="display: block;">
             <h3>¿Tienes alguna preferencia sobre el género de tu psicólogo/a?</h3>
             <div class="form-group">
-                {{ form.pref_genero }} 
+                <select name="pref_genero" id="id_pref_genero" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    {% for id, genero in form.fields.pref_genero.choices %}
+                        <option value="{{ id }}">{{ genero }}</option>
+                    {% endfor %}
+                </select>
             </div>
         </div>
         <div class="content-test" id="content-2" data-id='2'>
             <h3>¿Qué tipo de terapia estás buscando?</h3>
             <div class="form-group">
-                {{ form.tipo_terapia }} 
+                <select name="tipo_terapia" id="id_tipo_terapia" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    {% for id, tipo in form.fields.tipo_terapia.choices %}
+                        <option value="{{ id }}">{{ tipo }}</option>
+                    {% endfor %}
+                </select>
             </div>
         </div>
         <div class="content-test" id="content-3" data-id='3'>
             <h3>¿Tienes preferencia por alguna corriente teórica de psicología?</h3>
             <div class="form-group">
-                {{ form.pref_corriente }} 
+                {{ form.pref_corriente }}
             </div>
         </div>
         <div class="content-test" id="content-4" data-id='4'>
             <h3>Tengo diagnóstico o sospecha de:</h3>
             <div class="form-group">
-                {{ form.diagnostico_sospecha }} 
+                {{ form.diagnostico_sospecha }}
             </div>
         </div>
         <div class="content-test" id="content-5" data-id='5'>
             <h3>Motivo de búsqueda de psicólogo/a:</h3>
             <div class="form-group">
-                {{ form.motivo_busqueda }} 
+                {{ form.motivo_busqueda }}
             </div>
         </div>
         <div class="content-test" id="content-6" data-id='6'>
             <h3>¿Cuál es el rango de precio que puedes pagar por tu sesión de terapia?</h3>
             <div class="form-group">
-                {{ form.rango_precio }} 
+                <select name="rango_precio" id="id_rango_precio" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    {% for id, precio in form.fields.rango_precio.choices %}
+                        <option value="{{ id }}">{{ precio }}</option>
+                    {% endfor %}
+                </select>
             </div>
         </div>
         <div class="content-test" id="content-7" data-id='7'>
             <h3>¿Con qué tipo de cobertura de salud cuentas?</h3>
             <div class="form-group">
-                {{ form.cobertura_salud }} 
+                <select name="cobertura_salud" id="id_cobertura_salud" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    {% for id, cobertura in form.fields.cobertura_salud.choices %}
+                        <option value="{{ id }}">{{ cobertura }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        
+    </div>
+    <div class="botones-test">
+        <button type="button" class="test-back">Volver</button>
+        <button type="button" class="test-next" id="btn-test">Continuar</button>
+    </div>
+
+    <div class="test-paciente-end">
+        <div class="test-fin" data-id='8'>
+            <p>Test terminado uwu, ¿quiere confirmar respuestas?</p>
+            <button type="button" class="edit-anterior">Editar mis respuestas</button>
+            <button type="submit" class="fin-test" id="btn-test">Encontrar psicólogo/a</button>
+        </div>
+    </div>
+</form> {% endcomment %}
+
+ <form method="POST" enctype="multipart/form-data" id="FormTestPaciente" class="FormTestPaciente">
+    {% csrf_token %}
+    <div class="test-paciente">
+        <div class="content-test" id="content-1" data-id='1' style="display: block;">
+            <h3>¿Tienes alguna preferencia sobre el género de tu psicólogo/a?</h3>
+            <div class="form-group">
+                {{ form.generopsicologo_idgeneropsicologo }} 
+            </div>
+        </div>
+        <div class="content-test" id="content-2" data-id='2'>
+            <h3>¿Qué tipo de terapia estás buscando?</h3>
+            <div class="form-group">
+                {{ form.tiposesion_idtiposesion}} 
+            </div>
+        </div>
+        <div class="content-test" id="content-3" data-id='3'>
+            <h3>¿Tienes preferencia por alguna corriente teórica de psicología?</h3>
+            <div class="form-group">
+                {{ form.corriente_idcorriente }} 
+            </div>
+        </div>
+        <div class="content-test" id="content-4" data-id='4'>
+            <h3>Tengo diagnóstico o sospecha de:</h3>
+            <div class="form-group">
+                {{ form.diagnostico_iddiagnostico}} 
+            </div>
+        </div>
+        <div class="content-test" id="content-5" data-id='5'>
+            <h3>Motivo de búsqueda de psicólogo/a:</h3>
+            <div class="form-group">
+                {{ form.motivosesion_idmotivosesion }} 
+            </div>
+        </div>
+        <div class="content-test" id="content-6" data-id='6'>
+            <h3>¿Cuál es el rango de precio que puedes pagar por tu sesión de terapia?</h3>
+            <div class="form-group">
+                {{ form.rangoprecio_idrangoprecio }} 
+            </div>
+        </div>
+        <div class="content-test" id="content-7" data-id='7'>
+            <h3>¿Con qué tipo de cobertura de salud cuentas?</h3>
+            <div class="form-group">
+                {{ form.coberturasalud_id }} 
             </div>
         </div>
         
@@ -65,5 +147,6 @@
         </div>
 
     </div>
-</form> 
+</form>  
+
 {% endblock content %}

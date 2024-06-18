@@ -11,9 +11,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>  
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+
+    
 
 </head>
 <body>
@@ -28,10 +28,10 @@
             <div class="bloque2">
                 <div class="card">
                     <h1 class="card-title">Crear cuenta</h1>
-                    <form method="POST" id="FormRegistro" class="FormRegistro">
+                    <form method="POST" id="FormRegistroPsi" class="FormRegistroPsi">
                         {% csrf_token %}
                         <div class="tipocuenta">
-                            <button class="btn btn-cliente active" id="btn-cliente">Soy cliente</button>
+                            <button class="btn btn-cliente active" id="btn-cliente"><a href="{% url 'registro' %}">Soy cliente</a></button>
                             <button class="btn btn-psicologo" id="btn-psicologo"><a href="{% url 'registro_psicologo' %}">Soy psicólogo/a</a></button>
                         </div>
                         <div class="form-group">
@@ -54,10 +54,10 @@
                             <label for="genero_idgenero">Género</label>
                             {{ form.genero_idgenero }}
                         </div>
-                        <!-- <div class="form-group campo-licencia" id="campos-psicologo">
+                        <div class="form-group campo-licencia" id="campos-psicologo">
                             <label for="licencia">Número de registro de licencia RNPI</label>
                             {{ form.licencia }}
-                        </div> -->
+                        </div>
                         <div class="form-group">
                             <label for="email">Correo electrónico</label>
                             {{ form.email }}
@@ -77,11 +77,11 @@
                         </div>
 
                         {% if messages %}
-                            <ul class="messages">
-                                {% for message in messages %}
-                                    <li>{{ message }}</li>
-                                {% endfor %}
-                            </ul>
+                        <ul class="messages">
+                            {% for message in messages %}
+                            <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+                            {% endfor %}
+                        </ul>
                         {% endif %}
                     </form>
                 </div>

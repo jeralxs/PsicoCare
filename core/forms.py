@@ -1,8 +1,12 @@
 from django import forms
-from django.forms import ModelForm, fields, Form
-from .models import Test, Psicologo, Usuario
+from django.forms import ModelForm, fields, Form, ModelMultipleChoiceField
+from .models import Test, Psicologo, Usuario, Generopsicologo, Tiposesion, Corrientepsicologica, Rangoetario, Rangoprecio, Motivosesion, Coberturasalud, Diagnostico
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
+# from captcha.fields import ReCaptchaField
+# from captcha.widgets import ReCaptchaV2Checkbox
+from django.contrib.auth.forms import UserCreationForm
 
 
 form_hidden = {'class': 'd-none'}
@@ -13,7 +17,8 @@ form_file = {'class': 'form-control-file', 'title': 'Debe subir una imagen'}
 form_check = {'class': 'form-check-input'}
 form_password = {'class': 'form-control text-danger'}
 
-class FormRegistro (forms.ModelForm): 
+GENERO = (("1","Mujer"),("2","Hombre"),("3","Otro"))
+class FormRegistro (Form): 
     username = forms.CharField(
         max_length=100, 
         required=True, 
@@ -34,11 +39,81 @@ class FormRegistro (forms.ModelForm):
         widget=forms.TextInput(attrs={'placeholder': 'Ingresa apellido paterno'}),
     )
 
-    apellidomaterno = forms.CharField(
+    apellido_materno = forms.CharField(
         max_length=100, 
         required=True, 
         label='apellido materno',
         widget=forms.TextInput(attrs={'placeholder': 'Ingresa apellido materno'}),
+    )
+
+    genero_idgenero = forms.MultipleChoiceField(
+        required=True, 
+        label='Género',
+        widget=forms.Select,
+        choices=GENERO,
+    )
+
+    email = forms.EmailField(
+        required=True,
+        label='correo',
+        widget=forms.EmailInput(attrs={'placeholder': 'Ingresa correo'})
+    )
+
+    password = forms.CharField(
+        max_length=20, 
+        required=True, 
+        label='contraseña',
+        widget=forms.PasswordInput (attrs={'placeholder': 'Ingresa contraseña'}),
+    )
+
+    password2= forms.CharField(
+        label='confirmar contraseña',
+        widget=forms.PasswordInput (attrs={'placeholder': 'Repita la contraseña'}),
+    )
+
+    # captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
+
+    class Meta:
+        model = Usuario
+        fields = ['username','first_name', 'last_name', 'apellido_materno', 'email', 'password']
+
+
+
+
+GENERO = (("1","Mujer"),("2","Hombre"),("3","Otro"))
+class FormRegistroPsi (Form): 
+    username = forms.CharField(
+        max_length=100, 
+        required=True, 
+        label='nombre de usuario',
+        widget=forms.TextInput(attrs={'placeholder': 'Ingresa Usuario'}),
+    )
+    first_name = forms.CharField(
+        max_length=100, 
+        required=True, 
+        label='nombres',
+        widget=forms.TextInput(attrs={'placeholder': 'Ingresa nombres'}),
+    )
+
+    last_name = forms.CharField(
+        max_length=100, 
+        required=True, 
+        label='apellido paterno',
+        widget=forms.TextInput(attrs={'placeholder': 'Ingresa apellido paterno'}),
+    )
+
+    apellido_materno = forms.CharField(
+        max_length=100, 
+        required=True, 
+        label='apellido materno',
+        widget=forms.TextInput(attrs={'placeholder': 'Ingresa apellido materno'}),
+    )
+
+    genero_idgenero = forms.MultipleChoiceField(
+        required=True, 
+        label='Género',
+        widget=forms.Select,
+        choices=GENERO,
     )
 
     email = forms.EmailField(
@@ -63,11 +138,11 @@ class FormRegistro (forms.ModelForm):
         label='Número de registro de licencia',
         widget=forms.TextInput(attrs={'placeholder': 'Ingresa número de RNPI'}),
     )
+    # captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
 
     class Meta:
         model = Usuario
-        fields = ['username','first_name', 'last_name', 'apellidomaterno', 'email', 'password', 'licencia']
-
+        fields = ['username','first_name', 'last_name', 'apellido_materno', 'email', 'password', 'licencia']
 
 class IngresarForm(Form):
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Ingresar Usuario'}), label="Username")
@@ -199,65 +274,261 @@ class EliminarForm(Form):
         fields = ['password']
 
 # FORMS PERFIL
+from django import forms
+from .models import Mensaje
+
+class FormularioMensaje(forms.ModelForm):
+    class Meta:
+        model = Mensaje
+        fields = ['content']  # Campos del modelo Mensaje que estarán en el formulario
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['content'].widget.attrs.update({'rows': 3, 'placeholder': 'Escribe tu mensaje aquí'})
 
 # form test psico
 
-GENERO_OP=(("1","Mujer"),("2","Hombre"),("3","Otro"),("4","Sin preferencia"))
-TERAPIA_OP=(("1","Individual"),("2","Pareja"),("3","Familiar"))
-CORRIENTE_OP=(("1","Cognitivo-Conductual"),("2","Psicoanálisis"),("3","Sistémica"),("4","Humanista"),("5","Breve"),("6","Feminista"),("7","Otra"),("8","Sin preferencia"))
-DIAGNOSTICO_OP=(("1","Ansiedad"),("2","Autolesiones"),("3","Depresión"),("4","Riesgo suicida"),("5","Trastorno disociativo"),("6","Trastorno de estrés postraumático"),
-                ("7","Crisis de pánico"),("8","Disfunciones sexuales"),("9","Bipolaridad"),("10","Consumo problemático"),("11","Trastorno conducta alimentaria"),
-                ("12","Trastorno de la personalidad"),("13","Trastorno obsesivo compulsivo"),("14","Trastorno psicótico"),("15","Otro"),("16","Sin diagnóstico o sospecha"))
-MOTIVO_OP=(("1","Acoso"),("2","Bullying"),("3","Crisis existencial"),("4","Duelo"),("5","Estrés"),("6","Problemas vocacionales"),
-                ("7","Problemas de relaciones"),("8","Problemas de autoestima"),("9","Sexualidad y/o género"),("10","Otro"))
-PRECIO_OP=(("1","$0-$10000"),("2","$10000-$15000"),("3","$15000-$20000"),("4","$25000-$30000"),("5","$30000-$35000"),("6","$35000-$40000"),
-                ("7","$40000-$45000"),("8","$45000-$50000"),("9","+$50000"))
-COBERTURA_OP=(("1","Fonasa"),("2","Isapre"),("3","Otro"),("4","Ninguno"))
+def get_genero():
+    return [(g.idgeneropsicologo, g.genero) for g in Generopsicologo.objects.all()]
+def get_tiposesion():
+    return [(t.idtiposesion, t.nombre) for t in Tiposesion.objects.all()]
+def get_corriente():
+    return [(co.idcorrientepsicologica, co.corrientepsicologica) for co in Corrientepsicologica.objects.all()]
+def get_diagnostico():
+    return [(d.iddiagnostico, d.diagnostico) for d in Diagnostico.objects.all()]
+def get_motivo():
+    return [(m.idmotivosesion, m.motivosesion) for m in Motivosesion.objects.all()]
+def get_precio():
+    return [(r.idrangoprecio, f"{r.montominimo} - {r.montomaximo}") for r in Rangoprecio.objects.all()]
+def get_cobertura():
+    return [(cs.idcoberturasalud, cs.coberturasalud) for cs in Coberturasalud.objects.all()]
 
-class FormTestPaciente (forms.ModelForm): 
+# class FormTestPaciente(forms.ModelForm):
 
+#     def __init__(self, *args, **kwargs):
+#         self.user = kwargs.pop('user', None)
+#         super().__init__(*args, **kwargs)
+
+#         self.fields['generopsicologo_idgeneropsicologo'].queryset = Generopsicologo.objects.all()
+#         self.fields['generopsicologo_idgeneropsicologo'].widget = forms.CheckboxSelectMultiple(
+#             choices=[(obj.idgeneropsicologo, str(obj)) for obj in self.fields['generopsicologo_idgeneropsicologo'].queryset]
+#         )
+
+#         self.fields['tiposesion_idtiposesion'].queryset = Tiposesion.objects.all()
+#         self.fields['tiposesion_idtiposesion'].widget = forms.CheckboxSelectMultiple(
+#             choices=[(obj.idtiposesion, str(obj)) for obj in self.fields['tiposesion_idtiposesion'].queryset]
+#         )
+
+#         self.fields['corriente_idcorriente'].queryset = Corrientepsicologica.objects.all()
+#         self.fields['corriente_idcorriente'].widget = forms.CheckboxSelectMultiple(
+#             choices=[(obj.idcorrientepsicologica, str(obj)) for obj in self.fields['corriente_idcorriente'].queryset]
+#         )
+
+#         self.fields['diagnostico_iddiagnostico'].queryset = Diagnostico.objects.all()
+#         self.fields['diagnostico_iddiagnostico'].widget = forms.CheckboxSelectMultiple(
+#             choices=[(obj.iddiagnostico, str(obj)) for obj in self.fields['diagnostico_iddiagnostico'].queryset]
+#         )
+
+#         self.fields['motivosesion_idmotivosesion'].queryset = Motivosesion.objects.all()
+#         self.fields['motivosesion_idmotivosesion'].widget = forms.CheckboxSelectMultiple(
+#             choices=[(obj.idmotivosesion, str(obj)) for obj in self.fields['motivosesion_idmotivosesion'].queryset]
+#         )
+
+#         self.fields['rangoprecio_idrangoprecio'].queryset = Rangoprecio.objects.all()
+#         self.fields['rangoprecio_idrangoprecio'].widget = forms.CheckboxSelectMultiple(
+#             choices=[(obj.idrangoprecio, f"{obj.montominimo} - {obj.montomaximo}") for obj in self.fields['rangoprecio_idrangoprecio'].queryset]
+#         )
+
+#         self.fields['coberturasalud_id'].queryset = Coberturasalud.objects.all()
+#         self.fields['coberturasalud_id'].widget = forms.CheckboxSelectMultiple(
+#             choices=[(obj.idcoberturasalud, str(obj)) for obj in self.fields['coberturasalud_id'].queryset]
+#         )
+
+#     def save(self, commit=True):
+#         instance = super().save(commit=False)
+
+#         if self.user:
+#             instance.idusuariotest = self.user.usuario  # Asumiendo que `self.user.usuario` es el objeto `Usuario` correcto
+#             generopsicologo_ids = self.cleaned_data['generopsicologo_idgeneropsicologo']
+#             tiposesion_ids = self.cleaned_data['tiposesion_idtiposesion']
+#             corriente_ids = self.cleaned_data['corriente_idcorriente']
+#             diagnostico_ids = self.cleaned_data['diagnostico_iddiagnostico']
+#             motivosesion_ids = self.cleaned_data['motivosesion_idmotivosesion']
+#             rangoprecio_ids = self.cleaned_data['rangoprecio_idrangoprecio']
+#             coberturasalud_ids = self.cleaned_data['coberturasalud_id']
+#         if commit:
+#             instance.save()
+
+#             # Actualizar relaciones many-to-many
+#             instance.generopsicologo_idgeneropsicologo.set(Generopsicologo.objects.filter(idgeneropsicologo__in=generopsicologo_ids))
+#             instance.tiposesion_idtiposesion.set(Tiposesion.objects.filter(idtiposesion__in=tiposesion_ids))
+#             instance.corriente_idcorriente.set(Corrientepsicologica.objects.filter(idcorrientepsicologica__in=corriente_ids))
+#             instance.diagnostico_iddiagnostico.set(Diagnostico.objects.filter(iddiagnostico__in=diagnostico_ids))
+#             instance.motivosesion_idmotivosesion.set(Motivosesion.objects.filter(idmotivosesion__in=motivosesion_ids))
+#             instance.rangoprecio_idrangoprecio.set(Rangoprecio.objects.filter(idrangoprecio__in=rangoprecio_ids))
+#             instance.coberturasalud_id.set(Coberturasalud.objects.filter(idcoberturasalud__in=coberturasalud_ids))
+
+#         return instance
+
+#     class Meta:
+#         model = Test
+#         fields = '__all__'
+#         exclude = ['idtest','idusuariotest']
+class FormTestPaciente(forms.ModelForm):
     class Meta:
         model = Test
-        fields = ['generopsicologo_idgeneropsicologo','tiposesion_idtiposesion','corrientepsicologica_idcorrientepsicologica','diagnostico_iddiagnostico','motivosesion_idmotivosesion','rangoprecio_idrangoprecio','coberturasalud_idcoberturasalud']
+        fields = '__all__'
+        exclude = ['idtest','idusuariotest']
 
-    pref_genero = forms.MultipleChoiceField(
-        required=True, 
-        widget=forms.Select.allow_multiple_selected,
-        choices=GENERO_OP,
-    )
-
-    tipo_terapia = forms.MultipleChoiceField(
-        required=True, 
-        widget=forms.Select.allow_multiple_selected,
-        choices=TERAPIA_OP,
-    )
-
-    pref_corriente = forms.MultipleChoiceField(
-        required=True, 
+    generopsicologo_idgeneropsicologo = forms.MultipleChoiceField(
+        required=True,
         widget=forms.CheckboxSelectMultiple,
-        choices=CORRIENTE_OP,
+        choices=get_genero,
     )
 
-    diagnostico_sospecha = forms.MultipleChoiceField(
-        required=True, 
+    tiposesion_idtiposesion = forms.MultipleChoiceField(
+        required=True,
         widget=forms.CheckboxSelectMultiple,
-        choices=DIAGNOSTICO_OP,
+        choices=get_tiposesion,
     )
 
-    motivo_busqueda = forms.MultipleChoiceField(
-        required=True, 
+    corriente_idcorriente = forms.MultipleChoiceField(
+        required=True,
         widget=forms.CheckboxSelectMultiple,
-        choices=MOTIVO_OP,
+        choices=get_corriente,
     )
 
-    rango_precio = forms.MultipleChoiceField(
-        required=True, 
-        widget=forms.Select.allow_multiple_selected,
-        choices=PRECIO_OP,
+    diagnostico_iddiagnostico = forms.MultipleChoiceField(
+        required=True,
+        widget=forms.CheckboxSelectMultiple,
+        choices=get_diagnostico,
     )
 
-    cobertura_salud = forms.MultipleChoiceField(
-        required=True, 
-        widget=forms.Select.allow_multiple_selected,
-        choices=COBERTURA_OP,
+    motivosesion_idmotivosesion = forms.MultipleChoiceField(
+        required=True,
+        widget=forms.CheckboxSelectMultiple,
+        choices=get_motivo,
     )
+
+    rangoprecio_idrangoprecio = forms.MultipleChoiceField(
+        required=True,
+        widget=forms.CheckboxSelectMultiple,
+        choices=get_precio,
+    )
+
+    coberturasalud_id = forms.MultipleChoiceField(
+        required=True,
+        widget=forms.CheckboxSelectMultiple,
+        choices=get_cobertura,
+    )
+
+    # def save(self, commit=True, user=None):
+    #     # Obtener la instancia del formulario
+    #     instance = super(FormTestPaciente, self).save(commit=False)
+    #     if user is not None:
+    #         instance.idusuariotest = user
+    #     # Obtener las IDs seleccionadas para cada campo ForeignKey que deseas manejar como ManyToMany
+    #     generopsicologo_ids = self.cleaned_data['generopsicologo_idgeneropsicologo']
+    #     tiposesion_ids = self.cleaned_data['tiposesion_idtiposesion']
+    #     corriente_ids = self.cleaned_data['corriente_idcorriente']
+    #     diagnostico_ids = self.cleaned_data['diagnostico_iddiagnostico']
+    #     motivosesion_ids = self.cleaned_data['motivosesion_idmotivosesion']
+    #     rangoprecio_ids = self.cleaned_data['rangoprecio_idrangoprecio']
+    #     coberturasalud_ids = self.cleaned_data['coberturasalud_id']
+
+    #     if commit:
+    #         instance.save()
+
+    #     instance.generopsicologo_idgeneropsicologo.set(Generopsicologo.objects.filter(idgeneropsicologo__in=generopsicologo_ids))
+    #     instance.tiposesion_idtiposesion.set(Tiposesion.objects.filter(idtiposesion__in=tiposesion_ids))
+    #     instance.corriente_idcorriente.set(Corrientepsicologica.objects.filter(idcorrientepsicologica__in=corriente_ids))
+    #     instance.diagnostico_iddiagnostico.set(Diagnostico.objects.filter(iddiagnostico__in=diagnostico_ids))
+    #     instance.motivosesion_idmotivosesion.set(Motivosesion.objects.filter(idmotivosesion__in=motivosesion_ids))
+    #     instance.rangoprecio_idrangoprecio.set(Rangoprecio.objects.filter(idrangoprecio__in=rangoprecio_ids))
+    #     instance.coberturasalud_id.set(Coberturasalud.objects.filter(idcoberturasalud__in=coberturasalud_ids))
+
+    #     return instance
+
+       
+    # class Meta:
+    #     model = Test
+    #     fields = '__all__'
+
+        
+    # generopsicologo_idgeneropsicologo = forms.MultipleChoiceField(
+    #     required=True, 
+    #     widget=forms.CheckboxSelectMultiple,
+    #     choices=get_genero,
+    # )
+    
+
+    # tiposesion_idtiposesion = forms.MultipleChoiceField(
+    #     required=True, 
+    #     widget=forms.CheckboxSelectMultiple,
+    #     choices=get_tiposesion,
+    # )
+
+    # corriente_idcorriente = forms.MultipleChoiceField(
+    #     required=True, 
+    #     widget=forms.CheckboxSelectMultiple,
+    #     choices=get_corriente,
+    # )
+
+    # diagnostico_iddiagnostico = forms.MultipleChoiceField(
+    #     required=True, 
+    #     widget=forms.CheckboxSelectMultiple,
+    #     choices=get_diagnostico,
+    # )
+
+    # motivosesion_idmotivosesion = forms.MultipleChoiceField(
+    #     required=True, 
+    #     widget=forms.CheckboxSelectMultiple,
+    #     choices=get_motivo,
+    # )
+
+    # rangoprecio_idrangoprecio = forms.MultipleChoiceField(
+    #     required=True, 
+    #     widget=forms.CheckboxSelectMultiple,
+    #     choices=get_precio,
+    # )
+
+    # coberturasalud_id = forms.MultipleChoiceField(
+    #     required=True, 
+    #     widget=forms.CheckboxSelectMultiple,
+    #     choices=get_cobertura,
+    # )
+    
+    # def save(self, commit=True):
+    #     instance = forms.ModelForm.save(self, commit=False)
+
+    #     if commit:
+    #         instance.save()
+
+    #     # ... (resto del código para limpiar relaciones)
+
+    #     # Agregar las relaciones con las instancias de los modelos
+    #     for generopsicologo_id in self.cleaned_data['generopsicologo_idgeneropsicologo']:
+    #         generopsicologo = Generopsicologo.objects.get(pk=generopsicologo_id)
+    #         instance.generopsicologo_idgeneropsicologo.add(generopsicologo)
+    #     for tiposesion_id in self.cleaned_data['tiposesion_idtiposesion']:
+    #         tiposesion = Tiposesion.objects.get(pk=tiposesion_id)
+    #         instance.tiposesion_idtiposesion.add(tiposesion)
+    #     for corriente_id in self.cleaned_data['corriente_idcorriente']:
+    #         corriente = Corrientepsicologica.objects.get(pk=corriente_id)
+    #         instance.corriente_idcorriente.add(corriente)
+    #     for motivosesion_id in self.cleaned_data['motivosesion_idmotivosesion']:
+    #         motivosesion = Motivosesion.objects.get(pk=motivosesion_id)
+    #         instance.motivosesion_idmotivosesion.add(motivosesion)
+    #     for diagnostico_id in self.cleaned_data['diagnostico_iddiagnostico']:
+    #         diagnostico = Diagnostico.objects.get(pk=diagnostico_id)
+    #         instance.diagnostico_iddiagnostico.add(diagnostico)
+    #     for rangoprecio_id in self.cleaned_data['rangoprecio_idrangoprecio']:
+    #         rangoprecio = Rangoprecio.objects.get(pk=rangoprecio_id)
+    #         instance.rangoprecio_idrangoprecio.add(rangoprecio)
+    #     for cobertura_id in self.cleaned_data['coberturasalud_id']:
+    #         cobertura = Coberturasalud.objects.get(pk=cobertura_id)
+    #         instance.coberturasalud_id.add(cobertura)
+
+    #     return instance
+
+    

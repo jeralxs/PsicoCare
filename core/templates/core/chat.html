@@ -1,0 +1,81 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<h1>Chat</h1>
+<div class="chat-container">
+    <div id="messages">
+        {% for message in messages %}
+            <p>{{ message.content }}</p>
+            <small>{{ message.autor.username }} - {{ message.timestamp }}</small>
+        {% endfor %}
+    </div>
+
+    <form id="sendMessageForm" action="{% url 'send_message' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" id="conversation_id" name="conversation_id" value="{{ conversation.id }}">
+        <textarea id="messageContent" name="content" placeholder="Escribe tu mensaje aquí"></textarea>
+        <button type="submit">Enviar</button>
+    </form>
+</div>
+<script>
+    $(document).ready(function() {
+        $('#sendMessageForm').on('submit', function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: "{% url 'send_message' %}",
+                type: $(this).attr('method'),
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(response) {
+                    console.log('Mensaje enviado correctamente');
+                    // Actualizar la interfaz para mostrar el mensaje enviado
+                    $('#messages').append(`
+                        <p>${response.content}</p>
+                        <small>${response.author} - ${response.timestamp}</small>
+                    `);
+                    // Limpiar el textarea después de enviar el mensaje
+                    $('#messageContent').val('');
+                },
+                error: function(xhr, errmsg, err) {
+                    console.error('Error al enviar el mensaje:', errmsg);
+                }
+            });
+        });
+    });
+</script>
+
+<style>
+    .chat-container {
+        width: 80%; /* Ancho del contenedor del chat */
+        max-width: 600px; /* Ancho máximo del contenedor */
+        margin: 0 auto; /* Centrar horizontalmente */
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    #messages {
+        height: 300px; /* Altura fija para el área de mensajes */
+        overflow-y: auto; /* Hacer que el área de mensajes sea desplazable verticalmente si hay demasiados mensajes */
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    #sendMessageForm {
+        margin-top: 10px;
+    }
+
+    #sendMessageForm textarea {
+        width: calc(100% - 10px); /* El textarea ocupa todo el ancho disponible menos 10px de margen */
+        min-height: 80px; /* Altura mínima del textarea */
+        resize: vertical; /* Permite que el textarea sea redimensionable verticalmente */
+    }
+</style>
+
+{% endblock content %}

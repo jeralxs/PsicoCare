@@ -154,6 +154,59 @@ $(document).ready(function () {
 
 //test paciente matching
 
+$(document).ready(function () {
+    $("#FormTestPaciente").validate({
+        rules: {
+            pref_genero: {
+                required: true,
+            },
+            tipo_terapia: {
+                required: true,
+            },
+            pref_corriente: {
+                required: true,
+            },
+            diagnostico_sospecha: {
+                required: true,
+            },
+            motivo_busqueda: {
+                required: true,
+            },
+            rango_precio: {
+                required: true,
+            },
+            cobertura_salud: {
+                required: true,
+            },
+        },
+        messages: {
+            pref_genero: {
+                required: "Elija una opción",
+            },
+            tipo_terapia: {
+                required: "Elija una opción",
+            },
+            pref_corriente: {
+                required: "Elija al menos una opción",
+            },
+            diagnostico_sospecha: {
+                required: "Elija al menos una opción",
+            },
+            motivo_busqueda: {
+                required: "Elija al menos una opción",
+            },
+            rango_precio: {
+                required: "Elija una opción",
+            },
+            cobertura_salud: {
+                required: "Elija una opción",
+            },
+        },
+        submitHandler: function(form) {
+            form.submit();
+        }
+    });
+});
 
 
 $('body').on('click', '.test-next', function() { 

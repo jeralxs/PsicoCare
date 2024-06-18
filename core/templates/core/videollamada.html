@@ -4,5 +4,9 @@
 {% block content %}
     <h1>Videollamada de Google Meet</h1>
     <!-- <iframe src="{{ response }}" width="800" height="600" frameborder="0" allowfullscreen></iframe> -->
+    {% if response %}
     <p><a href="{{ response }}">link: {{ response }}</a></p>
+    {% else %}
+        <p>Error al crear la reunión</p>
+    {% endif %}
 {% endblock content %}
