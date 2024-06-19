@@ -24,7 +24,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.apps import meet_v2
-from .google_calendar import GoogleCalendarManager
+from .google_calendar import GoogleCalendarManager, obtener_credenciales
 from googleapiclient.errors import HttpError
 from .google_meet import GoogleMeetManager, obtener_credenciales
 from .models import Conversation

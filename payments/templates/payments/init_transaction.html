@@ -1,17 +1,14 @@
+{% extends 'core/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Iniciar Transacción</title>
-    <link rel="stylesheet" href="{% static 'payments/css/stylesheet.css' %}">
-</head>
-<body>
-    <h1>Iniciar Transacción</h1>
-    <form method="post">
-        {% csrf_token %}
-        <label for="amount">Monto:</label>
-        <input type="text" name="amount" id="amount" required>
-        <button type="submit">Pagar</button>
-    </form>
-</body>
-</html>
+
+{% block content %}
+    <div class="container">
+        <h1>Iniciar Transacción</h1>
+        <form method="post">
+            {% csrf_token %}
+            <label for="amount">Monto:</label>
+            <input type="text" name="amount" id="amount" required>
+            <button type="submit">Pagar</button>
+        </form>
+    </div>
+{% endblock content %}

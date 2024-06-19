@@ -8,7 +8,7 @@
     {% if sesiones %}
     <ul class="list-group">
         {% for sesion in sesiones %}
-            <li class="list-group-item">{{ sesion.id }} - {{ sesion.summary }} - {{ sesion.start.dateTime }} - {{ sesion.status }} - {{ sesion.htmlLink }}</li>
+            <li class="list-group-item">{{ sesion.id }} - {{ sesion.summary }} - {{ sesion.start.dateTime }} - {{ sesion.status }} - {{ sesion.htmlLink }} <button type="button" class="btn-pago" name="pago"><a href="{% url 'init_transaction' %}">realizar pago</a></button></li>
         {% endfor %}
     </ul>
     {% else %}
@@ -16,4 +16,25 @@
     {% endif %}
     
 </div>
+
+<style>
+    a {
+        text-decoration: none;
+        font-family: 'Lexend', sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        color: black;
+        }
+    .list-group {
+        display: inline-block;
+        padding-inline: 160px;
+        margin-left: 90px;
+        margin-top: 25px;
+    }
+    .btn-pago {
+        display: inline-block;
+        margin-left: 20px;
+        margin-top: 10px;
+    }
+</style>
 {% endblock content %}

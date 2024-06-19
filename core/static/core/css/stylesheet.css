@@ -140,17 +140,17 @@ ul {
 
 .navbar-left {
     position: fixed;
-    top: 80px; /*Altura de la barra de navegación superior */
+    top: 80px; 
     left: 0;
-    width: 100px; /* Ancho del navbar lateral */
-    height: 100%; /* Calcula la altura restando la altura de la barra superior */
+    width: 100px; 
+    height: 100%; 
     background-color: #FFFFFF;
     color: #141B0C;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    z-index: 1000; /* Asegura que esté por encima del contenido */
+    z-index: 1000; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 .navbar-left ul {
