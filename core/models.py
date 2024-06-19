@@ -323,111 +323,14 @@ class Mensaje(models.Model):
     # def __str__(self):
     #     return f'{self.author.username} - {self.timestamp}'
 
-# from typing import List, Dict
-# from collections import defaultdict
 
-# # ... (Your existing model imports and definitions)
 
-# def find_compatible_psychologists(patient_test: Test) -> List[Psicologo]:
-#     """
-#     Finds compatible psychologists for a given patient based on their test answers.
 
-#     Args:
-#         patient_test: The Test object representing the patient's answers.
 
-#     Returns:
-#         A list of Psicologo objects representing the compatible psychologists.
-#     """
 
-#     # 1. Define matching criteria and their weights
-#     matching_criteria = {
-#         "generopsicologo_idgeneropsicologo": 3,
-#         "rangoetario_idrangoetario": 2,
-#         "corrientepsicologica_idcorrientepsicologica": 5,
-#         "rangoprecio_idrangoprecio": 4,
-#         "motivosesion_idmotivosesion": 4,
-#         "coberturasalud_idcoberturasalud": 3,
-#         "diagnostico_iddiagnostico": 5,
-#         "tiposesion_idtiposesion": 2,
-#     }
 
-#     # 2. Fetch all psychologists
-#     all_psychologists = Psicologo.objects.all()
 
-#     # 3. Calculate compatibility scores
-#     compatibility_scores = defaultdict(int)
-#     for psychologist in all_psychologists:
-#         for criterion, weight in matching_criteria.items():
-#             # Get the values for comparison from the models
-#             patient_value = getattr(patient_test, criterion)
-#             psychologist_value = getattr(psychologist, criterion, None)  
 
-#             # Handle cases where the psychologist might not have a value for a criterion
-#             if psychologist_value is not None and patient_value == psychologist_value:
-#                 compatibility_scores[psychologist.psi_idusuario_id] += weight
 
-#     # 4. Sort psychologists by compatibility score (descending)
-#     sorted_psychologists = sorted(
-#         compatibility_scores.items(), key=lambda item: item[1], reverse=True
-#     )
 
-#     # 5. Return top 5 most compatible psychologists as Psicologo objects
-#     top_psychologist_ids = [psychologist_id for psychologist_id, _ in sorted_psychologists[:5]]
-#     return Psicologo.objects.filter(psi_idusuario_id__in=top_psychologist_ids)
-
-# VIEWS 
-# from django.shortcuts import render, redirect, get_object_or_404
-# from django.contrib.auth.decorators import login_required
-# from .models import Test, Psicologo, Paciente, TestPaciente  # Import your models
-# from .matching_logic import find_compatible_psychologists  # Assuming you put the matching logic in a file named matching_logic.py
-
-# # ... other imports ...
-
-# @login_required
-# def take_test(request):
-#     """View for a patient to take the test."""
-#     if request.method == 'POST':
-#         # Process the form data, create a TestPaciente instance
-#         # ... (form handling logic) ...
-
-#         test = Test.objects.create(
-#             # ... (save data from the form to the Test model) ...
-#         )
-#         test_paciente = TestPaciente.objects.create(
-#             idtest=test,
-#             # ... (save additional data specific to TestPaciente) ...
-#         )
-#         return redirect('show_matches')  # Redirect to the results page
-#     else:
-#         # Render the test form
-#         return render(request, 'take_test.html')
-
-# @login_required
-# def show_matches(request):
-#     """View to display compatible psychologists to the patient."""
-#     try:
-#         patient_test = TestPaciente.objects.get(idusuariotest=request.user.id)
-#     except TestPaciente.DoesNotExist:
-#         return redirect('take_test')  # Redirect if the patient hasn't taken the test
-
-#     compatible_psychologists = find_compatible_psychologists(patient_test.idtest)
-    
-#     return render(request, 'show_matches.html', {'psychologists': compatible_psychologists})
-
-# # ... other views ...
-
-# HTML
-
-# {% extends 'base.html' %}
-# {% block content %}
-#     <h2>Your Compatible Psychologists</h2>
-#     <ul>
-#         {% for psychologist in psychologists %}
-#             <li>
-#                 <h3>{{ psychologist.psi_idusuario.user.first_name }} {{ psychologist.psi_idusuario.user.last_name }}</h3>
-#                 <!-- Display other relevant psychologist information -->
-#             </li>
-#         {% endfor %}
-#     </ul>
-# {% endblock %}
 

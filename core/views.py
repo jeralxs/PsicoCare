@@ -180,17 +180,6 @@ def perfil_configurar(request):
     }
     return render(request, 'core/perfil_configurar.html', context=context) 
 
-# def your_view(request):
-#     stock_form = StockForm()
-#     stock_history_form = StockHistoryForm() //added this
-#     if request.method == 'POST':
-#         stock_form = StockForm(request.POST)
-#         stock_history_form == StockHistoryForm(request.POST)
-#         if stock_form.is_valid() and stock_history_form.is_valid():
-#             stock = stock_form.save() //changes here
-#             stock_form_history.save(item_name=stock.item_name) //changes here
-#             return HttpResponse("Saved")
-#     return render(request, 'your_html.html', {'stock_form': stock_form, 'stock_history_form':stock_history_form})
 
 def registro(request):
     if request.method == 'POST':
@@ -242,7 +231,6 @@ def logout_view(request):
     logout(request)
     return redirect('index')
 
-SCOPES = ['https://www.googleapis.com/auth/meet', 'https://www.googleapis.com/auth/meetings.space.created']
 
 def crear_espacio(request):
     creds = obtener_credenciales()
@@ -386,13 +374,13 @@ def send_message(request):
         return JsonResponse({'status': 'error', 'message': 'Método no permitido'})
     
 def chat(request):
-    mensajes = Mensaje.objects.all()  # Obtener todos los mensajes (ajusta según tu modelo)
+    mensajes = Mensaje.objects.all()  
 
     if request.method == 'POST':
         form = FormularioMensaje(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('chat')  # Redirigir a la misma vista después de enviar el mensaje
+            return redirect('chat')  
     else:
         form = FormularioMensaje()
 

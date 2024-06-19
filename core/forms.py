@@ -280,7 +280,7 @@ from .models import Mensaje
 class FormularioMensaje(forms.ModelForm):
     class Meta:
         model = Mensaje
-        fields = ['content']  # Campos del modelo Mensaje que estarán en el formulario
+        fields = ['content']  
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
