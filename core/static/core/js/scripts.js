@@ -166,7 +166,7 @@ $('body').on('click', '.test-next', function() {
         $('.test-back').show();
     }
 
-    if(nextId == 8){
+    if(nextId == 9){
         $('.test-paciente').hide();
         $('.test-paciente-end').show();
     }
@@ -186,7 +186,7 @@ $('body').on('click', '.test-back', function() {
 $('body').on('click', '.edit-anterior', function() { 
     $('.test-paciente-end').hide();
     $('.test-paciente').show();
-    $('#content-7').show();
+    $('#content-8').show();
 });
 
 //test paciente matching end

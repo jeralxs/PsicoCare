@@ -93,43 +93,49 @@
         <div class="content-test" id="content-1" data-id='1' style="display: block;">
             <h3>¿Tienes alguna preferencia sobre el género de tu psicólogo/a?</h3>
             <div class="form-group">
-                {{ form.generopsicologo_idgeneropsicologo }} 
+                {{ form.generopsicologo_idgenero }} 
             </div>
         </div>
         <div class="content-test" id="content-2" data-id='2'>
+            <h3>¿En qué rango etario te encuentras?</h3>
+            <div class="form-group">
+                {{ form.rangoetario_idrangoetario}} 
+            </div>
+        </div>
+        <div class="content-test" id="content-3" data-id='3'>
             <h3>¿Qué tipo de terapia estás buscando?</h3>
             <div class="form-group">
                 {{ form.tiposesion_idtiposesion}} 
             </div>
         </div>
-        <div class="content-test" id="content-3" data-id='3'>
+        <div class="content-test" id="content-4" data-id='4'>
             <h3>¿Tienes preferencia por alguna corriente teórica de psicología?</h3>
             <div class="form-group">
                 {{ form.corriente_idcorriente }} 
             </div>
         </div>
-        <div class="content-test" id="content-4" data-id='4'>
+        <div class="content-test" id="content-5" data-id='5'>
             <h3>Tengo diagnóstico o sospecha de:</h3>
             <div class="form-group">
                 {{ form.diagnostico_iddiagnostico}} 
             </div>
         </div>
-        <div class="content-test" id="content-5" data-id='5'>
+        <div class="content-test" id="content-6" data-id='6'>
             <h3>Motivo de búsqueda de psicólogo/a:</h3>
             <div class="form-group">
                 {{ form.motivosesion_idmotivosesion }} 
             </div>
         </div>
-        <div class="content-test" id="content-6" data-id='6'>
+        <div class="content-test" id="content-7" data-id='7'>
             <h3>¿Cuál es el rango de precio que puedes pagar por tu sesión de terapia?</h3>
             <div class="form-group">
                 {{ form.rangoprecio_idrangoprecio }} 
             </div>
         </div>
-        <div class="content-test" id="content-7" data-id='7'>
+        <div class="content-test" id="content-8" data-id='8'>
             <h3>¿Con qué tipo de cobertura de salud cuentas?</h3>
             <div class="form-group">
-                {{ form.coberturasalud_id }} 
+                {{ form.coberturasalud_idcobertura }} 
             </div>
         </div>
         
@@ -140,7 +146,7 @@
     </div>
 
     <div class="test-paciente-end">
-        <div class="test-fin" data-id='8'>
+        <div class="test-fin" data-id='9'>
             <p>Test terminado uwu, quiere confirmar respuestas?</p>
             <button type="button" class="edit-anterior">Editar mis respuestas</button>
             <button type="submit" class="fin-test" id="btn-test">Encontrar psicólogo/a</button>

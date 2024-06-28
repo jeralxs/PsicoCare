@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from collections import defaultdict
 
 class Administrador(models.Model):
     adm_idusuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='adm_idusuario')
@@ -218,12 +219,12 @@ class Superusuario(models.Model):
 
 class Test(models.Model):
     idtest = models.AutoField(primary_key=True)
-    generopsicologo_idgeneropsicologo = models.ForeignKey(Generopsicologo, models.DO_NOTHING, db_column='generopsicologo_idgeneropsicologo')
+    generopsicologo_idgenero = models.ForeignKey(Generopsicologo, models.DO_NOTHING, db_column='generopsicologo_idgenero')
     rangoetario_idrangoetario = models.ForeignKey(Rangoetario, models.DO_NOTHING, db_column='rangoetario_idrangoetario')
     corriente_idcorriente = models.ForeignKey(Corrientepsicologica, models.DO_NOTHING, db_column='corriente_idcorriente')
     rangoprecio_idrangoprecio = models.ForeignKey(Rangoprecio, models.DO_NOTHING, db_column='rangoprecio_idrangoprecio')
     motivosesion_idmotivosesion = models.ForeignKey(Motivosesion, models.DO_NOTHING, db_column='motivosesion_idmotivosesion')
-    coberturasalud_id  = models.ForeignKey(Coberturasalud, models.DO_NOTHING, db_column='coberturasalud_id ')
+    coberturasalud_idcobertura  = models.ForeignKey(Coberturasalud, models.DO_NOTHING, db_column='coberturasalud_idcobertura')
     diagnostico_iddiagnostico = models.ForeignKey(Diagnostico, models.DO_NOTHING, db_column='diagnostico_iddiagnostico')
     tiposesion_idtiposesion = models.ForeignKey('Tiposesion', models.DO_NOTHING, db_column='tiposesion_idtiposesion')
     idusuariotest = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='idusuariotest')
@@ -324,8 +325,87 @@ class Mensaje(models.Model):
     #     return f'{self.author.username} - {self.timestamp}'
 
 
+def puntaje_match(psicologo, test):
+    score = 0
+    if psicologo.corriente_idcorriente == test.corriente_idcorriente:
+        score += 1
+
+    # Comparar rango etario
+    if psicologo.rangoetario_idrangoetario == test.rangoetario_idrangoetario:
+        score += 3
+
+    # Comparar motivo de sesión
+    if psicologo.motivosesion_idmotivosesion == test.motivosesion_idmotivosesion:
+        score += 2
+
+    # Comparar diagnóstico
+    if psicologo.diagnostico_iddiagnostico == test.diagnostico_iddiagnostico:
+        score += 5
+
+    # Comparar rango de precio
+    if psicologo.rangoprecio_idrangoprecio == test.rangoprecio_idrangoprecio:
+        score += 4
+
+    # Comparar género del psicólogo preferido por el paciente
+    # if psicologo.genero == test.generopsicologo_idgenero:
+    #     score += 3
+
+    if psicologo.tiposesion_idtiposesion == test.tiposesion_idtiposesion:
+        score += 3
+    # Comparar cobertura de salud
+    if psicologo.coberturasalud_id == test.coberturasalud_idcobertura:
+        score += 1
+
+        return score
 
 
+
+# def find_compatible_psychologists(patient_test: Test) -> list[Psicologo]:
+#     """
+#     Finds compatible psychologists for a given patient based on their test answers.
+
+#     Args:
+#         patient_test: The Test object representing the patient's answers.
+
+#     Returns:
+#         A list of Psicologo objects representing the compatible psychologists.
+#     """
+
+#     # 1. Define matching criteria and their weights
+#     matching_criteria = {
+#         "generopsicologo_idgeneropsicologo": 5,
+#         "rangoetario_idrangoetario": 5,
+#         "corrientepsicologica_idcorrientepsicologica": 2,
+#         "rangoprecio_idrangoprecio": 4,
+#         "motivosesion_idmotivosesion": 3,
+#         "coberturasalud_idcoberturasalud": 3,
+#         "diagnostico_iddiagnostico": 5,
+#         "tiposesion_idtiposesion": 2,
+#     }
+
+#     # 2. Fetch all psychologists
+#     all_psychologists = Psicologo.objects.all()
+
+#     # 3. Calculate compatibility scores
+#     compatibility_scores = defaultdict(int)
+#     for psychologist in all_psychologists:
+#         for criterion, weight in matching_criteria.items():
+#             # Get the values for comparison from the models
+#             patient_value = getattr(patient_test, criterion)
+#             psychologist_value = getattr(psychologist, criterion, None)  
+
+#             # Handle cases where the psychologist might not have a value for a criterion
+#             if psychologist_value is not None and patient_value == psychologist_value:
+#                 compatibility_scores[psychologist.psi_idusuario_id] += weight
+
+#     # 4. Sort psychologists by compatibility score (descending)
+#     sorted_psychologists = sorted(
+#         compatibility_scores.items(), key=lambda item: item[1], reverse=True
+#     )
+
+#     # 5. Return top 5 most compatible psychologists as Psicologo objects
+#     top_psychologist_ids = [psychologist_id for psychologist_id, _ in sorted_psychologists[:5]]
+#     return Psicologo.objects.filter(psi_idusuario_id__in=top_psychologist_ids)
 
 
 

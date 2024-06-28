@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm, fields, Form, ModelMultipleChoiceField
-from .models import Test, Psicologo, Usuario, Generopsicologo, Tiposesion, Corrientepsicologica, Rangoetario, Rangoprecio, Motivosesion, Coberturasalud, Diagnostico
+from .models import Test, Psicologo, Usuario, Generopsicologo, Tiposesion, Corrientepsicologica, Rangoetario, Rangoprecio, Motivosesion, Coberturasalud, Diagnostico, Resena
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
@@ -308,44 +308,96 @@ class FormTestPaciente(forms.ModelForm):
         model = Test
         fields = '__all__'
         exclude = ['idtest','idusuariotest']
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user', None)
-        super().__init__(*args, **kwargs)
 
-        self.fields['generopsicologo_idgeneropsicologo'].queryset = Generopsicologo.objects.all()
-        self.fields['generopsicologo_idgeneropsicologo'].widget = forms.CheckboxSelectMultiple(
-            choices=[(obj.idgeneropsicologo, str(obj.genero)) for obj in self.fields['generopsicologo_idgeneropsicologo'].queryset]
-        )
+    
+    generopsicologo_idgenero = forms.ModelChoiceField(
+        queryset=Generopsicologo.objects.all(),
+        widget=forms.Select(attrs=form_select),
+        label='Preferencia de género'
+    )
+    rangoetario_idrangoetario = forms.ModelChoiceField(
+        queryset=Rangoetario.objects.all(),
+        widget=forms.Select(attrs=form_select),
+        label='Rango de edad'
+    )
+    tiposesion_idtiposesion = forms.ModelChoiceField(
+        queryset=Tiposesion.objects.all(),
+        widget=forms.Select(attrs=form_select),
+        label='Tipo de sesión'
+    )
+    corriente_idcorriente = forms.ModelChoiceField(
+        queryset=Corrientepsicologica.objects.all(),
+        widget=forms.Select(attrs=form_select),
+        label='Preferencia de de corriente psicológica'
+    )
+    diagnostico_iddiagnostico = forms.ModelChoiceField(
+        queryset=Diagnostico.objects.all(),
+        widget=forms.Select(attrs=form_select),
+        label='Diagnósticos o sospechas'
+    )
+    motivosesion_idmotivosesion = forms.ModelChoiceField(
+        queryset=Motivosesion.objects.all(),
+        widget=forms.Select(attrs=form_select),
+        label='Motivo por el que busca ayuda'
+    )
+    rangoprecio_idrangoprecio = forms.ModelChoiceField(
+        queryset=Rangoprecio.objects.all(),
+        widget=forms.Select(attrs=form_select),
+        label='Rango de precio que puede pagar'
+    )
+    coberturasalud_idcobertura = forms.ModelChoiceField(
+        queryset=Coberturasalud.objects.all(),
+        widget=forms.Select(attrs=form_select),
+        label='Cobertura de salud'
+    )
 
-        self.fields['tiposesion_idtiposesion'].queryset = Tiposesion.objects.all()
-        self.fields['tiposesion_idtiposesion'].widget = forms.CheckboxSelectMultiple(
-            choices=[(obj.idtiposesion, str(obj.nombre)) for obj in self.fields['tiposesion_idtiposesion'].queryset]
-        )
 
-        self.fields['corriente_idcorriente'].queryset = Corrientepsicologica.objects.all()
-        self.fields['corriente_idcorriente'].widget = forms.CheckboxSelectMultiple(
-            choices=[(obj.idcorrientepsicologica, str(obj.corrientepsicologica)) for obj in self.fields['corriente_idcorriente'].queryset]
-        )
+class ResenaForm(forms.ModelForm):
+    class Meta:
+        model = Resena
+        fields = ['puntuacion', 'comentarios']
+        widgets = {
+            'rating': forms.RadioSelect(choices=[(i, f'{i} estrellas') for i in range(1, 6)])
+        }
 
-        self.fields['diagnostico_iddiagnostico'].queryset = Diagnostico.objects.all()
-        self.fields['diagnostico_iddiagnostico'].widget = forms.CheckboxSelectMultiple(
-            choices=[(obj.iddiagnostico, str(obj.diagnostico)) for obj in self.fields['diagnostico_iddiagnostico'].queryset]
-        )
+    # def __init__(self, *args, **kwargs):
+    #     self.user = kwargs.pop('user', None)
+    #     super().__init__(*args, **kwargs)
 
-        self.fields['motivosesion_idmotivosesion'].queryset = Motivosesion.objects.all()
-        self.fields['motivosesion_idmotivosesion'].widget = forms.CheckboxSelectMultiple(
-            choices=[(obj.idmotivosesion, str(obj.motivosesion)) for obj in self.fields['motivosesion_idmotivosesion'].queryset]
-        )
+    #     self.fields['generopsicologo_idgeneropsicologo'].queryset = Generopsicologo.objects.all()
+    #     self.fields['generopsicologo_idgeneropsicologo'].widget = forms.CheckboxSelectMultiple(
+    #         choices=[(obj.idgeneropsicologo, str(obj.genero)) for obj in self.fields['generopsicologo_idgeneropsicologo'].queryset]
+    #     )
 
-        self.fields['rangoprecio_idrangoprecio'].queryset = Rangoprecio.objects.all()
-        self.fields['rangoprecio_idrangoprecio'].widget = forms.CheckboxSelectMultiple(
-            choices=[(obj.idrangoprecio, f"{obj.montominimo} - {obj.montomaximo}") for obj in self.fields['rangoprecio_idrangoprecio'].queryset]
-        )
+    #     self.fields['tiposesion_idtiposesion'].queryset = Tiposesion.objects.all()
+    #     self.fields['tiposesion_idtiposesion'].widget = forms.CheckboxSelectMultiple(
+    #         choices=[(obj.idtiposesion, str(obj.nombre)) for obj in self.fields['tiposesion_idtiposesion'].queryset]
+    #     )
 
-        self.fields['coberturasalud_id'].queryset = Coberturasalud.objects.all()
-        self.fields['coberturasalud_id'].widget = forms.CheckboxSelectMultiple(
-            choices=[(obj.idcoberturasalud, str(obj.coberturasalud)) for obj in self.fields['coberturasalud_id'].queryset]
-        )
+    #     self.fields['corriente_idcorriente'].queryset = Corrientepsicologica.objects.all()
+    #     self.fields['corriente_idcorriente'].widget = forms.CheckboxSelectMultiple(
+    #         choices=[(obj.idcorrientepsicologica, str(obj.corrientepsicologica)) for obj in self.fields['corriente_idcorriente'].queryset]
+    #     )
+
+    #     self.fields['diagnostico_iddiagnostico'].queryset = Diagnostico.objects.all()
+    #     self.fields['diagnostico_iddiagnostico'].widget = forms.CheckboxSelectMultiple(
+    #         choices=[(obj.iddiagnostico, str(obj.diagnostico)) for obj in self.fields['diagnostico_iddiagnostico'].queryset]
+    #     )
+
+    #     self.fields['motivosesion_idmotivosesion'].queryset = Motivosesion.objects.all()
+    #     self.fields['motivosesion_idmotivosesion'].widget = forms.CheckboxSelectMultiple(
+    #         choices=[(obj.idmotivosesion, str(obj.motivosesion)) for obj in self.fields['motivosesion_idmotivosesion'].queryset]
+    #     )
+
+    #     self.fields['rangoprecio_idrangoprecio'].queryset = Rangoprecio.objects.all()
+    #     self.fields['rangoprecio_idrangoprecio'].widget = forms.CheckboxSelectMultiple(
+    #         choices=[(obj.idrangoprecio, f"{obj.montominimo} - {obj.montomaximo}") for obj in self.fields['rangoprecio_idrangoprecio'].queryset]
+    #     )
+
+    #     self.fields['coberturasalud_id'].queryset = Coberturasalud.objects.all()
+    #     self.fields['coberturasalud_id'].widget = forms.CheckboxSelectMultiple(
+    #         choices=[(obj.idcoberturasalud, str(obj.coberturasalud)) for obj in self.fields['coberturasalud_id'].queryset]
+    #     )
 
     # def save(self, commit=True):
     #     instance = super().save(commit=False)
