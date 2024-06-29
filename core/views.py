@@ -3,7 +3,7 @@ from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
-from .forms import FormRegistro, IngresarForm, DatosPersonalesForm,DatosProfesionalesForm, ResenaForm,PasswordResetForm,FormTestPaciente,Generopsicologo, FormularioMensaje, FormRegistroPsi, Tiposesion, Corrientepsicologica, Diagnostico, Motivosesion, Rangoprecio, Coberturasalud
+from .forms import FormRegistro, IngresarForm, EliminarForm, DatosPersonalesForm,DatosProfesionalesForm, ResenaForm,PasswordResetForm,FormTestPaciente,Generopsicologo, FormularioMensaje, FormRegistroPsi, Tiposesion, Corrientepsicologica, Diagnostico, Motivosesion, Rangoprecio, Coberturasalud
 from django.contrib import messages
 from .models import Usuario, Test, Psicologo, puntaje_match
 # from .google_meet import main, create_space
@@ -68,7 +68,7 @@ def test(request):
                 test.idusuariotest_id = usuario.idusuario 
                 test.save()    
            
-            return redirect('matching', kwargs={'form_id': form.instance.id})
+            return redirect('matching')
         else:
             print("Formulario no válido:")
             print(form.errors)
@@ -78,27 +78,36 @@ def test(request):
 
     return render(request, 'core/test.html', {'form': form})
 
+    
 
 def matching(request):
-    usuario = Usuario.objects.get(user=request.user)
-    test = Usuario.objects.get(idusuariotest=usuario.idusuario)
-    best_match = None
-    highest_score = 0
+    try:
+        usuario = Usuario.objects.get(user=request.user)
+        test = Test.objects.get(idusuariotest=usuario.idusuario)
+    except Usuario.DoesNotExist:
+        return HttpResponse("Usuario no encontrado", status=404)
+    except Test.DoesNotExist:
+        return HttpResponse("Test no encontrado", status=404)
+    
     psicologos = Psicologo.objects.all()
+    puntuaciones = []
 
     for psicologo in psicologos:
         score = puntaje_match(psicologo, test)
-        if score > highest_score:
-            highest_score = score
-            best_match = psicologo
+        if score is not None:
+            puntuaciones.append((psicologo, score))
+    
 
-    return render(request, 'core/matching.html', best_match, highest_score)
+    puntuaciones_ordenadas = sorted(puntuaciones, key=lambda x: x[1], reverse=True)
+    
+ 
+    mejores_opciones = puntuaciones_ordenadas[:5]
 
-# @login_required
-# def matching(request, idtest):
+    context = {
+        'mejores_opciones': mejores_opciones
+    }
 
-#     best_match, score = encontrar_match(idtest)
-#     return render(request, 'core/matching.html', {'best_match': best_match, 'score': score})
+    return render(request, 'core/matching.html', context)
 
 
 @login_required
@@ -126,18 +135,30 @@ def perfil_configurar(request):
     }
     return render(request, 'core/perfil_configurar.html', context=context) 
 
-
 def registro(request):
     if request.method == 'POST':
         form = FormRegistro(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, '¡Tu cuenta ha sido registrada exitosamente!')
-            return redirect('ingresar')           
+            messages.success(request, 'Tu cuenta ha sido registrada con éxito')
+            return redirect('ingresar')
     else:
         form = FormRegistro()
-        
+    
     return render(request, 'core/registro.html', {'form': form})
+
+# def registro(request):
+#     if request.method == 'POST':
+#         form = FormRegistro(request.POST)
+#         if form.is_valid():
+#             user = form.save()
+#             print(user)
+#             messages.success(request, '¡Tu cuenta ha sido registrada exitosamente!')
+#             return redirect('ingresar')           
+#     else:
+#         form = FormRegistro()
+        
+#     return render(request, 'core/registro.html', {'form': form})
 def registro_psicologo(request):
     if request.method == 'POST':
         form = FormRegistroPsi(request.POST)

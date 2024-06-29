@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 # from captcha.fields import ReCaptchaField
 # from captcha.widgets import ReCaptchaV2Checkbox
-from django.contrib.auth.forms import UserCreationForm
+
 
 
 form_hidden = {'class': 'd-none'}
@@ -18,7 +18,7 @@ form_check = {'class': 'form-check-input'}
 form_password = {'class': 'form-control text-danger'}
 
 GENERO = (("1","Mujer"),("2","Hombre"),("3","Otro"))
-class FormRegistro (Form): 
+class FormRegistro (forms.ModelForm): 
     username = forms.CharField(
         max_length=100, 
         required=True, 
@@ -39,19 +39,19 @@ class FormRegistro (Form):
         widget=forms.TextInput(attrs={'placeholder': 'Ingresa apellido paterno'}),
     )
 
-    apellido_materno = forms.CharField(
-        max_length=100, 
-        required=True, 
-        label='apellido materno',
-        widget=forms.TextInput(attrs={'placeholder': 'Ingresa apellido materno'}),
-    )
+    # apellido_materno = forms.CharField(
+    #     max_length=100, 
+    #     required=True, 
+    #     label='apellido materno',
+    #     widget=forms.TextInput(attrs={'placeholder': 'Ingresa apellido materno'}),
+    # )
 
-    genero_idgenero = forms.MultipleChoiceField(
-        required=True, 
-        label='Género',
-        widget=forms.Select,
-        choices=GENERO,
-    )
+    # genero_idgenero = forms.MultipleChoiceField(
+    #     required=True, 
+    #     label='Género',
+    #     widget=forms.Select,
+    #     choices=GENERO,
+    # )
 
     email = forms.EmailField(
         required=True,
@@ -74,8 +74,14 @@ class FormRegistro (Form):
     # captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
 
     class Meta:
-        model = Usuario
-        fields = ['username','first_name', 'last_name', 'apellido_materno', 'email', 'password']
+        model = User
+        fields = ['username','first_name', 'last_name', 'email', 'password']
+    # def save(self, commit=True):
+    #     user = super(FormRegistro, self).save(commit=False)
+    #     user.email = self.cleaned_data['email']
+    #     if commit:
+    #         user.save()
+    #     return user
 
 
 
@@ -102,19 +108,19 @@ class FormRegistroPsi (Form):
         widget=forms.TextInput(attrs={'placeholder': 'Ingresa apellido paterno'}),
     )
 
-    apellido_materno = forms.CharField(
-        max_length=100, 
-        required=True, 
-        label='apellido materno',
-        widget=forms.TextInput(attrs={'placeholder': 'Ingresa apellido materno'}),
-    )
+    # apellido_materno = forms.CharField(
+    #     max_length=100, 
+    #     required=True, 
+    #     label='apellido materno',
+    #     widget=forms.TextInput(attrs={'placeholder': 'Ingresa apellido materno'}),
+    # )
 
-    genero_idgenero = forms.MultipleChoiceField(
-        required=True, 
-        label='Género',
-        widget=forms.Select,
-        choices=GENERO,
-    )
+    # genero_idgenero = forms.MultipleChoiceField(
+    #     required=True, 
+    #     label='Género',
+    #     widget=forms.Select,
+    #     choices=GENERO,
+    # )
 
     email = forms.EmailField(
         required=True,
@@ -134,15 +140,16 @@ class FormRegistroPsi (Form):
         widget=forms.PasswordInput (attrs={'placeholder': 'Repita la contraseña'}),
     )
 
-    licencia= forms.CharField(
-        label='Número de registro de licencia',
-        widget=forms.TextInput(attrs={'placeholder': 'Ingresa número de RNPI'}),
-    )
+    # licencia= forms.CharField(
+    #     label='Número de registro de licencia',
+    #     widget=forms.TextInput(attrs={'placeholder': 'Ingresa número de RNPI'}),
+    # )
     # captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
 
     class Meta:
-        model = Usuario
-        fields = ['username','first_name', 'last_name', 'apellido_materno', 'email', 'password', 'licencia']
+        model = User
+        fields = ['username','first_name', 'last_name', 'email', 'password']
+
 
 class IngresarForm(Form):
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Ingresar Usuario'}), label="Username")
@@ -269,6 +276,7 @@ class DatosProfesionalesForm (forms.ModelForm):
 class EliminarForm(Form):
     eliminar_cuenta = forms.BooleanField(widget=forms.HiddenInput, initial=True)
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Ingresa tu contraseña'}), label="Contraseña")
+    
     class Meta:
         model = Usuario
         fields = ['password']

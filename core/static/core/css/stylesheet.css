@@ -430,7 +430,7 @@ label.error {
     justify-content: center;
 }
 
-.FormRegistro .btn-primary .g-recaptcha{
+.FormRegistro .btn-primary {
     background-color:#8EB859;
     color: #fff;
     cursor: pointer;
@@ -1062,7 +1062,7 @@ details summary::marker {
 /* css perfil fin */
 
 
-/* css test inicio */
+/* css test y matching inicio */
 
 
 .test-paciente {
@@ -1161,6 +1161,26 @@ details summary::marker {
     margin-left: 46.5%; 
 }
 
+.cardmatch {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 600px;
+    margin-block: 10px;
+}
+
+.containermatch {
+    position: absolute; 
+    padding: 40px;
+    right: 3%;
+    top: 10%;
+    bottom: 10%;
+    width: 80%;
+    border-radius: 8px;
+    text-align: center;
+    align-items: center;
+}
 /* css test fin */
 
 #messages {

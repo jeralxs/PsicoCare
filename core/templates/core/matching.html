@@ -1,18 +1,27 @@
-{% comment %} {% extends 'base.html' %}
-# {% block content %}
-#     <h2>Tus psicólogos más compatibles</h2>
-#     <ul>
-#         {% for psicologo in psicologo %}
-#             <li>
-#                 <h3>{{ psicolgo.psi_idusuario.user.first_name }} {{ psicolgo.psi_idusuario.user.last_name }}</h3>
-#                 <!-- Display other relevant psychologist information -->
-#             </li>
-#         {% endfor %}
-#     </ul>
-# {% endblock %} {% endcomment %}
+{% extends 'core/base.html' %}
+{% load static %}
 
-<div class="container">
+{% block content %}
+
+<div class="containermatch">
     <h1>Tus psicólogos más compatibles</h1>
-    {{ best_match }}
+    <ul>
+        {% for psicologo, score in mejores_opciones %}
+        <div class="cardmatch">
+            <p class="card-title">{{ psicologo.psi_idusuario.user.first_name }} {{ psicologo.psi_idusuario.user.last_name }} {{ psicologo.psi_idusuario.apellido_materno }} </p>
+            <p>Puntaje de compatibilidad: {{ score }}</p>
+            <p>Afinidad con el psicólogo:</p>
+            <p>Tipo de sesión: {{ psicologo.tiposesion_idtiposesion.nombre }}</p>
+            <p>Especialidad diagnóstica: {{ psicologo.diagnostico_iddiagnostico.diagnostico }}</p>
+            <p>Rango etario: {{ psicologo.rangoetario_idrangoetario.rangoetario }}</p>
+            <p>Tipo de sesión: {{ psicologo.corriente_idcorriente.corrientepsicologica }}</p>
+            <p>Tipo de sesión: {{ psicologo.rangoprecio_idrangoprecio.montominimo }} - {{ psicologo.rangoprecio_idrangoprecio.montomaximo }}</p>
+            <p>Tipo de sesión: {{ psicologo.motivosesion_idmotivosesion.motivosesion }}</p>
+            <p>Tipo de sesión: {{ psicologo.coberturasalud_id.coberturasalud }}</p>
+        </div>
+        {% endfor %}
+    </ul>
     
 </div>
+
+{% endblock content %}

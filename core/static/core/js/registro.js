@@ -2,7 +2,7 @@
 $(document).ready(function () {
 
 
-    var validator = $("#FormRegistro").validate({
+    $("#FormRegistro").validate({
         // ignore: ":hidden",  
         rules: {
             username: {
@@ -66,8 +66,7 @@ $(document).ready(function () {
             form.submit();
         }
     });
-
-    var validator = $("#FormRegistroPsi").validate({
+    $("#FormRegistroPsi").validate({
 
         rules: {
             username: {

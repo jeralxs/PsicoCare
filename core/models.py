@@ -327,90 +327,50 @@ class Mensaje(models.Model):
 
 def puntaje_match(psicologo, test):
     score = 0
-    if psicologo.corriente_idcorriente == test.corriente_idcorriente:
-        score += 1
+    print(f"Evaluando psicólogo: {psicologo.idpsicologo}")
 
-    # Comparar rango etario
-    if psicologo.rangoetario_idrangoetario == test.rangoetario_idrangoetario:
-        score += 3
+    if psicologo.psi_idusuario.genero_idgenero is not None and test.generopsicologo_idgenero  is not None:
+        print(f"Comparando corriente: {psicologo.psi_idusuario.genero_idgenero} vs {test.generopsicologo_idgenero}")
+        if test.generopsicologo_idgenero == 4:
+            score += 0
+        else:
+            if psicologo.psi_idusuario.genero_idgenero == test.generopsicologo_idgenero:
+                score += 3
 
-    # Comparar motivo de sesión
-    if psicologo.motivosesion_idmotivosesion == test.motivosesion_idmotivosesion:
-        score += 2
+    if psicologo.corriente_idcorriente is not None and test.corriente_idcorriente is not None:
+        print(f"Comparando corriente: {psicologo.corriente_idcorriente} vs {test.corriente_idcorriente}")
+        if psicologo.corriente_idcorriente == test.corriente_idcorriente:
+            score += 1
 
-    # Comparar diagnóstico
-    if psicologo.diagnostico_iddiagnostico == test.diagnostico_iddiagnostico:
-        score += 5
+    if psicologo.rangoetario_idrangoetario is not None and test.rangoetario_idrangoetario is not None:
+        print(f"Comparando rango etario: {psicologo.rangoetario_idrangoetario} vs {test.rangoetario_idrangoetario}")
+        if psicologo.rangoetario_idrangoetario == test.rangoetario_idrangoetario:
+            score += 8
 
-    # Comparar rango de precio
-    if psicologo.rangoprecio_idrangoprecio == test.rangoprecio_idrangoprecio:
-        score += 4
+    if psicologo.motivosesion_idmotivosesion is not None and test.motivosesion_idmotivosesion is not None:
+        print(f"Comparando motivo sesión: {psicologo.motivosesion_idmotivosesion} vs {test.motivosesion_idmotivosesion}")
+        if psicologo.motivosesion_idmotivosesion == test.motivosesion_idmotivosesion:
+            score += 2
 
-    # Comparar género del psicólogo preferido por el paciente
-    # if psicologo.genero == test.generopsicologo_idgenero:
-    #     score += 3
+    if psicologo.diagnostico_iddiagnostico is not None and test.diagnostico_iddiagnostico is not None:
+        print(f"Comparando diagnóstico: {psicologo.diagnostico_iddiagnostico} vs {test.diagnostico_iddiagnostico}")
+        if psicologo.diagnostico_iddiagnostico == test.diagnostico_iddiagnostico:
+            score += 5
 
-    if psicologo.tiposesion_idtiposesion == test.tiposesion_idtiposesion:
-        score += 3
-    # Comparar cobertura de salud
-    if psicologo.coberturasalud_id == test.coberturasalud_idcobertura:
-        score += 1
+    if psicologo.rangoprecio_idrangoprecio is not None and test.rangoprecio_idrangoprecio is not None:
+        print(f"Comparando rango de precio: {psicologo.rangoprecio_idrangoprecio} vs {test.rangoprecio_idrangoprecio}")
+        if psicologo.rangoprecio_idrangoprecio == test.rangoprecio_idrangoprecio:
+            score += 4
 
-        return score
+    if psicologo.tiposesion_idtiposesion is not None and test.tiposesion_idtiposesion is not None:
+        print(f"Comparando tipo de sesión: {psicologo.tiposesion_idtiposesion} vs {test.tiposesion_idtiposesion}")
+        if psicologo.tiposesion_idtiposesion == test.tiposesion_idtiposesion:
+            score += 3
 
+    if psicologo.coberturasalud_id is not None and test.coberturasalud_idcobertura is not None:
+        print(f"Comparando cobertura de salud: {psicologo.coberturasalud_id} vs {test.coberturasalud_idcobertura}")
+        if psicologo.coberturasalud_id == test.coberturasalud_idcobertura:
+            score += 2
 
-
-# def find_compatible_psychologists(patient_test: Test) -> list[Psicologo]:
-#     """
-#     Finds compatible psychologists for a given patient based on their test answers.
-
-#     Args:
-#         patient_test: The Test object representing the patient's answers.
-
-#     Returns:
-#         A list of Psicologo objects representing the compatible psychologists.
-#     """
-
-#     # 1. Define matching criteria and their weights
-#     matching_criteria = {
-#         "generopsicologo_idgeneropsicologo": 5,
-#         "rangoetario_idrangoetario": 5,
-#         "corrientepsicologica_idcorrientepsicologica": 2,
-#         "rangoprecio_idrangoprecio": 4,
-#         "motivosesion_idmotivosesion": 3,
-#         "coberturasalud_idcoberturasalud": 3,
-#         "diagnostico_iddiagnostico": 5,
-#         "tiposesion_idtiposesion": 2,
-#     }
-
-#     # 2. Fetch all psychologists
-#     all_psychologists = Psicologo.objects.all()
-
-#     # 3. Calculate compatibility scores
-#     compatibility_scores = defaultdict(int)
-#     for psychologist in all_psychologists:
-#         for criterion, weight in matching_criteria.items():
-#             # Get the values for comparison from the models
-#             patient_value = getattr(patient_test, criterion)
-#             psychologist_value = getattr(psychologist, criterion, None)  
-
-#             # Handle cases where the psychologist might not have a value for a criterion
-#             if psychologist_value is not None and patient_value == psychologist_value:
-#                 compatibility_scores[psychologist.psi_idusuario_id] += weight
-
-#     # 4. Sort psychologists by compatibility score (descending)
-#     sorted_psychologists = sorted(
-#         compatibility_scores.items(), key=lambda item: item[1], reverse=True
-#     )
-
-#     # 5. Return top 5 most compatible psychologists as Psicologo objects
-#     top_psychologist_ids = [psychologist_id for psychologist_id, _ in sorted_psychologists[:5]]
-#     return Psicologo.objects.filter(psi_idusuario_id__in=top_psychologist_ids)
-
-
-
-
-
-
-
-
+    print(f"Score final para psicólogo {psicologo.idpsicologo}: {score}")
+    return score
