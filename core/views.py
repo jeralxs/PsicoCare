@@ -39,6 +39,9 @@ from django.shortcuts import render
 def index(request):
     return render(request, 'core/index.html')
 
+def agendar(request):
+    return render(request, 'core/agendar.html')
+
 def resena(request):
     if request.method == 'POST':
         form = ResenaForm(request.POST)
@@ -54,6 +57,13 @@ def soporte(request):
 
 @login_required
 def perfil(request):
+    try:
+        usuario = Usuario.objects.get(user=request.user)
+        test = [Test.objects.get(idusuariotest=usuario.idusuario)]
+    except Usuario.DoesNotExist:
+        return HttpResponse("Usuario no encontrado", status=404)
+    except Test.DoesNotExist:
+        return HttpResponse("Test no encontrado", status=404)
     return render(request, 'core/perfil.html')
 
 def test(request):
@@ -78,7 +88,32 @@ def test(request):
 
     return render(request, 'core/test.html', {'form': form})
 
+def psicologo(request,psico_id,usu_id):
+    context = obtener_info_psico(psico_id,usu_id)
+    return render(request, 'core/psicologo.html', context)   
+def obtener_info_psico(psico_id,usu_id):
+
+    psicologo = Psicologo.objects.get(idpsicologo=psico_id)
+    usuario = Usuario.objects.get(idusuario=usu_id)
     
+    return {
+        'id': psicologo.idpsicologo,
+        'nombre': usuario.user.first_name,
+        'apellido': usuario.user.last_name,
+        'apellido_m': usuario.apellido_materno,
+        'email': usuario.user.email,
+        'genero': usuario.genero_idgenero.n_genero,
+        'foto': usuario.foto,
+        'telefono': usuario.telefono,
+        'corriente': psicologo.corriente_idcorriente.corrientepsicologica,
+        'tiposesion': psicologo.tiposesion_idtiposesion.nombre,
+        'cobertura': psicologo.coberturasalud_id.coberturasalud,
+        'preciomin': psicologo.rangoprecio_idrangoprecio.montominimo,
+        'preciomax': psicologo.rangoprecio_idrangoprecio.montomaximo,
+        'rangoetario': psicologo.rangoetario_idrangoetario.rangoetario,
+        'diagnostico': psicologo.diagnostico_iddiagnostico.diagnostico,
+        'motivosesion': psicologo.motivosesion_idmotivosesion.motivosesion,
+    }
 
 def matching(request):
     try:
@@ -95,7 +130,7 @@ def matching(request):
     for psicologo in psicologos:
         score = puntaje_match(psicologo, test)
         if score is not None:
-            puntuaciones.append((psicologo, score))
+            puntuaciones.append((psicologo, score, test))
     
 
     puntuaciones_ordenadas = sorted(puntuaciones, key=lambda x: x[1], reverse=True)
@@ -139,7 +174,15 @@ def registro(request):
     if request.method == 'POST':
         form = FormRegistro(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            apellido_materno = form.cleaned_data['apellido_materno']
+            genero_idgenero = form.cleaned_data['genero_idgenero']
+            Usuario.objects.create(
+                usuario=user,
+                tipousuario='paciente',
+                apellido_materno=apellido_materno,
+                genero_idgenero=genero_idgenero,
+            )
             messages.success(request, 'Tu cuenta ha sido registrada con éxito')
             return redirect('ingresar')
     else:
@@ -147,28 +190,27 @@ def registro(request):
     
     return render(request, 'core/registro.html', {'form': form})
 
-# def registro(request):
-#     if request.method == 'POST':
-#         form = FormRegistro(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             print(user)
-#             messages.success(request, '¡Tu cuenta ha sido registrada exitosamente!')
-#             return redirect('ingresar')           
-#     else:
-#         form = FormRegistro()
-        
-#     return render(request, 'core/registro.html', {'form': form})
+
 def registro_psicologo(request):
     if request.method == 'POST':
         form = FormRegistroPsi(request.POST)
         if form.is_valid():
-            messages.success(request, '¡Tu cuenta ha sido registrada exitosamente!')
-            form.save()
-            return redirect('ingresar')           
+            user = form.save()
+            apellido_materno = form.cleaned_data['apellido_materno']
+            genero_idgenero = form.cleaned_data['genero_idgenero']
+            licencia = form.cleaned_data['licencia']
+            Usuario.objects.create(
+                usuario=user,
+                tipousuario='psicologo',
+                apellido_materno=apellido_materno,
+                genero_idgenero=genero_idgenero,
+                licencia=licencia,
+            )
+            messages.success(request, 'Tu cuenta ha sido registrada con éxito')
+            return redirect('ingresar')
     else:
         form = FormRegistroPsi()
-        
+    
     return render(request, 'core/registro_psicologo.html', {'form': form})
 
 

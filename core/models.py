@@ -335,17 +335,17 @@ def puntaje_match(psicologo, test):
             score += 0
         else:
             if psicologo.psi_idusuario.genero_idgenero == test.generopsicologo_idgenero:
-                score += 3
+                score += 2
 
     if psicologo.corriente_idcorriente is not None and test.corriente_idcorriente is not None:
         print(f"Comparando corriente: {psicologo.corriente_idcorriente} vs {test.corriente_idcorriente}")
         if psicologo.corriente_idcorriente == test.corriente_idcorriente:
-            score += 1
+            score += 2
 
     if psicologo.rangoetario_idrangoetario is not None and test.rangoetario_idrangoetario is not None:
         print(f"Comparando rango etario: {psicologo.rangoetario_idrangoetario} vs {test.rangoetario_idrangoetario}")
         if psicologo.rangoetario_idrangoetario == test.rangoetario_idrangoetario:
-            score += 8
+            score += 2
 
     if psicologo.motivosesion_idmotivosesion is not None and test.motivosesion_idmotivosesion is not None:
         print(f"Comparando motivo sesión: {psicologo.motivosesion_idmotivosesion} vs {test.motivosesion_idmotivosesion}")
@@ -355,17 +355,17 @@ def puntaje_match(psicologo, test):
     if psicologo.diagnostico_iddiagnostico is not None and test.diagnostico_iddiagnostico is not None:
         print(f"Comparando diagnóstico: {psicologo.diagnostico_iddiagnostico} vs {test.diagnostico_iddiagnostico}")
         if psicologo.diagnostico_iddiagnostico == test.diagnostico_iddiagnostico:
-            score += 5
+            score += 2
 
     if psicologo.rangoprecio_idrangoprecio is not None and test.rangoprecio_idrangoprecio is not None:
         print(f"Comparando rango de precio: {psicologo.rangoprecio_idrangoprecio} vs {test.rangoprecio_idrangoprecio}")
         if psicologo.rangoprecio_idrangoprecio == test.rangoprecio_idrangoprecio:
-            score += 4
+            score += 2
 
     if psicologo.tiposesion_idtiposesion is not None and test.tiposesion_idtiposesion is not None:
         print(f"Comparando tipo de sesión: {psicologo.tiposesion_idtiposesion} vs {test.tiposesion_idtiposesion}")
         if psicologo.tiposesion_idtiposesion == test.tiposesion_idtiposesion:
-            score += 3
+            score += 2
 
     if psicologo.coberturasalud_id is not None and test.coberturasalud_idcobertura is not None:
         print(f"Comparando cobertura de salud: {psicologo.coberturasalud_id} vs {test.coberturasalud_idcobertura}")

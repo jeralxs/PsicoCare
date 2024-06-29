@@ -1,7 +1,7 @@
 from django.urls import path, include
 from django.views.generic.base import TemplateView
 from django.contrib.auth import views as auth_views
-from .views import index, perfil, registro, ingresar, home, recuperar_contrasena, perfil_configurar, test, videollamada, matching, pagos,chat, registro_psicologo, soporte, resena
+from .views import index, perfil, registro, ingresar, home, recuperar_contrasena, perfil_configurar, test, videollamada, matching, pagos,chat, registro_psicologo, soporte, resena, psicologo, agendar
 from core import views
 
 urlpatterns = [
@@ -21,6 +21,8 @@ urlpatterns = [
     path('eliminar-sesion/<str:event_id>/', views.eliminar_sesion, name='eliminar_sesion'),
     path('recuperar_contrasena', recuperar_contrasena, name='recuperar_contrasena'),
     path('matching', matching, name='matching'),
+    path('agendar', agendar, name='agendar'),
+    path('psicologo/<psico_id>/<usu_id>',psicologo, name='psicologo'),
     path("accounts/", include("django.contrib.auth.urls")),
     path('pagos', pagos, name='pagos'),
     path('chat/<int:conversation_id>/', views.chat_view, name='chat_view'),

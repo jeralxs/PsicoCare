@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>List Schedule</title>
+</head>
+<body>
+    <h1>Your Schedule</h1>
+    <table>
+        <tr>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Available</th>
+        </tr>
+        {% for schedule in schedules %}
+        <tr>
+            <td>{{ schedule.start_time }}</td>
+            <td>{{ schedule.end_time }}</td>
+            <td>{{ schedule.available }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'create_schedule' %}">Create New Schedule</a>
+</body>
+</html>

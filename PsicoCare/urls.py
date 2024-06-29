@@ -24,5 +24,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
     path('payments/', include('payments.urls')),
-    # path('twilio/callback/', views.twilio_callback, name='twilio_callback'),
+    path('scheduling/', include('scheduling.urls')),
 ]

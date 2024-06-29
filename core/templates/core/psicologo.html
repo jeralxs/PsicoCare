@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="contenido">
+        <h1>{{nombre}} {{apellido}} {{apellido_m}}</h1>
+        <img src="/media/{{ foto }}" alt="foto de perfil" id="fotoperfil">
+        <h2>Contacto: </h2>
+        <p>Teléfono: {{telefono}} Correo: {{email}} </p>
+        <p>BIO/INFO </p>
+        <div class="pregunta">
+            <h3>Dignóstico en el que se especializa </h3>
+            <div>{{diagnostico}} </div>
+        </div>
+        <div class="pregunta">
+            <h3>Rango de edad de los pacientes que trata </h3>
+            <div>{{rangoetario}} </div>
+        </div>
+        <div class="pregunta">
+            <h3>Áreas problemáticas con la que más trabaja </h3>
+            <div>{{motivosesion}}</div>
+        </div>
+        <div class="pregunta">
+            <h3>Tipo de sesión que realiza </h3>
+            <div>{{tiposesion}}</div>
+        </div>
+        <div class="pregunta">
+            <h3>Corriente psicólogica con la que se desempeña </h3>
+            <div>{{corriente}}</div>
+        </div>
+        <div class="pregunta">
+            <h3> Rango de precio por sesión</h3>
+            <div>{{preciomin}} - {{preciomax}}</div>
+        </div>
+        <div class="pregunta">
+            <h3>Cobertura de salud que acepta </h3>
+            <div>{{cobertura}}</div>
+        </div>
+        <button id="btnselec" onclick="location.href='{% url 'matching' %}'">Volver atrás</button> <button id="btnselec" onclick="location.href='{% url 'agendar' %}'">Agendar sesión</button>
+    </div>
+
+{% endblock content %}

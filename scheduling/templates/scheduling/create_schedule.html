@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Schedule</title>
+</head>
+<body>
+    <h1>Create Schedule</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="start_time">Start Time:</label>
+        <input type="datetime-local" id="start_time" name="start_time" required><br>
+        <label for="end_time">End Time:</label>
+        <input type="datetime-local" id="end_time" name="end_time" required><br>
+        <button type="submit">Create</button>
+    </form>
+    <a href="{% url 'list_schedule' %}">Back to Schedule List</a>
+</body>
+</html>

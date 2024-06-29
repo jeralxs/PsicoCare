@@ -4,6 +4,7 @@ from .models import Test, Psicologo, Usuario, Generopsicologo, Tiposesion, Corri
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.forms import UserCreationForm
 # from captcha.fields import ReCaptchaField
 # from captcha.widgets import ReCaptchaV2Checkbox
 
@@ -18,138 +19,144 @@ form_check = {'class': 'form-check-input'}
 form_password = {'class': 'form-control text-danger'}
 
 GENERO = (("1","Mujer"),("2","Hombre"),("3","Otro"))
-class FormRegistro (forms.ModelForm): 
-    username = forms.CharField(
-        max_length=100, 
-        required=True, 
-        label='nombre de usuario',
-        widget=forms.TextInput(attrs={'placeholder': 'Ingresa Usuario'}),
-    )
-    first_name = forms.CharField(
-        max_length=100, 
-        required=True, 
-        label='nombres',
-        widget=forms.TextInput(attrs={'placeholder': 'Ingresa nombres'}),
-    )
-
-    last_name = forms.CharField(
-        max_length=100, 
-        required=True, 
-        label='apellido paterno',
-        widget=forms.TextInput(attrs={'placeholder': 'Ingresa apellido paterno'}),
-    )
-
-    # apellido_materno = forms.CharField(
+class FormRegistro (UserCreationForm): 
+    # username = forms.CharField(
     #     max_length=100, 
     #     required=True, 
-    #     label='apellido materno',
-    #     widget=forms.TextInput(attrs={'placeholder': 'Ingresa apellido materno'}),
+    #     label='nombre de usuario',
+    #     widget=forms.TextInput(attrs={'placeholder': 'Ingresa Usuario'}),
     # )
-
-    # genero_idgenero = forms.MultipleChoiceField(
+    # first_name = forms.CharField(
+    #     max_length=100, 
     #     required=True, 
-    #     label='Género',
-    #     widget=forms.Select,
-    #     choices=GENERO,
+    #     label='nombres',
+    #     widget=forms.TextInput(attrs={'placeholder': 'Ingresa nombres'}),
     # )
 
-    email = forms.EmailField(
-        required=True,
-        label='correo',
-        widget=forms.EmailInput(attrs={'placeholder': 'Ingresa correo'})
+    # last_name = forms.CharField(
+    #     max_length=100, 
+    #     required=True, 
+    #     label='apellido paterno',
+    #     widget=forms.TextInput(attrs={'placeholder': 'Ingresa apellido paterno'}),
+    # )
+
+    apellido_materno = forms.CharField(
+        max_length=100, 
+        required=True, 
+        label='apellido materno',
+        widget=forms.TextInput(attrs={'placeholder': ''}),
     )
+
+    genero_idgenero = forms.MultipleChoiceField(
+        required=True, 
+        label='Género',
+        widget=forms.Select,
+        choices=GENERO,
+    )
+
+    # email = forms.EmailField(
+    #     required=True,
+    #     label='correo',
+    #     widget=forms.EmailInput(attrs={'placeholder': 'Ingresa correo'})
+    # )
 
     password = forms.CharField(
         max_length=20, 
         required=True, 
         label='contraseña',
-        widget=forms.PasswordInput (attrs={'placeholder': 'Ingresa contraseña'}),
+        widget=forms.PasswordInput (attrs={'placeholder': ''}),
     )
 
     password2= forms.CharField(
         label='confirmar contraseña',
-        widget=forms.PasswordInput (attrs={'placeholder': 'Repita la contraseña'}),
+        widget=forms.PasswordInput (attrs={'placeholder': ''}),
     )
-
-    # captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
 
     class Meta:
         model = User
-        fields = ['username','first_name', 'last_name', 'email', 'password']
-    # def save(self, commit=True):
-    #     user = super(FormRegistro, self).save(commit=False)
-    #     user.email = self.cleaned_data['email']
-    #     if commit:
-    #         user.save()
-    #     return user
+        fields = ['username','first_name', 'last_name', 'apellido_materno', 'email', 'genero_idgenero', 'password', 'password2']
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update(form_control)
+        self.fields['first_name'].widget.attrs.update(form_control)
+        self.fields['last_name'].widget.attrs.update(form_control)
+        self.fields['email'].widget.attrs.update(form_control)
+        self.fields['password'].widget.attrs.update(form_control)
+        self.fields['password2'].widget.attrs.update(form_control)
 
 
 
 
 GENERO = (("1","Mujer"),("2","Hombre"),("3","Otro"))
-class FormRegistroPsi (Form): 
-    username = forms.CharField(
-        max_length=100, 
-        required=True, 
-        label='nombre de usuario',
-        widget=forms.TextInput(attrs={'placeholder': 'Ingresa Usuario'}),
-    )
-    first_name = forms.CharField(
-        max_length=100, 
-        required=True, 
-        label='nombres',
-        widget=forms.TextInput(attrs={'placeholder': 'Ingresa nombres'}),
-    )
-
-    last_name = forms.CharField(
-        max_length=100, 
-        required=True, 
-        label='apellido paterno',
-        widget=forms.TextInput(attrs={'placeholder': 'Ingresa apellido paterno'}),
-    )
-
-    # apellido_materno = forms.CharField(
+class FormRegistroPsi (UserCreationForm): 
+    # username = forms.CharField(
     #     max_length=100, 
     #     required=True, 
-    #     label='apellido materno',
-    #     widget=forms.TextInput(attrs={'placeholder': 'Ingresa apellido materno'}),
+    #     label='nombre de usuario',
+    #     widget=forms.TextInput(attrs={'placeholder': 'Ingresa Usuario'}),
     # )
-
-    # genero_idgenero = forms.MultipleChoiceField(
+    # first_name = forms.CharField(
+    #     max_length=100, 
     #     required=True, 
-    #     label='Género',
-    #     widget=forms.Select,
-    #     choices=GENERO,
+    #     label='nombres',
+    #     widget=forms.TextInput(attrs={'placeholder': 'Ingresa nombres'}),
     # )
 
-    email = forms.EmailField(
-        required=True,
-        label='correo',
-        widget=forms.EmailInput(attrs={'placeholder': 'Ingresa correo'})
+    # last_name = forms.CharField(
+    #     max_length=100, 
+    #     required=True, 
+    #     label='apellido paterno',
+    #     widget=forms.TextInput(attrs={'placeholder': 'Ingresa apellido paterno'}),
+    # )
+
+    apellido_materno = forms.CharField(
+        max_length=100, 
+        required=True, 
+        label='apellido materno',
+        widget=forms.TextInput(attrs={'placeholder': ''}),
     )
+
+    genero_idgenero = forms.MultipleChoiceField(
+        required=True, 
+        label='Género',
+        widget=forms.Select,
+        choices=GENERO,
+    )
+
+    # email = forms.EmailField(
+    #     required=True,
+    #     label='correo',
+    #     widget=forms.EmailInput(attrs={'placeholder': 'Ingresa correo'})
+    # )
 
     password = forms.CharField(
         max_length=20, 
         required=True, 
         label='contraseña',
-        widget=forms.PasswordInput (attrs={'placeholder': 'Ingresa contraseña'}),
+        widget=forms.PasswordInput (attrs={'placeholder': ''}),
     )
 
     password2= forms.CharField(
         label='confirmar contraseña',
-        widget=forms.PasswordInput (attrs={'placeholder': 'Repita la contraseña'}),
+        widget=forms.PasswordInput (attrs={'placeholder': ''}),
     )
 
-    # licencia= forms.CharField(
-    #     label='Número de registro de licencia',
-    #     widget=forms.TextInput(attrs={'placeholder': 'Ingresa número de RNPI'}),
-    # )
-    # captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
+    licencia= forms.CharField(
+        label='Número de registro de licencia',
+        widget=forms.TextInput(attrs={'placeholder': ''}),
+    )
 
     class Meta:
         model = User
-        fields = ['username','first_name', 'last_name', 'email', 'password']
-
+        fields = ['username','first_name', 'last_name', 'apellido_materno', 'genero_idgenero', 'email', 'password', 'password2', 'licencia']
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update(form_control)
+        self.fields['first_name'].widget.attrs.update(form_control)
+        self.fields['last_name'].widget.attrs.update(form_control)
+        self.fields['email'].widget.attrs.update(form_control)
+        self.fields['password'].widget.attrs.update(form_control)
+        self.fields['password2'].widget.attrs.update(form_control)
 
 class IngresarForm(Form):
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Ingresar Usuario'}), label="Username")

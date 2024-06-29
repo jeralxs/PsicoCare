@@ -3,24 +3,48 @@
 
 {% block content %}
 
+
+
 <div class="containermatch">
-    <h1>Tus psicólogos más compatibles</h1>
-    <ul>
-        {% for psicologo, score in mejores_opciones %}
-        <div class="cardmatch">
-            <p class="card-title">{{ psicologo.psi_idusuario.user.first_name }} {{ psicologo.psi_idusuario.user.last_name }} {{ psicologo.psi_idusuario.apellido_materno }} </p>
-            <p>Puntaje de compatibilidad: {{ score }}</p>
-            <p>Afinidad con el psicólogo:</p>
-            <p>Tipo de sesión: {{ psicologo.tiposesion_idtiposesion.nombre }}</p>
-            <p>Especialidad diagnóstica: {{ psicologo.diagnostico_iddiagnostico.diagnostico }}</p>
-            <p>Rango etario: {{ psicologo.rangoetario_idrangoetario.rangoetario }}</p>
-            <p>Tipo de sesión: {{ psicologo.corriente_idcorriente.corrientepsicologica }}</p>
-            <p>Tipo de sesión: {{ psicologo.rangoprecio_idrangoprecio.montominimo }} - {{ psicologo.rangoprecio_idrangoprecio.montomaximo }}</p>
-            <p>Tipo de sesión: {{ psicologo.motivosesion_idmotivosesion.motivosesion }}</p>
-            <p>Tipo de sesión: {{ psicologo.coberturasalud_id.coberturasalud }}</p>
+    <h1 class="titlematch">Tus psicólogos más compatibles </h1>
+    <button id="btnselec">Ver todos los psicólogos disponibles</button>
+    {% for psicologo, score,test in mejores_opciones %}
+    <div class="cardmatch">
+        <p class="card-title">{{ psicologo.psi_idusuario.user.first_name }} {{ psicologo.psi_idusuario.user.last_name }} {{ psicologo.psi_idusuario.apellido_materno }} </p>
+        <img src="/media/{{ psicologo.psi_idusuario.foto }}" alt="foto de perfil" id="fotoperfil">
+        <div>BIO/INFO</div>
+        <p>Puntaje de compatibilidad: {{ score }}</p>
+        <p>Áreas de afinidad con el psicólogo: </p>
+        <div class="cardmatch1">
+            {% if test.generopsicologo_idgenero == psicologo.psi_idusuario.genero_idgenero %}
+            <div class="carditem">Género: {{ psicologo.psi_idusuario.genero_idgenero.n_genero }}</div>
+            {% endif %}
+            {% if test.tiposesion_idtiposesion == psicologo.tiposesion_idtiposesion %}
+            <div class="carditem">Tipo de sesión: {{ psicologo.tiposesion_idtiposesion.nombre }}</div>
+            {% endif %}
+            {% if test.diagnostico_iddiagnostico == psicologo.diagnostico_iddiagnostico %}
+            <div class="carditem">Especialidad diagnóstica: {{ psicologo.diagnostico_iddiagnostico.diagnostico }}</div>
+            {% endif %}
+            {% if test.rangoetario_idrangoetario == psicologo.rangoetario_idrangoetario %}
+            <div class="carditem">Rango etario: {{ psicologo.rangoetario_idrangoetario.rangoetario }}</div>
+            {% endif %}
+            {% if test.corriente_idcorriente == psicologo.corriente_idcorriente %}
+            <div class="carditem">Corriente psicológica: {{ psicologo.corriente_idcorriente.corrientepsicologica }}</div>
+            {% endif %}
+            {% if test.rangoprecio_idrangoprecio == psicologo.rangoprecio_idrangoprecio %}
+            <div class="carditem">Rango precio por sesión: {{ psicologo.rangoprecio_idrangoprecio.montominimo }} - {{ psicologo.rangoprecio_idrangoprecio.montomaximo }}</div>
+            {% endif %}
+            {% if test.motivosesion_idmotivosesion == psicologo.motivosesion_idmotivosesion %}
+            <div class="carditem">Motivos y áreas con las que trabaja: {{ psicologo.motivosesion_idmotivosesion.motivosesion }}</div>
+            {% endif %}
+            {% if test.coberturasalud_idcobertura == psicologo.coberturasalud_id %}
+            <div class="carditem">Cobertura de salud que acepta: {{ psicologo.coberturasalud_id.coberturasalud }}</div>
+            {% endif %}
         </div>
-        {% endfor %}
-    </ul>
+        <button id="btnselec" onclick="location.href='{% url 'psicologo' psicologo.idpsicologo psicologo.psi_idusuario.idusuario %}'">Seleccionar psicólogo</button>
+    </div>
+    {% endfor %}
+   
     
 </div>
 

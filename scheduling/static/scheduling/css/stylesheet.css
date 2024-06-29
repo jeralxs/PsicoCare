@@ -10,10 +10,6 @@ body {
 
 a {
     text-decoration: none;
-    font-family: 'Lexend', sans-serif;
-    font-style: normal;
-    font-weight: 500;
-    color: #EAF2E0;
 }
 
 li {
@@ -28,18 +24,6 @@ ul {
     display: inline;
 }
 
-.container {
-    position: absolute; 
-    padding: 40px;
-    right: 6%;
-    top: 17%;
-    bottom: 10%;
-    width: 80%;
-    border-radius: 8px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    background-color: #ffffff; 
-}
 .container-fluid {
     padding-top: 10px;
     width: 100%;
@@ -140,17 +124,17 @@ ul {
 
 .navbar-left {
     position: fixed;
-    top: 80px; 
+    top: 80px; /*Altura de la barra de navegación superior */
     left: 0;
-    width: 100px; 
-    height: 100%; 
+    width: 100px; /* Ancho del navbar lateral */
+    height: 100%; /* Calcula la altura restando la altura de la barra superior */
     background-color: #FFFFFF;
     color: #141B0C;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    z-index: 1000; 
+    z-index: 1000; /* Asegura que esté por encima del contenido */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 .navbar-left ul {
@@ -430,7 +414,7 @@ label.error {
     justify-content: center;
 }
 
-.FormRegistro .btn-primary {
+.FormRegistro .btn-primary .g-recaptcha{
     background-color:#8EB859;
     color: #fff;
     cursor: pointer;
@@ -461,89 +445,6 @@ label.error {
 }
 
 .FormRegistro .btn-cancelar:hover {
-        color: #45a049;
-        padding: 10px 20px;
-        border-radius: 8px 8px 8px 8px;
-        border: 1px 0px 0px 0px;
-        border:1px solid #45a049;
-}
-
-
-
-/* css registro fin */
-
-.FormRegistroPsi label {
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 24px;
-    letter-spacing: 0.20000000298023224px;
-    text-align: left;
-    color: #8EB859;
-
-}
-
-
-.FormRegistroPsi input {
-    width: calc(100% - 20px);
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #efefef;
-    border-radius: 4px;
-    background-color: #EFEFEF;
-
-}
-
-.FormRegistroPsi {
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 24px;
-    letter-spacing: 0.20000000298023224px;
-    text-align: left;
-    color:#141B0C;
-}
-
-.FormRegistroPsi ::placeholder {
-    color: #141B0C;
-}
-
-.FormRegistroPsi button {
-    padding: 10px 20px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    justify-content: center;
-}
-
-
-.FormRegistroPsi .btn-primary .g-recaptcha{
-    background-color:#8EB859;
-    color: #fff;
-    cursor: pointer;
-    text-align: center;
-    justify-content: center;
-}
-
-
-.FormRegistroPsi .btn-primary:hover {
-    background-color: #45a049;
-}
-
-.FormRegistroPsi .btn-cancelar {
-    padding: 10px 20px;
-    border-radius: 8px 8px 8px 8px;
-    border: 1px 0px 0px 0px;
-    border: 1px solid #8EB859;
-    background: #FFFFFF;
-    text-align: center;
-    color: #8EB859;
-    gap: 10px;
-    cursor: pointer;
-    justify-content: center;
-}
-
-.FormRegistroPsi .btn-cancelar:hover {
         color: #45a049;
         padding: 10px 20px;
         border-radius: 8px 8px 8px 8px;
@@ -1062,7 +963,7 @@ details summary::marker {
 /* css perfil fin */
 
 
-/* css test y matching inicio */
+/* css test inicio */
 
 
 .test-paciente {
@@ -1161,91 +1062,4 @@ details summary::marker {
     margin-left: 46.5%; 
 }
 
-.cardmatch {
-    background-color: #FFFFFF;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 600px;
-    margin-block: 10px;
-}
-
-.cardmatch1 {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    justify-items: center;
-}
-
-.carditem {
-    background-color:#B3CF8F;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    width: fit-content;
-    margin-block: 10px;
-    font-size: small;
-}
-
-#btnselec {
-    padding: 10px 20px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: fit-content;
-    height: fit-content;
-    font-family: 'Lexend', sans-serif;
-    font-style: normal;
-    background-color:#8EB859;
-    color: #fff;
-    text-align: center;
-}
-
-#btnselec:hover {
-    background-color: #50880d;
-}
-.containermatch {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    justify-items: center;
-    position: absolute; 
-    padding: 40px;
-    right: 3%;
-    top: 10%;
-    width: 80%;
-    border-radius: 8px;
-    text-align: center;
-}
-
-.titlematch {
-    justify-content: center;
-}
 /* css test fin */
-
-#messages {
-    height: 300px; /* Altura fija para el área de mensajes */
-    overflow-y: auto; /* Hacer que el área de mensajes sea desplazable verticalmente si hay demasiados mensajes */
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-#sendMessageForm {
-    margin-top: 10px;
-}
-
-#sendMessageForm textarea {
-    width: 100%; /* El textarea ocupa todo el ancho disponible */
-    min-height: 80px; /* Altura mínima del textarea */
-    resize: vertical; /* Permite que el textarea sea redimensionable verticalmente */
-}
-
-.chat-container {
-    max-width: 800px; /* Ancho máximo del contenedor del chat */
-    margin: 10 auto; /* Centrar el chat horizontalmente */
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
