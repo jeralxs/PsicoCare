@@ -1063,3 +1063,17 @@ details summary::marker {
 }
 
 /* css test fin */
+
+#view_schedule {
+    margin-top: 70px;
+    margin-left: 250px;
+}
+
+th, td {
+    padding: 10px;
+}
+
+#tableappointment {
+    margin-top: 70px;
+    margin-left: 250px;
+}

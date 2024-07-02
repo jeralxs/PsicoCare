@@ -10,16 +10,16 @@
         <input type="datetime-local" id="start_time" name="start_time" required><br>
         <label for="end_time">Hora de término:</label>
         <input type="datetime-local" id="end_time" name="end_time" required><br>
-        <button type="submit">Crear</button>
+        <label for="Valor">Valor de la sesión:</label>
+        <input type="number" id="valor" name="valor" required><br>
+        <button type="submit" id="crearsch">Crear</button>
     </form>
     <button onclick="history.back()">Volver atrás</button>
     <button><a href="{% url 'list_schedule' %}">Volver a agenda</a></button>
     
 </div>
     <style>
-        .schedule {
-            margin-left: 100px;
-        }
+        
         button {
             /* margin-left: 150px; */
             background-color:#8EB859;
@@ -27,8 +27,25 @@
             cursor: pointer;
             text-align: center;
             justify-content: center;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
             margin-top: 15px;
             margin-bottom: 10px;
+        }
+
+        .schedule label{
+            padding: 10px;
+        }
+
+        input {
+            width: calc(100% - 1000px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #efefef;
+            border-radius: 4px;
+            background-color: #EFEFEF;
         }
 
     </style>

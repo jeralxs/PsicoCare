@@ -163,16 +163,7 @@ class Pacientepsicologo(models.Model):
         db_table = 'pacientepsicologo'
 
 
-class Pago(models.Model):
-    idpago = models.AutoField(primary_key=True)
-    fechahora = models.DateField()
-    montototal = models.IntegerField()
-    sesion_idsesion = models.ForeignKey('Sesion', models.DO_NOTHING, db_column='sesion_idsesion')
-    metodopago_idmetodopago = models.ForeignKey(Metodopago, models.DO_NOTHING, db_column='metodopago_idmetodopago')
 
-    class Meta:
-        managed = False
-        db_table = 'pago'
 
 
 
@@ -199,28 +190,7 @@ class Rangoprecio(models.Model):
         return u'{0}'.format( f'{self.montominimo} - {self.montomaximo}')
 
 
-class Resena(models.Model):
-    idresena = models.AutoField(primary_key=True)
-    puntuacion = models.BooleanField()
-    comentarios = models.CharField(max_length=512)
-    sesion_idsesion = models.ForeignKey('Sesion', models.DO_NOTHING, db_column='sesion_idsesion')
 
-    class Meta:
-        managed = False
-        db_table = 'resena'
-
-
-class Sesion(models.Model):
-    idsesion = models.AutoField(primary_key=True)
-    fechahora = models.DateField()
-    notas = models.CharField(max_length=1024, blank=True, null=True)
-    estadosesion_idestadosesion = models.ForeignKey(Estadosesion, models.DO_NOTHING, db_column='estadosesion_idestadosesion')
-    tiposesion_idtiposesion = models.ForeignKey('Tiposesion', models.DO_NOTHING, db_column='tiposesion_idtiposesion')
-    usuario_idusuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='usuario_idusuario')
-
-    class Meta:
-        managed = False
-        db_table = 'sesion'
 
 
 class Superusuario(models.Model):
@@ -329,17 +299,55 @@ class Paciente(models.Model):
         db_table = 'paciente'
 
 
+
+class Resena(models.Model):
+    idresena = models.AutoField(primary_key=True)
+    puntuacion = models.BooleanField()
+    comentarios = models.CharField(max_length=512)
+    sesion_idsesion = models.ForeignKey('google_meet.Sesion', models.DO_NOTHING,db_column='sesion_idsesion')
+
+    class Meta:
+        managed = False
+        db_table = 'resena'
+
+class Pago(models.Model):
+    idpago = models.AutoField(primary_key=True)
+    fechahora = models.DateField()
+    montototal = models.IntegerField()
+    sesion_idsesion = models.ForeignKey('google_meet.Sesion', models.DO_NOTHING, db_column='sesion_idsesion')
+    metodopago_idmetodopago = models.ForeignKey(Metodopago, models.DO_NOTHING, db_column='metodopago_idmetodopago')
+
+    class Meta:
+        managed = False
+        db_table = 'pago'
+# class Conversation(models.Model):
+#     participants = models.ManyToManyField(User, related_name='conversations')
+
+# class Mensaje(models.Model):
+#     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='mensajes')
+#     author = models.ForeignKey(User, models.DO_NOTHING, db_column='author')
+#     content = models.TextField()
+#     timestamp = models.DateTimeField(auto_now_add=True)
+
+#     def __str__(self):
+#         return f'{self.author.username} - {self.timestamp}'
+
 class Conversation(models.Model):
-    participants = models.ManyToManyField(User, related_name='conversations')
+    psicologo = models.ForeignKey(Psicologo, on_delete=models.CASCADE, related_name='conversations')
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='conversations')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Conversación entre {self.psicologo.usuario.user.username} y {self.paciente.usuario.user.username}"
 
 class Mensaje(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='mensajes')
-    author = models.ForeignKey(User, models.DO_NOTHING, db_column='author')
-    content = models.TextField()
+    autor = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    contenido = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.author.username} - {self.timestamp}'
+        return f'{self.autor.user.username} - {self.timestamp}'
 
 
 def puntaje_match(psicologo, test):

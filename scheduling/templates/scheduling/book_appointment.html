@@ -7,6 +7,7 @@
     <p>Psicólogo: {{ schedule.Psicologo.username }}</p>
     <p>Inicio: {{ schedule.start_time }}</p>
     <p>Final: {{ schedule.end_time }}</p>
+    <p> {{ schedule.valor }} </p>
     <form method="post">
         {% csrf_token %}
         <button type="submit">Agendar</button>
@@ -24,6 +25,8 @@
             cursor: pointer;
             text-align: center;
             justify-content: center;
-        }
+    }
+    
+    
 </style>
 {% endblock content %}

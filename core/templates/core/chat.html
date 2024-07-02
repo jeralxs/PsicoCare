@@ -4,88 +4,193 @@
 {% block content %}
 
 
-<h1>Chat</h1>
-<div class="chat-container">
-    <div id="messages">
-        {% for message in messages %}
-            <p>{{ message.content }}</p>
-            <small>{{ message.autor.username }} - {{ message.timestamp }}</small>
-        {% endfor %}
-    </div>
-
-    <form id="sendMessageForm" action="{% url 'send_message' %}" method="POST">
+<div class="conversation-list">
+    <h3>Iniciar nueva conversación</h3>
+    <form method="post">
         {% csrf_token %}
-        <input type="hidden" id="conversation_id" name="conversation_id" value="{{ conversation.id }}">
-        <textarea id="messageContent" name="content" placeholder="Escribe tu mensaje aquí"></textarea>
-        <button type="submit">Enviar</button>
+        {{ conversation_form.as_p }}
+        <button type="submit" name="start_conversation">Iniciar chat</button>
     </form>
+    
+    <h3>Conversaciones existentes</h3>
+    <ul>
+        {% for conversation in conversations %}
+            <li>
+                <a href="?conversation_id={{ conversation.id }}">
+                    {% if user.usuario.tipousuario == 'psicologo' %}
+                        {{ conversation.paciente.pac_idusuario.user.username }}
+                    {% else %}
+                        {{ conversation.psicologo.psi_idusuario.user.username }}
+                    {% endif %}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
 </div>
-<script>
-    $(document).ready(function() {
-        $('#sendMessageForm').on('submit', function(event) {
-            event.preventDefault();
 
+<div class="chat-area">
+    {% if current_conversation %}
+        <div class="chat-container">
+            <div class="chat-header">
+                Chat con 
+                {% if user.usuario.tipousuario == 'psicologo' %}
+                    {{ current_conversation.paciente.pac_idusuario.user.username }}
+                {% else %}
+                    {{ current_conversation.psicologo.psi_idusuario.user.username }}
+                {% endif %}
+            </div>
+            <div id="messages" class="messages-container">
+                {% for message in messages %}
+                    <div class="message {% if message.autor.user == user %}message-sent{% else %}message-received{% endif %}">
+                        <div>{{ message.contenido }}</div>
+                        <div class="message-info">
+                            {{ message.autor.user.username }} - {{ message.timestamp|date:"d/m/Y H:i" }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <form id="sendMessageForm" class="chat-input" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="conversation_id" value="{{ current_conversation.id }}">
+                {{ message_form.contenido }}
+                <button type="submit" name="send_message" id="sendMessageBtn">Enviar</button>
+            </form>
+        </div>
+    {% else %}
+        <p>Selecciona una conversación existente o inicia una nueva para comenzar a chatear.</p>
+    {% endif %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    function scrollToBottom() {
+        var messagesContainer = document.getElementById('messages');
+        if (messagesContainer) {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    }
+
+    scrollToBottom();
+
+    $("#sendMessageForm").on('submit', function(e) {
+        e.preventDefault();
+        var messageContent = $('#{{ message_form.contenido.id_for_label }}').val().trim();
+        if (messageContent) {
             $.ajax({
-                url: "{% url 'send_message' %}",
-                type: $(this).attr('method'),
+                type: 'POST',
+                url: window.location.href,
                 data: $(this).serialize(),
-                dataType: 'json',
                 success: function(response) {
-                    console.log('Mensaje enviado correctamente');
-                    // Actualizar la interfaz para mostrar el mensaje enviado
-                    $('#messages').append(`
-                        <p>${response.content}</p>
-                        <small>${response.author} - ${response.timestamp}</small>
-                    `);
-                    // Limpiar el textarea después de enviar el mensaje
-                    $('#messageContent').val('');
-                },
-                error: function(xhr, errmsg, err) {
-                    console.error('Error al enviar el mensaje:', errmsg);
+                    if(response.status === 'ok') {
+                        var newMessage = '<div class="message message-sent">' +
+                                         '<div>' + response.content + '</div>' +
+                                         '<div class="message-info">' + response.author + ' - ' + response.timestamp + '</div>' +
+                                         '</div>';
+                        $('#messages').append(newMessage);
+                        $('#{{ message_form.contenido.id_for_label }}').val('');
+                        scrollToBottom();
+                    } else {
+                        alert('Error al enviar el mensaje');
+                    }
                 }
             });
-        });
+        }
     });
+
+    function updateMessages() {
+        var currentConversationId = $('input[name="conversation_id"]').val();
+        if (currentConversationId) {
+            $.get(window.location.href + '?conversation_id=' + currentConversationId, function(data) {
+                var newMessages = $(data).find('#messages').html();
+                $('#messages').html(newMessages);
+                scrollToBottom();
+            });
+        }
+    }
+
+    setInterval(updateMessages, 5000);
+});
 </script>
 
 <style>
-    .chat-container {
-        width: 80%; /* Ancho del contenedor del chat */
-        max-width: 600px; /* Ancho máximo del contenedor */
-        margin: 0 auto; /* Centrar horizontalmente */
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        background-color: #f9f9f9;
-    }
-
-    #messages {
-        height: 300px; /* Altura fija para el área de mensajes */
-        overflow-y: auto; /* Hacer que el área de mensajes sea desplazable verticalmente si hay demasiados mensajes */
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin-bottom: 10px;
-    }
-
-    #sendMessageForm {
-        margin-top: 10px;
-    }
-
-    #sendMessageForm textarea {
-        width: calc(100% - 10px); /* El textarea ocupa todo el ancho disponible menos 10px de margen */
-        min-height: 80px; /* Altura mínima del textarea */
-        resize: vertical; /* Permite que el textarea sea redimensionable verticalmente */
-    }
-    body {
-            background-color: lightgrey;
+     .container {
+            display: flex;
+            height: 100vh;
         }
-    a {
-    text-decoration: none;
-    font-family: 'Lexend', sans-serif;
-    font-style: normal;
-    font-weight: 500;
-    color: black;
-    }
+    .conversation-list {
+            width: 30%;
+            padding: 20px;
+            background-color: #fff;
+            overflow-y: auto;
+            border-right: 1px solid #ddd;
+        }
+    .chat-area {
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+        }
+    .chat-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+        }
+    .chat-header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+        }
+    .messages-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+    .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 70%;
+        }
+    .message-sent {
+            background-color: #e1ffc7;
+            margin-left: auto;
+        }
+    .message-received {
+            background-color: #f0f0f0;
+        }
+    .message-info {
+            font-size: 0.8em;
+            color: #888;
+            margin-top: 5px;
+        }
+    .chat-input {
+            display: flex;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+    #id_contenido {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: none;
+        }
+    #sendMessageBtn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+    #sendMessageBtn:hover {
+            background-color: #45a049;
+        }
+    </style>
 </style>
 
 {% endblock content %}

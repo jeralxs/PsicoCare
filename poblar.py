@@ -12,7 +12,7 @@ from core.models import (Administrador, Agenda, Coberturasalud, Corrientepsicolo
                      Diadisponible, Diagnostico, Estadosesion, Estadousuario,
                      Genero, Generopsicologo, Mensaje, Metodopago, Motivosesion,
                      Notificacion, Paciente, Pacientepsicologo, Pago, Psicologo,
-                     Rangoetario, Rangoprecio, Resena, Sesion, Superusuario,
+                     Rangoetario, Rangoprecio, Resena, Superusuario,
                      Test, Testpaciente, Testpsicologo, Ticketsoporte,
                      Tiposesion, Usuario)
 

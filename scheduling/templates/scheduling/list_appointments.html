@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container">
     <h1>Tus citas</h1>
-    <table>
+    <table id="tableappointment">
         <tr>
             <th>Psicologo</th>
             <th>Hora de inicio</th>
@@ -30,13 +30,16 @@
 </div>
 
 <style>
-    button .btn-pago {
-        margin-left: 150px;
+    .btn-pago {
         background-color:#8EB859;
         color: #fff;
         cursor: pointer;
         text-align: center;
         justify-content: center;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
     }
 
     a {

@@ -1,4 +1,4 @@
-from django.db import models
+
 
 # Create your models here.
 from django.db import models
@@ -11,6 +11,7 @@ class Schedule(models.Model):
     psicologo = models.ForeignKey(Psicologo, models.DO_NOTHING, db_column="psicologo")
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+    valor = models.IntegerField()
     available = models.BooleanField(default=True)
     class Meta:
         managed = False

@@ -25,4 +25,8 @@ urlpatterns = [
     path('', include('core.urls')),
     path('payments/', include('payments.urls')),
     path('scheduling/', include('scheduling.urls')),
+    path('google_meet/', include('google_meet.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

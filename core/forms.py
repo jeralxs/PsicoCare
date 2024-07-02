@@ -295,28 +295,36 @@ from .models import Mensaje
 class FormularioMensaje(forms.ModelForm):
     class Meta:
         model = Mensaje
-        fields = ['content']  
+        fields = ['contenido']  # Asumiendo que el campo se llama 'contenido' en tu modelo
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['content'].widget.attrs.update({'rows': 3, 'placeholder': 'Escribe tu mensaje aquí'})
+        self.fields['contenido'].widget.attrs.update({
+            'rows': 3, 
+            'placeholder': 'Escribe tu mensaje aquí',
+            'class': 'form-control'
+        })
+        self.fields['contenido'].label = ''  # Quita la etiqueta del campo
+
+class ConversationForm(forms.Form):
+    recipient = forms.ModelChoiceField(
+        queryset=None,
+        empty_label="Selecciona un destinatario",
+        label="Iniciar conversación con"
+    )
+
+    def __init__(self, *args, **kwargs):
+        user_type = kwargs.pop('user_type', None)
+        super().__init__(*args, **kwargs)
+        
+        if user_type == 'psicologo':
+            from .models import Paciente
+            self.fields['recipient'].queryset = Paciente.objects.all()
+        elif user_type == 'paciente':
+            from .models import Psicologo
+            self.fields['recipient'].queryset = Psicologo.objects.all()
 
 # form test psico
-
-def get_genero():
-    return [(g.idgeneropsicologo, g.genero) for g in Generopsicologo.objects.all()]
-def get_tiposesion():
-    return [(t.idtiposesion, t.nombre) for t in Tiposesion.objects.all()]
-def get_corriente():
-    return [(co.idcorrientepsicologica, co.corrientepsicologica) for co in Corrientepsicologica.objects.all()]
-def get_diagnostico():
-    return [(d.iddiagnostico, d.diagnostico) for d in Diagnostico.objects.all()]
-def get_motivo():
-    return [(m.idmotivosesion, m.motivosesion) for m in Motivosesion.objects.all()]
-def get_precio():
-    return [(r.idrangoprecio, f"{r.montominimo} - {r.montomaximo}") for r in Rangoprecio.objects.all()]
-def get_cobertura():
-    return [(cs.idcoberturasalud, cs.coberturasalud) for cs in Coberturasalud.objects.all()]
 
 class FormTestPaciente(forms.ModelForm):
     class Meta:
@@ -377,253 +385,3 @@ class ResenaForm(forms.ModelForm):
         widgets = {
             'rating': forms.RadioSelect(choices=[(i, f'{i} estrellas') for i in range(1, 6)])
         }
-
-    # def __init__(self, *args, **kwargs):
-    #     self.user = kwargs.pop('user', None)
-    #     super().__init__(*args, **kwargs)
-
-    #     self.fields['generopsicologo_idgeneropsicologo'].queryset = Generopsicologo.objects.all()
-    #     self.fields['generopsicologo_idgeneropsicologo'].widget = forms.CheckboxSelectMultiple(
-    #         hoices=c[(obj.idgeneropsicologo, str(obj.genero)) for obj in self.fields['generopsicologo_idgeneropsicologo'].queryset]
-    #     )
-
-    #     self.fields['tiposesion_idtiposesion'].queryset = Tiposesion.objects.all()
-    #     self.fields['tiposesion_idtiposesion'].widget = forms.CheckboxSelectMultiple(
-    #         choices=[(obj.idtiposesion, str(obj.nombre)) for obj in self.fields['tiposesion_idtiposesion'].queryset]
-    #     )
-
-    #     self.fields['corriente_idcorriente'].queryset = Corrientepsicologica.objects.all()
-    #     self.fields['corriente_idcorriente'].widget = forms.CheckboxSelectMultiple(
-    #         choices=[(obj.idcorrientepsicologica, str(obj.corrientepsicologica)) for obj in self.fields['corriente_idcorriente'].queryset]
-    #     )
-
-    #     self.fields['diagnostico_iddiagnostico'].queryset = Diagnostico.objects.all()
-    #     self.fields['diagnostico_iddiagnostico'].widget = forms.CheckboxSelectMultiple(
-    #         choices=[(obj.iddiagnostico, str(obj.diagnostico)) for obj in self.fields['diagnostico_iddiagnostico'].queryset]
-    #     )
-
-    #     self.fields['motivosesion_idmotivosesion'].queryset = Motivosesion.objects.all()
-    #     self.fields['motivosesion_idmotivosesion'].widget = forms.CheckboxSelectMultiple(
-    #         choices=[(obj.idmotivosesion, str(obj.motivosesion)) for obj in self.fields['motivosesion_idmotivosesion'].queryset]
-    #     )
-
-    #     self.fields['rangoprecio_idrangoprecio'].queryset = Rangoprecio.objects.all()
-    #     self.fields['rangoprecio_idrangoprecio'].widget = forms.CheckboxSelectMultiple(
-    #         choices=[(obj.idrangoprecio, f"{obj.montominimo} - {obj.montomaximo}") for obj in self.fields['rangoprecio_idrangoprecio'].queryset]
-    #     )
-
-    #     self.fields['coberturasalud_id'].queryset = Coberturasalud.objects.all()
-    #     self.fields['coberturasalud_id'].widget = forms.CheckboxSelectMultiple(
-    #         choices=[(obj.idcoberturasalud, str(obj.coberturasalud)) for obj in self.fields['coberturasalud_id'].queryset]
-    #     )
-
-    # def save(self, commit=True):
-    #     instance = super().save(commit=False)
-
-    #     if self.user:
-    #         instance.idusuariotest = self.user.usuario 
-    #         generopsicologo_ids = self.cleaned_data.get('generopsicologo_idgeneropsicologo', [])
-    #         tiposesion_ids = self.cleaned_data.get('tiposesion_idtiposesion', [])
-    #         corriente_ids = self.cleaned_data.get('corriente_idcorriente', [])
-    #         diagnostico_ids = self.cleaned_data.get('diagnostico_iddiagnostico', [])
-    #         motivosesion_ids = self.cleaned_data.get('motivosesion_idmotivosesion', [])
-    #         rangoprecio_ids = self.cleaned_data.get('rangoprecio_idrangoprecio', [])
-    #         coberturasalud_ids = self.cleaned_data.get('coberturasalud_id', [])
-    #     if commit:
-    #         instance.save()
-
-    #         instance.generopsicologo_idgeneropsicologo.set(Generopsicologo.objects.filter(idgeneropsicologo__in=generopsicologo_ids))
-    #         instance.tiposesion_idtiposesion.set(Tiposesion.objects.filter(idtiposesion__in=tiposesion_ids))
-    #         instance.corriente_idcorriente.set(Corrientepsicologica.objects.filter(idcorrientepsicologica__in=corriente_ids))
-    #         instance.diagnostico_iddiagnostico.set(Diagnostico.objects.filter(iddiagnostico__in=diagnostico_ids))
-    #         instance.motivosesion_idmotivosesion.set(Motivosesion.objects.filter(idmotivosesion__in=motivosesion_ids))
-    #         instance.rangoprecio_idrangoprecio.set(Rangoprecio.objects.filter(idrangoprecio__in=rangoprecio_ids))
-    #         instance.coberturasalud_id.set(Coberturasalud.objects.filter(idcoberturasalud__in=coberturasalud_ids))
-
-    #     return instance
-
-#     class Meta:
-#         model = Test
-#         fields = '__all__'
-#         exclude = ['idtest','idusuariotest']
-
-# class FormTestPaciente(forms.ModelForm):
-    
-#     class Meta:
-#                 model = Test
-#                 fields = '__all__'
-#                 exclude = ['idtest','idusuariotest'] 
-
-#     generopsicologo_idgeneropsicologo = forms.MultipleChoiceField(
-#         required=True,
-#         widget=forms.CheckboxSelectMultiple,
-#         choices=get_genero,
-#     )
-
-#     tiposesion_idtiposesion = forms.MultipleChoiceField(
-#         required=True,
-#         widget=forms.CheckboxSelectMultiple,
-#         choices=get_tiposesion,
-#     )
-
-#     corriente_idcorriente = forms.MultipleChoiceField(
-#         required=True,
-#         widget=forms.CheckboxSelectMultiple,
-#         choices=get_corriente,
-#     )
-
-#     diagnostico_iddiagnostico = forms.MultipleChoiceField(
-#         required=True,
-#         widget=forms.CheckboxSelectMultiple,
-#         choices=get_diagnostico,
-#     )
-
-#     motivosesion_idmotivosesion = forms.MultipleChoiceField(
-#         required=True,
-#         widget=forms.CheckboxSelectMultiple,
-#         choices=get_motivo,
-#     )
-
-#     rangoprecio_idrangoprecio = forms.MultipleChoiceField(
-#         required=True,
-#         widget=forms.CheckboxSelectMultiple,
-#         choices=get_precio,
-#     )
-
-#     coberturasalud_id = forms.MultipleChoiceField(
-#         required=True,
-#         widget=forms.CheckboxSelectMultiple,
-#         choices=get_cobertura,
-#     )
-#     def save(self, commit=True):
-    
-#         instance = super(FormTestPaciente, self).save(commit=False)
-       
-#         generopsicologo_ids = self.cleaned_data['generopsicologo_idgeneropsicologo']
-#         tiposesion_ids = self.cleaned_data['tiposesion_idtiposesion']
-#         corriente_ids = self.cleaned_data['corriente_idcorriente']
-#         diagnostico_ids = self.cleaned_data['diagnostico_iddiagnostico']
-#         motivosesion_ids = self.cleaned_data['motivosesion_idmotivosesion']
-#         rangoprecio_ids = self.cleaned_data['rangoprecio_idrangoprecio']
-#         coberturasalud_ids = self.cleaned_data['coberturasalud_id']
-
-#         if commit:
-#             instance.save()
-
-#         instance.generopsicologo_idgeneropsicologo.set(Generopsicologo.objects.filter(idgeneropsicologo__in=generopsicologo_ids))
-#         instance.tiposesion_idtiposesion.set(Tiposesion.objects.filter(idtiposesion__in=tiposesion_ids))
-#         instance.corriente_idcorriente.set(Corrientepsicologica.objects.filter(idcorrientepsicologica__in=corriente_ids))
-#         instance.diagnostico_iddiagnostico.set(Diagnostico.objects.filter(iddiagnostico__in=diagnostico_ids))
-#         instance.motivosesion_idmotivosesion.set(Motivosesion.objects.filter(idmotivosesion__in=motivosesion_ids))
-#         instance.rangoprecio_idrangoprecio.set(Rangoprecio.objects.filter(idrangoprecio__in=rangoprecio_ids))
-#         instance.coberturasalud_id.set(Coberturasalud.objects.filter(idcoberturasalud__in=coberturasalud_ids))
-
-#         return instance
-    # def is_valid(self):
-    
-        
-       
-    #     generopsicologo_ids = self.cleaned_data['generopsicologo_idgeneropsicologo']
-    #     tiposesion_ids = self.cleaned_data['tiposesion_idtiposesion']
-    #     corriente_ids = self.cleaned_data['corriente_idcorriente']
-    #     diagnostico_ids = self.cleaned_data['diagnostico_iddiagnostico']
-    #     motivosesion_ids = self.cleaned_data['motivosesion_idmotivosesion']
-    #     rangoprecio_ids = self.cleaned_data['rangoprecio_idrangoprecio']
-    #     coberturasalud_ids = self.cleaned_data['coberturasalud_id']
-
-    #     instance = super(FormTestPaciente, self).is_valid()
-
-    #     instance.generopsicologo_idgeneropsicologo.set(Generopsicologo.objects.filter(idgeneropsicologo__in=generopsicologo_ids))
-    #     instance.tiposesion_idtiposesion.set(Tiposesion.objects.filter(idtiposesion__in=tiposesion_ids))
-    #     instance.corriente_idcorriente.set(Corrientepsicologica.objects.filter(idcorrientepsicologica__in=corriente_ids))
-    #     instance.diagnostico_iddiagnostico.set(Diagnostico.objects.filter(iddiagnostico__in=diagnostico_ids))
-    #     instance.motivosesion_idmotivosesion.set(Motivosesion.objects.filter(idmotivosesion__in=motivosesion_ids))
-    #     instance.rangoprecio_idrangoprecio.set(Rangoprecio.objects.filter(idrangoprecio__in=rangoprecio_ids))
-    #     instance.coberturasalud_id.set(Coberturasalud.objects.filter(idcoberturasalud__in=coberturasalud_ids))
-    #     save = save(self, commit=True)
-    #     if save(self, commit=True):
-    #         instance.save()
-    #     return instance
-    
-
-       
-        
-
-        
-    # generopsicologo_idgeneropsicologo = forms.MultipleChoiceField(
-    #     required=True, 
-    #     widget=forms.CheckboxSelectMultiple,
-    #     choices=get_genero,
-    # )
-    
-
-    # tiposesion_idtiposesion = forms.MultipleChoiceField(
-    #     required=True, 
-    #     widget=forms.CheckboxSelectMultiple,
-    #     choices=get_tiposesion,
-    # )
-
-    # corriente_idcorriente = forms.MultipleChoiceField(
-    #     required=True, 
-    #     widget=forms.CheckboxSelectMultiple,
-    #     choices=get_corriente,
-    # )
-
-    # diagnostico_iddiagnostico = forms.MultipleChoiceField(
-    #     required=True, 
-    #     widget=forms.CheckboxSelectMultiple,
-    #     choices=get_diagnostico,
-    # )
-
-    # motivosesion_idmotivosesion = forms.MultipleChoiceField(
-    #     required=True, 
-    #     widget=forms.CheckboxSelectMultiple,
-    #     choices=get_motivo,
-    # )
-
-    # rangoprecio_idrangoprecio = forms.MultipleChoiceField(
-    #     required=True, 
-    #     widget=forms.CheckboxSelectMultiple,
-    #     choices=get_precio,
-    # )
-
-    # coberturasalud_id = forms.MultipleChoiceField(
-    #     required=True, 
-    #     widget=forms.CheckboxSelectMultiple,
-    #     choices=get_cobertura,
-    # )
-    
-    # def save(self, commit=True):
-    #     instance = forms.ModelForm.save(self, commit=False)
-
-    #     if commit:
-    #         instance.save()
-
-    #     # ... (resto del código para limpiar relaciones)
-
-    #     # Agregar las relaciones con las instancias de los modelos
-    #     for generopsicologo_id in self.cleaned_data['generopsicologo_idgeneropsicologo']:
-    #         generopsicologo = Generopsicologo.objects.get(pk=generopsicologo_id)
-    #         instance.generopsicologo_idgeneropsicologo.add(generopsicologo)
-    #     for tiposesion_id in self.cleaned_data['tiposesion_idtiposesion']:
-    #         tiposesion = Tiposesion.objects.get(pk=tiposesion_id)
-    #         instance.tiposesion_idtiposesion.add(tiposesion)
-    #     for corriente_id in self.cleaned_data['corriente_idcorriente']:
-    #         corriente = Corrientepsicologica.objects.get(pk=corriente_id)
-    #         instance.corriente_idcorriente.add(corriente)
-    #     for motivosesion_id in self.cleaned_data['motivosesion_idmotivosesion']:
-    #         motivosesion = Motivosesion.objects.get(pk=motivosesion_id)
-    #         instance.motivosesion_idmotivosesion.add(motivosesion)
-    #     for diagnostico_id in self.cleaned_data['diagnostico_iddiagnostico']:
-    #         diagnostico = Diagnostico.objects.get(pk=diagnostico_id)
-    #         instance.diagnostico_iddiagnostico.add(diagnostico)
-    #     for rangoprecio_id in self.cleaned_data['rangoprecio_idrangoprecio']:
-    #         rangoprecio = Rangoprecio.objects.get(pk=rangoprecio_id)
-    #         instance.rangoprecio_idrangoprecio.add(rangoprecio)
-    #     for cobertura_id in self.cleaned_data['coberturasalud_id']:
-    #         cobertura = Coberturasalud.objects.get(pk=cobertura_id)
-    #         instance.coberturasalud_id.add(cobertura)
-
-    #     return instance
-
-    

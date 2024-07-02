@@ -1,0 +1,1065 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Lexend', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    display: inline;
+}
+
+li .navbar-item {
+    padding: 30px;
+}
+
+ul {
+    display: inline;
+}
+
+.container-fluid {
+    padding-top: 10px;
+    width: 100%;
+    height: 80px;
+    background-color: #FFFFFF;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logops {
+    float: left;
+    margin-left: 200px;
+}
+
+.navbar-icon {
+    color:#8EB859;
+}
+
+.nav-options {
+    display: inline-block;
+    padding-inline: 160px;
+    margin-left: 90px;
+    margin-top: 25px;
+}
+
+.nav-options li {
+    margin-right: 20px;
+}
+
+
+.navbar-item { 
+    opacity: 0px;
+    width: 452px;
+    height: 41px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 21px;
+    text-align: center;
+}
+
+.nav-link {
+    color: #8EB859;
+}
+
+.nav-link:hover {
+    color: #3D5223;
+}
+
+.btns {
+    float: right;
+    margin-top: 20px;
+    margin-right: 200px;
+}
+
+.nav-btn {
+    padding: 10px 16px 10px 16px;
+    border-radius: 8px 8px 8px 8px;
+    border: 1px 0px 0px 0px;
+    border: 1px solid #8EB859;
+    background: #FFFFFF;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 21px;
+    text-align: center;
+    color: #8EB859;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.nav-btn2 {
+    width: 126px;
+    height: 41px;
+    padding: 10px 16px 10px 16px;
+    gap: 10px;
+    border-radius: 8px 8px 8px 8px;
+    opacity: 0px;
+    background: #8EB859;
+    color: #f9f9f9;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 21px;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+}
+
+
+.nav-btn:hover {
+    color: #45a049;
+    padding: 10px 16px 10px 16px;
+    border-radius: 8px 8px 8px 8px;
+    border: 1px 0px 0px 0px;
+    border:1px solid #45a049;
+}
+
+.nav-btn2:hover {
+    background-color: #45a049;
+}
+
+.navbar-left {
+    position: fixed;
+    top: 80px; /*Altura de la barra de navegación superior */
+    left: 0;
+    width: 100px; /* Ancho del navbar lateral */
+    height: 100%; /* Calcula la altura restando la altura de la barra superior */
+    background-color: #FFFFFF;
+    color: #141B0C;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    z-index: 1000; /* Asegura que esté por encima del contenido */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.navbar-left ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.navbar-left ul li {
+    padding: 10px;
+    border-bottom: 1px solid #555;
+    width: 90%;
+    text-align: center;
+}
+
+
+.left-up .bi {
+    display: grid;
+    margin: 15px;
+    padding: 10px 16px 10px 16px;
+    border-radius: 8px 8px 8px 8px;
+    
+}
+
+.left-up .bi:hover {
+    background-color: #aaa ;
+    padding: 10px 16px 10px 16px;
+    border-radius: 8px 8px 8px 8px;
+}
+
+.left-down {
+    position: fixed;
+    background-color: #B3CF8F;
+    border-radius: 8px 8px 8px 8px;
+    bottom: 0;
+    margin-bottom: 12px;
+    margin-left: 10px;
+    margin-right: 10px;
+
+}
+.left-down .bi {
+    display: grid;
+    color: white;
+    margin: 15px;
+    padding: 10px 16px 10px 16px;
+    border-radius: 8px 8px 8px 8px;
+    background-color: #B3CF8F;
+}
+
+.left-down .bi:hover {
+    background-color: #aaa ;
+    padding: 10px 16px 10px 16px;
+    border-radius: 8px 8px 8px 8px;
+}
+
+.home   {
+    margin-left: 250px;
+}
+
+
+.background {
+    position: relative;
+}
+
+.background img {
+    z-index: -1;
+    background-size: cover;
+    width:100%;
+    height: 10%;
+    opacity: 0px;
+    position:relative;
+
+}
+
+.text-box {
+    position: absolute; 
+    width: 650px;
+    height: 650ppx;
+    padding: 40px;
+    right: 6%;
+    top: 30%;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    background-color: #1E566D66; 
+}
+
+.text-box h1 {
+    margin-top: 0;
+    font-size: 36px; 
+    color: #f9f9f9; 
+    font-size: 48px;
+    font-weight: 500;
+    line-height: 54px;
+    letter-spacing: -0.02199999988079071px;
+    text-align: center;
+
+}
+
+.text-box p {
+    font-size: 18px;
+    color: #f9f9f9;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 24px;
+    text-align: justify;
+    margin-bottom: 40px;
+
+}
+
+.start-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4caf50; 
+    color: #ffffff; 
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.start-button:hover {
+    background-color: #45a049; 
+}
+
+
+/* css registro */
+
+label.error {
+    opacity: 50%;
+}
+
+.bloques {
+    height: 100%;
+}
+.gridbloque {
+    display:grid;
+    grid-template-columns: 0.65fr 1fr;
+    height: 100%;
+}
+
+.bloque1 {
+    background-color:#B3CF8F;
+    height: 100%;
+    width: 100%;
+}
+
+.bltexto {
+    width: 376px;
+    height: 567px;
+    margin-top: 400px;
+    margin-left: 100px;
+    gap: 40px;
+    opacity: 0px;
+    text-align: center;
+
+}
+
+.bltexto h1 {
+    font-size: 33px;
+    line-height: 39px;
+    letter-spacing: -0.019999999552965164px;
+    text-align: left;
+}
+
+.bltexto h2 {
+    color: #fff;
+    font-size: 23px;
+    font-weight: 200;
+    line-height: 38px;
+    letter-spacing: -0.019999999552965164px;
+    text-align: left;
+
+}
+
+.bloque2 {
+    background-color:#f9f9f9;
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.card {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 400px;
+    margin-left: 200px;
+    margin-top: 15%;
+}
+
+.card-title{
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 25px;
+    letter-spacing: -0.019999999552965164px;
+    text-align: center;
+
+}
+.FormRegistro label {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: 0.20000000298023224px;
+    text-align: left;
+    color: #8EB859;
+
+}
+
+
+.FormRegistro input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #efefef;
+    border-radius: 4px;
+    background-color: #EFEFEF;
+
+}
+
+.FormRegistro {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: 0.20000000298023224px;
+    text-align: left;
+    color:#141B0C;
+}
+
+.FormRegistro ::placeholder {
+    color: #141B0C;
+}
+
+.botonesform {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.FormRegistro button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    justify-content: center;
+}
+
+.tipocuenta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.tipocuenta .btn-cliente {
+    padding: 10px 20px;
+    border-radius: 8px 8px 8px 8px;
+    border: 1px 0px 0px 0px;
+    border: 1px solid #8EB859;
+    background: #FFFFFF;
+    text-align: center;
+    color: #8EB859;
+    gap: 10px;
+    cursor: pointer;
+    justify-content: center;
+}
+
+.tipocuenta .btn-psicologo {
+    background-color:#8EB859;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+    justify-content: center;
+}
+
+.FormRegistro .btn-primary .g-recaptcha{
+    background-color:#8EB859;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+    justify-content: center;
+}
+
+
+.FormRegistro .btn-primary:hover {
+    background-color: #45a049;
+}
+
+.btn-cancelar a {
+    color: #8EB859;
+}
+
+.FormRegistro .btn-cancelar {
+    padding: 10px 20px;
+    border-radius: 8px 8px 8px 8px;
+    border: 1px 0px 0px 0px;
+    border: 1px solid #8EB859;
+    background: #FFFFFF;
+    text-align: center;
+    color: #8EB859;
+    gap: 10px;
+    cursor: pointer;
+    justify-content: center;
+}
+
+.FormRegistro .btn-cancelar:hover {
+        color: #45a049;
+        padding: 10px 20px;
+        border-radius: 8px 8px 8px 8px;
+        border: 1px 0px 0px 0px;
+        border:1px solid #45a049;
+}
+
+
+
+/* css registro fin */
+
+/* css Ingresar */
+.IngresarForm label {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: 0.20000000298023224px;
+    text-align: left;
+    color: #8EB859;
+
+}
+
+
+.IngresarForm input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #efefef;
+    border-radius: 4px;
+    background-color: #EFEFEF;
+
+}
+
+.recuperar a {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: 0.20000000298023224px;
+    text-align: center;
+    color: #8EB859;
+    justify-self: center;
+}
+
+.IngresarForm .botonesform {
+    width: 820px;
+}
+
+.btn-crear a {
+    color: #8EB859;
+}
+
+.IngresarForm button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    justify-content: center;
+}
+
+.IngresarForm .btn-primary {
+    background-color:#8EB859;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+    justify-content: center;
+}
+
+.IngresarForm .btn-primary:hover {
+    background-color: #45a049;
+}
+
+.crearcuenta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.crearcuenta p {
+    font-size: 12px;
+    font-weight: 200;
+    line-height: 24px;
+    letter-spacing: 0.20000000298023224px;
+    text-align: center;
+    color: #141B0C;
+    justify-self: center;
+    padding: 10px;
+}
+
+.crearcuenta .btn-crear {
+    padding: 10px 20px;
+    border: none;
+    background: #FFFFFF;
+    text-align: center;
+    color: #8EB859;
+    cursor: pointer;
+    justify-content: center;
+}
+
+.crearcuenta .btn-crear:hover {
+    color: #45a049;
+}
+
+
+/* css Ingresar fin */
+
+/* css Recuperar contraseña */
+.PasswordResetForm label {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: 0.20000000298023224px;
+    text-align: left;
+    color: #8EB859;
+
+}
+
+
+.PasswordResetForm input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #efefef;
+    border-radius: 4px;
+    background-color: #EFEFEF;
+
+}
+
+
+.PasswordResetForm .botonesform {
+    width: 820px;
+}
+
+.PasswordResetForm button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    justify-content: center;
+}
+
+.PasswordResetForm .btn-primary {
+    background-color:#8EB859;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+    justify-content: center;
+}
+
+.PasswordResetForm .btn-primary:hover {
+    background-color: #45a049;
+}
+
+/* css Recuperar contraseña fin */
+
+
+/* CSS HOME */
+
+.contenido-home {
+    display: grid;
+    position: absolute; 
+    padding: 1%;
+    right: 6%;   
+    width: 80%;
+    height: 60%;
+    text-align: center;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 0.5fr 1fr; 
+    gap: 50px;
+}
+
+.contenido-home button {
+    padding: 10px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color:#8EB859;
+    color: #fff;
+    font-family: 'Lexend', sans-serif;
+    font-style: normal;
+    text-align: center;
+    justify-content: center;
+}
+
+.contenido-home button:hover {
+    background-color: #45a049;
+}
+
+.perfil-home {
+    display: grid;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    grid-template-columns: 30% 1fr;
+    grid-template-rows: 1fr; 
+} 
+#words-home {
+    padding: 20px;
+} 
+#icon-home {
+    background-color: #B3CF8F;
+} 
+.agendar-home {
+    display: grid;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    grid-template-columns: 30% 1fr;
+    grid-template-rows: 1fr;  
+} 
+.historial-home {
+    display: grid;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    grid-template-columns: 30% 1fr;
+    grid-template-rows: 1fr; 
+} 
+.sesion-home {
+    display: grid;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    grid-template-columns: 30% 1fr;
+    grid-template-rows: 1fr; 
+} 
+.reseña-home {
+    display: grid;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    grid-template-columns: 30% 1fr;
+    grid-template-rows: 1fr; 
+} 
+.ayuda-home {
+    display: grid;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    grid-template-columns: 30% 1fr;
+    grid-template-rows: 1fr; 
+} 
+/* CSS HOME FIN */
+
+
+/* css PERFIL ini */
+
+/* icons */
+
+#volver-perfil {
+    padding-left: 10%;
+    padding-block: 1%;
+}
+
+#volver-inicio {
+    padding-left: 10%;
+    padding-block: 1%;
+}
+
+#hrefeditar {
+    color: #45a049;
+}
+
+#flecha {
+    font-size: 2em;
+    color: #141B0C;
+}
+
+.contenido {
+    position: absolute; 
+    padding: 40px;
+    right: 6%;
+    top: 17%;
+    width: 80%;
+    max-height: fit-content;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    background-color: #ffffff; 
+}
+
+#grid1 {
+    display: grid;
+    width: 100%;
+    max-height: fit-content;
+    grid-template-columns: 30% 1fr;
+    grid-template-rows: 1fr;
+    
+}
+
+.subir-foto {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#fotoperfil {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+}
+
+.subir-pp {
+    width: Fixed (260px)px;
+    height: Hug (41px)px;
+    top: 698.23px;
+    left: 236px;
+    padding: 10px 16px 10px 16px;
+    gap: 10px;
+    border-radius: 8px 0px 0px 0px;
+    opacity: 0px;
+    background: #8EB859;
+}
+
+/* acordeon */
+
+.datos-perfil {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.pregunta {
+    padding-block: 2%;
+    padding-left: 1.5%;
+    margin-block: 1%;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.692);
+    text-align: left;
+    /* display: grid;
+    grid-template-columns: 1fr 1fr; */
+}
+
+.datos-perfil .pregunta input {
+    appearance: none;
+}
+
+.datos-perfil .pregunta label {
+    display: flex;
+    cursor: pointer;
+    justify-content: space-between;
+}
+
+.DatosPersonalesForm input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #efefef;
+    border-radius: 4px;
+    background-color: #EFEFEF;
+
+}
+
+.DatosProfesionalesForm input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #efefef;
+    border-radius: 4px;
+    background-color: #EFEFEF;
+
+}
+
+.DatosProfesionalesForm select {
+    width: 20%;
+    height: fit-content;
+    border-color: #8EB859;
+    border-radius: 5px;
+    padding: 0.5%;
+    font-family: 'Lexend', sans-serif;
+    font-style: normal;
+    font-size: 0.95em;
+}
+
+.datos-perfil button {
+    padding: 10px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    justify-self: center;
+}
+
+.datos-perfil .btn-primary {
+    background-color:#8EB859;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+    justify-content: center;
+}
+
+.DatosPersonalesForm .btn-primary:hover {
+    background-color: #45a049;
+}
+
+.DatosProfesionalesForm .btn-primary:hover {
+    background-color: #45a049;
+}
+
+#icon-edit {
+    color: #45a049;
+}
+
+.datos-perfil .pregunta .contacc {
+    max-height: 0;
+    transition: 1s;
+    overflow: hidden;
+}
+
+.datos-perfil .pregunta input:checked + .contacc {
+    max-height: fit-content;
+} 
+
+/* acordeon fin */
+
+
+
+#btn1 {
+    background: #45a049;
+    justify-self: right;
+}
+
+.eliminar-perfil {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: end;
+    align-self: flex-end;
+}
+
+#btneliminar {
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    justify-content: center;
+    background-color:#f15a46;
+    color: #fff;
+    cursor: pointer;
+}
+
+#btneliminar:hover {
+    background-color:#861708;
+}
+
+#Eliminarbtn {
+    padding: 10px 20px;
+    margin-top: 5%;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    justify-content: center;
+    background-color:#f15a46;
+    color: #fff;
+    cursor: pointer;
+}
+
+#Eliminarbtn:hover {
+    background-color:#861708;
+}
+
+
+.fondo {
+    background-color: #EAF2E0;
+}
+
+
+
+
+
+details summary::marker {
+    content: icon;
+    color: #8EB859;
+}
+
+/* modal */
+
+.bg-modal{
+    display: none; 
+    position: absolute; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+}
+
+.modal-content{
+    width:600px;
+    height:300px;
+    background-color: white;
+    border:none; 
+    border-radius: 15px;
+    padding:15px;
+    margin: 20% auto;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+/* css perfil fin */
+
+
+/* css test inicio */
+
+
+.test-paciente {
+    position: absolute; 
+    padding: 40px;
+    right: 6%;
+    top: 17%;
+    bottom: 10%;
+    width: 80%;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    background-color: #ffffff; 
+}
+
+.test-paciente-end {
+    display: none;
+    position: absolute; 
+    padding: 40px;
+    right: 6%;
+    top: 17%;
+    bottom: 10%;
+    width: 80%;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    background-color: #ffffff; 
+}
+
+.content-test {
+    display: none;
+}
+
+.test-back {
+    display: none;
+}
+.test-next {
+    margin-left: 50px;
+}
+
+.FormTestPaciente select {
+    width: 12%;
+    height: fit-content;
+    border-color: #8EB859;
+    border-radius: 5px;
+    padding: 0.5%;
+    font-family: 'Lexend', sans-serif;
+    font-style: normal;
+    font-size: 0.95em;
+    margin-top: 5%;
+}
+
+.FormTestPaciente select:focus {
+    border-color: #8EB859;
+}
+
+
+.FormTestPaciente option:hover {
+    background-color: #8EB859;
+}
+
+.FormTestPaciente option {
+    padding: 10%;
+}
+
+.FormTestPaciente .form-group {
+    margin-top: 4.5%;
+}
+
+.FormTestPaciente button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: fit-content;
+    font-family: 'Lexend', sans-serif;
+    font-style: normal;
+}
+
+.FormTestPaciente #btn-test {
+    background-color:#8EB859;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+}
+
+.FormTestPaciente #btn-test:hover {
+    background-color: #45a049;
+}
+
+.botones-test {
+    position: absolute;
+    margin-top: 32%;
+    margin-left: 46.5%; 
+}
+
+/* css test fin */

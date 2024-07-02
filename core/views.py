@@ -17,6 +17,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import Mensaje, Conversation
+from django.views.decorators.http import require_POST
+from django.db.models import Q
+from .forms import FormularioMensaje, ConversationForm
 
 import os.path
 
@@ -301,46 +304,46 @@ def logout_view(request):
 
 
 
-def editar_sesion(request, event_id):
-    # Obtener los detalles del evento
-    calendar_manager = GoogleCalendarManager()
-    event_details = calendar_manager.get_event_details(event_id)
+# def editar_sesion(request, event_id):
+#     # Obtener los detalles del evento
+#     calendar_manager = GoogleCalendarManager()
+#     event_details = calendar_manager.get_event_details(event_id)
     
-    # Verificar si el método es POST (cuando se envía el formulario)
-    if request.method == 'POST':
-        # Resto del código para procesar el formulario...
-        return HttpResponseRedirect(reverse('listar_sesiones'))
-    else:
-        # Renderizar el formulario de edición con los detalles del evento
-        return render(request, 'core/editar_sesion.html', {'event_details': event_details})
+#     # Verificar si el método es POST (cuando se envía el formulario)
+#     if request.method == 'POST':
+#         # Resto del código para procesar el formulario...
+#         return HttpResponseRedirect(reverse('listar_sesiones'))
+#     else:
+#         # Renderizar el formulario de edición con los detalles del evento
+#         return render(request, 'core/editar_sesion.html', {'event_details': event_details})
 
 
-def detalle_sesion(request, event_id):
-    # Inicializar el administrador de Google Calendar
-    calendar_manager = GoogleCalendarManager()
+# def detalle_sesion(request, event_id):
+#     # Inicializar el administrador de Google Calendar
+#     calendar_manager = GoogleCalendarManager()
 
-    # Obtener los detalles del evento con el event_id dado
-    event_details = calendar_manager.get_event_details(event_id)
-    # Renderizar la plantilla de detalle de sesión y pasar los detalles del evento
-    return render(request, 'core/detalle_sesion.html', {'event_details': event_details})
+#     # Obtener los detalles del evento con el event_id dado
+#     event_details = calendar_manager.get_event_details(event_id)
+#     # Renderizar la plantilla de detalle de sesión y pasar los detalles del evento
+#     return render(request, 'core/detalle_sesion.html', {'event_details': event_details})
 
 
-def eliminar_sesion(request, event_id):
-    # Inicializar el administrador de Google Calendar
-    calendar_manager = GoogleCalendarManager()
+# def eliminar_sesion(request, event_id):
+#     # Inicializar el administrador de Google Calendar
+#     calendar_manager = GoogleCalendarManager()
 
-    try:
-        # Llama al método delete_event para eliminar el evento
-        calendar_manager.delete_event(event_id)
-        messages.success(request, 'El evento ha sido eliminado correctamente.')
-    except HttpError as e:
-        if e.resp.status == 410:
-            messages.error(request, 'El evento ya ha sido eliminado.')
-        else:
-            messages.error(request, 'Ocurrió un error al eliminar el evento.')
+#     try:
+#         # Llama al método delete_event para eliminar el evento
+#         calendar_manager.delete_event(event_id)
+#         messages.success(request, 'El evento ha sido eliminado correctamente.')
+#     except HttpError as e:
+#         if e.resp.status == 410:
+#             messages.error(request, 'El evento ya ha sido eliminado.')
+#         else:
+#             messages.error(request, 'Ocurrió un error al eliminar el evento.')
 
-    # Redirige a una página de confirmación
-    return redirect(reverse('eliminar_sesion', args=[event_id]))
+#     # Redirige a una página de confirmación
+#     return redirect(reverse('eliminar_sesion', args=[event_id]))
 
 def recuperar_contrasena(request):
     if request.method == 'POST':
@@ -355,46 +358,173 @@ def recuperar_contrasena(request):
 def pagos(request):
     return render(request, 'core/pagos.html')
 
-
 @login_required
-def chat_view(request, conversation_id):
-    conversation = get_object_or_404(Conversation, id=conversation_id)
-    messages = conversation.mensajes.all()
-    return render(request, 'chat/chat.html', {'conversation': conversation, 'messages': messages})
-
-@login_required
-def send_message(request):
-    if request.method == 'POST':
-        conversation_id = request.POST.get('conversation_id')
-        content = request.POST.get('content')
-
-        if conversation_id and content:
-            conversation = get_object_or_404(Conversation, id=conversation_id)
-            mensaje = Mensaje.objects.create(conversacion=conversation, autor=request.user, contenido=content)
-            data = {
-                'status': 'ok',
-                'author': mensaje.autor.username,
-                'content': mensaje.contenido,
-                'timestamp': mensaje.timestamp.strftime('%Y-%m-%d %H:%M:%S')
-            }
-            return JsonResponse(data)
-        else:
-            return JsonResponse({'status': 'error', 'message': 'Falta conversation_id o contenido'})
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Método no permitido'})
+def chat_list(request):
+    user = request.user
+    usuario = Usuario.objects.get(user=user)
     
-def chat(request):
-    mensajes = Mensaje.objects.all()  
+    if usuario.tipousuario == 'psicologo':
+        conversations = Conversation.objects.filter(psicologo__psi_idusuario=usuario)
+    else:
+        conversations = Conversation.objects.filter(paciente__pac_idusuario=usuario)
+    
+    return render(request, 'core/chat_list.html', {'conversations': conversations})
+
+@login_required
+def chat_view(request):
+    user = request.user
+    usuario = Usuario.objects.get(user=user)
+    user_type = 'psicologo' if usuario.tipousuario == 'psicologo' else 'paciente'
+    
+    conversation_form = ConversationForm(user_type=user_type)
+    message_form = FormularioMensaje()
+    
+    current_conversation = None
+    messages = []
 
     if request.method == 'POST':
-        form = FormularioMensaje(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('chat')  
-    else:
-        form = FormularioMensaje()
+        if 'start_conversation' in request.POST:
+            conversation_form = ConversationForm(request.POST, user_type=user_type)
+            if conversation_form.is_valid():
+                recipient = conversation_form.cleaned_data['recipient']
+                if user_type == 'psicologo':
+                    psicologo = Psicologo.objects.get(psi_idusuario=usuario)
+                    paciente = recipient
+                else:
+                    psicologo = recipient
+                    paciente = Paciente.objects.get(pac_idusuario=usuario)
+                
+                current_conversation, created = Conversation.objects.get_or_create(
+                    psicologo=psicologo,
+                    paciente=paciente
+                )
+        elif 'send_message' in request.POST:
+            message_form = FormularioMensaje(request.POST)
+            if message_form.is_valid():
+                conversation_id = request.POST.get('conversation_id')
+                current_conversation = get_object_or_404(Conversation, id=conversation_id)
+                mensaje = message_form.save(commit=False)
+                mensaje.conversation = current_conversation
+                mensaje.autor = usuario
+                mensaje.save()
+                
+                if request.is_ajax():
+                    return JsonResponse({
+                        'status': 'ok',
+                        'content': mensaje.contenido,
+                        'author': mensaje.autor.user.username,
+                        'timestamp': mensaje.timestamp.strftime('%d/%m/%Y %H:%M')
+                    })
 
-    return render(request, 'core/chat.html', {'form': form, 'mensajes': mensajes})
+    if current_conversation:
+        messages = current_conversation.mensajes.all().order_by('timestamp')
+    
+    # Obtenemos todas las conversaciones del usuario
+    if user_type == 'psicologo':
+        conversations = Conversation.objects.filter(psicologo__psi_idusuario=usuario)
+    else:
+        conversations = Conversation.objects.filter(paciente__pac_idusuario=usuario)
+
+    return render(request, 'core/chat.html', {
+        'conversation_form': conversation_form,
+        'message_form': message_form,
+        'current_conversation': current_conversation,
+        'messages': messages,
+        'conversations': conversations,
+    })
+
+# @login_required
+# @require_POST
+# def send_message(request):
+#     conversation_id = request.POST.get('conversation_id')
+#     content = request.POST.get('content')
+
+#     if conversation_id and content:
+#         conversation = get_object_or_404(Conversation, id=conversation_id)
+#         usuario = Usuario.objects.get(user=request.user)
+        
+#         mensaje = Mensaje.objects.create(
+#             conversation=conversation,
+#             autor=usuario,
+#             contenido=content
+#         )
+        
+#         data = {
+#             'status': 'ok',
+#             'author': mensaje.autor.user.username,
+#             'content': mensaje.contenido,
+#             'timestamp': mensaje.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+#         }
+#         return JsonResponse(data)
+#     else:
+#         return JsonResponse({'status': 'error', 'message': 'Falta conversation_id o contenido'})
+
+# @login_required
+# def start_conversation(request, recipient_id):
+#     user = request.user
+#     usuario = Usuario.objects.get(user=user)
+#     recipient = get_object_or_404(Usuario, id=recipient_id)
+    
+#     if usuario.tipousuario == 'psicologo':
+#         psicologo = Psicologo.objects.get(psi_idusuario=usuario)
+#         paciente = Paciente.objects.get(pac_idusuario=recipient)
+#     else:
+#         psicologo = Psicologo.objects.get(psi_idusuario=recipient)
+#         paciente = Paciente.objects.get(pac_idusuario=usuario)
+    
+#     # Intenta obtener una conversación existente
+#     try:
+#         conversation = Conversation.objects.get(
+#             psicologo=psicologo,
+#             paciente=paciente
+#         )
+#     except Conversation.DoesNotExist:
+#         # Si no existe, crea una nueva conversación
+#         conversation = Conversation.objects.create(
+#             psicologo=psicologo,
+#             paciente=paciente
+#         )
+    
+#     return redirect('chat_view', conversation_id=conversation.id)
+# @login_required
+# def chat_view(request, conversation_id):
+#     conversation = get_object_or_404(Conversation, id=conversation_id)
+#     messages = conversation.mensajes.all()
+#     return render(request, 'chat/chat.html', {'conversation': conversation, 'messages': messages})
+
+# @login_required
+# def send_message(request):
+#     if request.method == 'POST':
+#         conversation_id = request.POST.get('conversation_id')
+#         content = request.POST.get('content')
+
+#         if conversation_id and content:
+#             conversation = get_object_or_404(Conversation, id=conversation_id)
+#             mensaje = Mensaje.objects.create(conversacion=conversation, autor=request.user, contenido=content)
+#             data = {
+#                 'status': 'ok',
+#                 'author': mensaje.autor.username,
+#                 'content': mensaje.contenido,
+#                 'timestamp': mensaje.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+#             }
+#             return JsonResponse(data)
+#         else:
+#             return JsonResponse({'status': 'error', 'message': 'Falta conversation_id o contenido'})
+#     else:
+#         return JsonResponse({'status': 'error', 'message': 'Método no permitido'})
+    
+# def chat(request):
+#     mensajes = Mensaje.objects.all()  
+
+#     if request.method == 'POST':
+#         form = FormularioMensaje(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('chat')  
+#     else:
+#         form = FormularioMensaje()
+
+#     return render(request, 'core/chat.html', {'form': form, 'mensajes': mensajes})
 
 
 # def crear_espacio(request):
