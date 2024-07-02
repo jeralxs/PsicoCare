@@ -1,18 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Create Schedule</title>
-</head>
-<body>
-    <h1>Create Schedule</h1>
-    <form method="post">
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Crear agenda</h1>
+    <form class="schedule"method="post">
         {% csrf_token %}
-        <label for="start_time">Start Time:</label>
+        <label for="start_time">Hora de inicio:</label>
         <input type="datetime-local" id="start_time" name="start_time" required><br>
-        <label for="end_time">End Time:</label>
+        <label for="end_time">Hora de término:</label>
         <input type="datetime-local" id="end_time" name="end_time" required><br>
-        <button type="submit">Create</button>
+        <button type="submit">Crear</button>
     </form>
-    <a href="{% url 'list_schedule' %}">Back to Schedule List</a>
-</body>
-</html>
+    <button onclick="history.back()">Volver atrás</button>
+    <button><a href="{% url 'list_schedule' %}">Volver a agenda</a></button>
+    
+</div>
+    <style>
+        .schedule {
+            margin-left: 100px;
+        }
+        button {
+            /* margin-left: 150px; */
+            background-color:#8EB859;
+            color: #fff;
+            cursor: pointer;
+            text-align: center;
+            justify-content: center;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+    </style>
+{% endblock content %}

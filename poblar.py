@@ -66,10 +66,12 @@ def clean_database(cursor):
     try:
         print('Elimininar tablas')
         tables = [
-            'administrador', 'superusuario','paciente','psicologo','usuario','estadosesion', 
+            'administrador', 'superusuario','appointment', 'schedule','paciente','psicologo','usuario','estadosesion', 
             'generopsicologo','rangoetario', 'corrientepsicologica', 'rangoprecio', 'motivosesion', 
             'coberturasalud', 'diagnostico', 'tiposesion', 'metodopago','agenda', 'diadisponible', 
-            'mensaje', 'notificacion',  'pacientepsicologo', 'pago',
+            'mensaje', 'notificacion',
+                # 'pacientepsicologo',
+                  'pago',
              'test', 'testpaciente', 'testpsicologo', 'ticketsoporte', 
             'resena', 'sesion', 'estadousuario','genero', 'auth_user'
         ]
@@ -85,7 +87,7 @@ def get_next_sequence_value(cursor, sequence_name):
     return cursor.fetchone()[0]
 
 def crear_usuario(idusuario, username, tipo, genero, nombre, apellido, apellido_m, telefono, correo, es_superusuario, 
-    es_staff, estado, foto, idpaciente, idpsicologo, rango_etario, corriente, precio, motivo, cobertura, diagnostico, tiposesion):
+    es_staff, estado, foto, idpaciente, idpsicologo, rango_etario, corriente, precio, motivo, cobertura, diagnostico, tiposesion, bio):
 
     try:
         print(f'Verificar si existe usuario {username}.')
@@ -142,6 +144,7 @@ def crear_usuario(idusuario, username, tipo, genero, nombre, apellido, apellido_
             print(f'    Crear psicologo: {username}')
             Psicologo.objects.create(
                 idpsicologo = idpsicologo,
+                bio_info = bio,
                 psi_idusuario = usuario,
                 rangoetario_idrangoetario= rango_etario,
                 corriente_idcorriente= corriente,
@@ -219,7 +222,10 @@ def populate_database():
     Diagnostico.objects.bulk_create(diagnosticos)
 
     rangos_precio = [
-        Rangoprecio(idrangoprecio=get_next_sequence_value(cursor, 'rangoprecio_seq'), montominimo=15000, montomaximo=20000 ),
+        Rangoprecio(idrangoprecio=get_next_sequence_value(cursor, 'rangoprecio_seq'), montominimo=0, montomaximo=5000 ),
+        Rangoprecio(idrangoprecio=get_next_sequence_value(cursor, 'rangoprecio_seq'), montominimo=5001, montomaximo=10000 ),
+        Rangoprecio(idrangoprecio=get_next_sequence_value(cursor, 'rangoprecio_seq'), montominimo=10001, montomaximo=15000 ),
+        Rangoprecio(idrangoprecio=get_next_sequence_value(cursor, 'rangoprecio_seq'), montominimo=15001, montomaximo=20000 ),
         Rangoprecio(idrangoprecio=get_next_sequence_value(cursor, 'rangoprecio_seq'), montominimo=20001, montomaximo=25000),
         Rangoprecio(idrangoprecio=get_next_sequence_value(cursor, 'rangoprecio_seq'), montominimo=25001, montomaximo=30000),
         Rangoprecio(idrangoprecio=get_next_sequence_value(cursor, 'rangoprecio_seq'), montominimo=30001, montomaximo=35000),
@@ -287,72 +293,74 @@ def populate_database():
         Tiposesion(idtiposesion=get_next_sequence_value(cursor, 'tiposesion_seq'),nombre='Familiar', descripcion='Sesión para familias'),
     ]
     Tiposesion.objects.bulk_create(tipos_sesion)
+
+    bio = "Lorem ipsum dolor sit amet consectetur, adipiscing elit sociosqu quam suspendisse viverra, leo integer vel torquent. Per cum dignissim rutrum sociis ac montes netus venenatis viverra, magnis platea tincidunt cursus ridiculus id primis iaculis, nascetur quis pulvinar duis mattis lacinia pharetra facilisis. Venenatis netus morbi praesent mi laoreet semper id pharetra sodales, fusce felis conubia aliquet urna habitant ut."
     
     #SUPERUSUARIO
     crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psicocare', 'superusuario', random.choice(generos), 'admin', 
                   'admin', 'admin', 11111111, 'psicocareduoc@gmail.com', True, True, random.choice(estados_usuario), 'img/fotoperfil.jpg', 
-                  '','', '', '', '','', '', '', '')
+                  '','', '', '', '','', '', '', '',bio)
     #PACIENTES
-    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'paciente1', 'paciente', random.choice(generos), 'Pedrito', 
-                  'Pérez', 'Monsalves', 11111111, 'pperez@gmail.com', False, False, random.choice(estados_usuario), 'img/usuario1.jpg', 
-                  get_next_sequence_value(cursor, 'paciente_seq'),'','', '', '', '', '', '', '')
-    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'paciente2', 'paciente', random.choice(generos), 'Juan', 
+    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'paciente1', 'paciente', Genero.objects.get(idgenero=1), 'Pedrito', 
+                  'Suárez', 'Monsalves', 11111111, 'psuarez@gmail.com', False, False, random.choice(estados_usuario), 'img/usuario1.jpg', 
+                  get_next_sequence_value(cursor, 'paciente_seq'),'','', '', '', '', '', '', '',bio)
+    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'paciente2', 'paciente', Genero.objects.get(idgenero=1), 'Juan', 
                   'Perez', 'Garcia', 11111111, 'jperez@gmail.com', False, False, random.choice(estados_usuario), 'img/usuario2.jpg', 
-                  get_next_sequence_value(cursor, 'paciente_seq'),'','', '', '', '', '', '', '')
-    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'paciente3', 'paciente', random.choice(generos), 'Maria', 
-                  'Garcia', 'Lopez', 11111111,'mlopez@gmail.com', False, False, random.choice(estados_usuario), 'img/usuario3.jpg', 
-                  get_next_sequence_value(cursor, 'paciente_seq'),'','', '', '', '', '', '', '')
+                  get_next_sequence_value(cursor, 'paciente_seq'),'','', '', '', '', '', '', '',bio)
+    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'paciente3', 'paciente', Genero.objects.get(idgenero=2), 'Maria', 
+                  'Henríquez', 'Lopez', 11111111,'mhenriquez@gmail.com', False, False, random.choice(estados_usuario), 'img/usuario3.jpg', 
+                  get_next_sequence_value(cursor, 'paciente_seq'),'','', '', '', '', '', '', '',bio)
     #PSICOLOGOS (13)
-    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico1', 'psicologo', random.choice(generos), 'Carolina', 
+    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico1', 'psicologo', Genero.objects.get(idgenero=2), 'Carolina', 
                   'Guerra', 'Morales', 11111111, 'cguerra@gmail.com', False, False, random.choice(estados_usuario), 'img/psico1.jpg', '',
-                  get_next_sequence_value(cursor, 'psicologo_seq'), random.choice(rangos_etarios), random.choice(corrientes_psicologicas), 
-                  random.choice(rangos_precio), random.choice(motivos_sesion), random.choice(coberturas_salud), random.choice(diagnosticos), 
-                  random.choice(tipos_sesion))
-    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico2', 'psicologo', random.choice(generos), 'Daniela', 
+                  get_next_sequence_value(cursor, 'psicologo_seq'), Rangoetario.objects.get(idrangoetario=2), random.choice(corrientes_psicologicas), 
+                  random.choice(rangos_precio), random.choice(motivos_sesion), Coberturasalud.objects.get(idcoberturasalud=1), random.choice(diagnosticos), 
+                  random.choice(tipos_sesion),bio)
+    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico2', 'psicologo', Genero.objects.get(idgenero=3), 'Daniela', 
                   'Lopez', 'Martinez', 11111111, 'dlopez@gmail.com', False, False, random.choice(estados_usuario), 'img/psico2.jpg', '',
-                  get_next_sequence_value(cursor, 'psicologo_seq'), random.choice(rangos_etarios), random.choice(corrientes_psicologicas), 
-                  random.choice(rangos_precio), random.choice(motivos_sesion), random.choice(coberturas_salud), random.choice(diagnosticos), 
-                  random.choice(tipos_sesion))
-    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico3', 'psicologo', random.choice(generos), 'Lucia', 
+                  get_next_sequence_value(cursor, 'psicologo_seq'), Rangoetario.objects.get(idrangoetario=4), random.choice(corrientes_psicologicas), 
+                  random.choice(rangos_precio), random.choice(motivos_sesion), Coberturasalud.objects.get(idcoberturasalud=1), random.choice(diagnosticos), 
+                  random.choice(tipos_sesion),bio)
+    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico3', 'psicologo', Genero.objects.get(idgenero=2), 'Lucia', 
                   'Martinez', 'Garcia', 11111111, 'lmartinez@gmail.com', False, False, random.choice(estados_usuario), 'img/psico3.jpg', '',
-                  get_next_sequence_value(cursor, 'psicologo_seq'), random.choice(rangos_etarios), random.choice(corrientes_psicologicas), 
-                  random.choice(rangos_precio), random.choice(motivos_sesion), random.choice(coberturas_salud), random.choice(diagnosticos), 
-                  random.choice(tipos_sesion))
-    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico4', 'psicologo', random.choice(generos), 'Sofia', 
-                  'Lopez', 'Perez', 11111111,'slopez@gmail.com', False, False, random.choice(estados_usuario), 'img/psico4.jpg', '',
-                  get_next_sequence_value(cursor, 'psicologo_seq'), random.choice(rangos_etarios), random.choice(corrientes_psicologicas), 
-                  random.choice(rangos_precio), random.choice(motivos_sesion), random.choice(coberturas_salud), random.choice(diagnosticos), 
-                  random.choice(tipos_sesion))
-    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico5', 'psicologo', random.choice(generos), 'Maria', 
-                  'Garcia', 'Lopez', 11111111,'mlopez@gmail.com', False, False, random.choice(estados_usuario), 'img/psico5.jpg', '',
-                  get_next_sequence_value(cursor, 'psicologo_seq'), random.choice(rangos_etarios), random.choice(corrientes_psicologicas), 
-                  random.choice(rangos_precio), random.choice(motivos_sesion), random.choice(coberturas_salud), random.choice(diagnosticos), 
-                  random.choice(tipos_sesion))
-    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico6', 'psicologo', random.choice(generos), 'Isabella', 
-                  'Lopez', 'Martinez', 11111111, 'ilopez@gmail.com', False, False, random.choice(estados_usuario), 'img/psico6.jpg', '',
-                  get_next_sequence_value(cursor, 'psicologo_seq'), random.choice(rangos_etarios), random.choice(corrientes_psicologicas), 
-                  random.choice(rangos_precio), random.choice(motivos_sesion), random.choice(coberturas_salud), random.choice(diagnosticos), 
-                  random.choice(tipos_sesion))
-    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico7', 'psicologo', random.choice(generos), 'Ana', 
-                  'Lopez', 'Martinez', 11111111, 'alopez@gmail.com', False, False, random.choice(estados_usuario), 'img/psico7.jpg', '',
-                  get_next_sequence_value(cursor, 'psicologo_seq'), random.choice(rangos_etarios), random.choice(corrientes_psicologicas), 
-                  random.choice(rangos_precio), random.choice(motivos_sesion), random.choice(coberturas_salud), random.choice(diagnosticos), 
-                  random.choice(tipos_sesion))
-    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico8', 'psicologo', random.choice(generos), 'Lucas', 
-                  'Lopez', 'Martinez', 11111111, 'llopez@gmail.com', False, False, random.choice(estados_usuario), 'img/psico8.jpg', '',
-                  get_next_sequence_value(cursor, 'psicologo_seq'), random.choice(rangos_etarios), random.choice(corrientes_psicologicas), 
-                  random.choice(rangos_precio), random.choice(motivos_sesion), random.choice(coberturas_salud), random.choice(diagnosticos), 
-                  random.choice(tipos_sesion))
-    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico9', 'psicologo', random.choice(generos), 'Marta', 
-                  'Lopez', 'Martinez', 11111111,'mlopez@gmail.com', False, False, random.choice(estados_usuario), 'img/psico9.jpg', '',
-                  get_next_sequence_value(cursor, 'psicologo_seq'), random.choice(rangos_etarios), random.choice(corrientes_psicologicas), 
-                  random.choice(rangos_precio), random.choice(motivos_sesion), random.choice(coberturas_salud), random.choice(diagnosticos), 
-                  random.choice(tipos_sesion))
-    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico10', 'psicologo', random.choice(generos), 'Andrea', 
-                  'Lopez', 'Martinez', 11111111, 'alopez@gmail.com', False, False, random.choice(estados_usuario), 'img/psico10.jpg', '',
-                  get_next_sequence_value(cursor, 'psicologo_seq'), random.choice(rangos_etarios), random.choice(corrientes_psicologicas), 
-                  random.choice(rangos_precio), random.choice(motivos_sesion), random.choice(coberturas_salud), random.choice(diagnosticos), 
-                  random.choice(tipos_sesion))
+                  get_next_sequence_value(cursor, 'psicologo_seq'), Rangoetario.objects.get(idrangoetario=3), random.choice(corrientes_psicologicas), 
+                  random.choice(rangos_precio), random.choice(motivos_sesion), Coberturasalud.objects.get(idcoberturasalud=2), random.choice(diagnosticos), 
+                  random.choice(tipos_sesion),bio)
+    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico4', 'psicologo', Genero.objects.get(idgenero=3), 'Sofia', 
+                  'Torres', 'Perez', 11111111,'storres@gmail.com', False, False, random.choice(estados_usuario), 'img/psico4.jpg', '',
+                  get_next_sequence_value(cursor, 'psicologo_seq'), Rangoetario.objects.get(idrangoetario=3), random.choice(corrientes_psicologicas), 
+                  random.choice(rangos_precio), random.choice(motivos_sesion), Coberturasalud.objects.get(idcoberturasalud=2), random.choice(diagnosticos), 
+                  random.choice(tipos_sesion),bio)
+    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico5', 'psicologo', Genero.objects.get(idgenero=2), 'Maria', 
+                  'Garcia', 'Lopez', 11111111,'mgarcia@gmail.com', False, False, random.choice(estados_usuario), 'img/psico5.jpg', '',
+                  get_next_sequence_value(cursor, 'psicologo_seq'), Rangoetario.objects.get(idrangoetario=4), random.choice(corrientes_psicologicas), 
+                  random.choice(rangos_precio), random.choice(motivos_sesion), Coberturasalud.objects.get(idcoberturasalud=4), random.choice(diagnosticos), 
+                  random.choice(tipos_sesion),bio)
+    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico6', 'psicologo', Genero.objects.get(idgenero=2), 'Isabella', 
+                  'Norambuena', 'Salas', 11111111, 'inorambuena@gmail.com', False, False, random.choice(estados_usuario), 'img/psico6.jpg', '',
+                  get_next_sequence_value(cursor, 'psicologo_seq'), Rangoetario.objects.get(idrangoetario=2), random.choice(corrientes_psicologicas), 
+                  random.choice(rangos_precio), random.choice(motivos_sesion), Coberturasalud.objects.get(idcoberturasalud=2), random.choice(diagnosticos), 
+                  random.choice(tipos_sesion),bio)
+    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico7', 'psicologo', Genero.objects.get(idgenero=2), 'Ana', 
+                  'Valenzuela', 'Gutierrez', 11111111, 'avalenzuela@gmail.com', False, False, random.choice(estados_usuario), 'img/psico7.jpg', '',
+                  get_next_sequence_value(cursor, 'psicologo_seq'), Rangoetario.objects.get(idrangoetario=3), random.choice(corrientes_psicologicas), 
+                  random.choice(rangos_precio), random.choice(motivos_sesion), Coberturasalud.objects.get(idcoberturasalud=2), random.choice(diagnosticos), 
+                  random.choice(tipos_sesion),bio)
+    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico8', 'psicologo', Genero.objects.get(idgenero=1), 'Lucas', 
+                  'Morales', 'Guerra', 11111111, 'lmorales@gmail.com', False, False, random.choice(estados_usuario), 'img/psico8.jpg', '',
+                  get_next_sequence_value(cursor, 'psicologo_seq'), Rangoetario.objects.get(idrangoetario=2), random.choice(corrientes_psicologicas), 
+                  random.choice(rangos_precio), random.choice(motivos_sesion), Coberturasalud.objects.get(idcoberturasalud=1), random.choice(diagnosticos), 
+                  random.choice(tipos_sesion),bio)
+    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico9', 'psicologo', Genero.objects.get(idgenero=2), 'Marta', 
+                  'Cáceres', 'Torres', 11111111,'mlcaceres@gmail.com', False, False, random.choice(estados_usuario), 'img/psico9.jpg', '',
+                  get_next_sequence_value(cursor, 'psicologo_seq'), Rangoetario.objects.get(idrangoetario=2), random.choice(corrientes_psicologicas), 
+                  random.choice(rangos_precio), random.choice(motivos_sesion), Coberturasalud.objects.get(idcoberturasalud=1), random.choice(diagnosticos), 
+                  random.choice(tipos_sesion),bio)
+    crear_usuario(get_next_sequence_value(cursor, 'usuario_seq'), 'psico10', 'psicologo', Genero.objects.get(idgenero=2), 'Andrea', 
+                  'Rebolledo', 'Martinez', 11111111, 'arebolledo@gmail.com', False, False, random.choice(estados_usuario), 'img/psico10.jpg', '',
+                  get_next_sequence_value(cursor, 'psicologo_seq'), Rangoetario.objects.get(idrangoetario=1), random.choice(corrientes_psicologicas), 
+                  random.choice(rangos_precio), random.choice(motivos_sesion), Coberturasalud.objects.get(idcoberturasalud=1), random.choice(diagnosticos), 
+                  random.choice(tipos_sesion),bio)
     
     
     

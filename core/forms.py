@@ -323,12 +323,15 @@ class FormTestPaciente(forms.ModelForm):
         model = Test
         fields = '__all__'
         exclude = ['idtest','idusuariotest']
-
+    def label_from_instance(self, obj):
+        return "My Object #%i" % obj.id
     
     generopsicologo_idgenero = forms.ModelChoiceField(
+        
         queryset=Generopsicologo.objects.all(),
         widget=forms.Select(attrs=form_select),
-        label='Preferencia de género'
+        label='Preferencia de género',
+        
     )
     rangoetario_idrangoetario = forms.ModelChoiceField(
         queryset=Rangoetario.objects.all(),
@@ -337,6 +340,7 @@ class FormTestPaciente(forms.ModelForm):
     )
     tiposesion_idtiposesion = forms.ModelChoiceField(
         queryset=Tiposesion.objects.all(),
+    
         widget=forms.Select(attrs=form_select),
         label='Tipo de sesión'
     )
@@ -366,7 +370,6 @@ class FormTestPaciente(forms.ModelForm):
         label='Cobertura de salud'
     )
 
-
 class ResenaForm(forms.ModelForm):
     class Meta:
         model = Resena
@@ -381,7 +384,7 @@ class ResenaForm(forms.ModelForm):
 
     #     self.fields['generopsicologo_idgeneropsicologo'].queryset = Generopsicologo.objects.all()
     #     self.fields['generopsicologo_idgeneropsicologo'].widget = forms.CheckboxSelectMultiple(
-    #         choices=[(obj.idgeneropsicologo, str(obj.genero)) for obj in self.fields['generopsicologo_idgeneropsicologo'].queryset]
+    #         hoices=c[(obj.idgeneropsicologo, str(obj.genero)) for obj in self.fields['generopsicologo_idgeneropsicologo'].queryset]
     #     )
 
     #     self.fields['tiposesion_idtiposesion'].queryset = Tiposesion.objects.all()
@@ -443,6 +446,7 @@ class ResenaForm(forms.ModelForm):
 #         model = Test
 #         fields = '__all__'
 #         exclude = ['idtest','idusuariotest']
+
 # class FormTestPaciente(forms.ModelForm):
     
 #     class Meta:

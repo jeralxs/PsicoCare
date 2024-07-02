@@ -1,0 +1,51 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Tus citas</h1>
+    <table>
+        <tr>
+            <th>Psicologo</th>
+            <th>Hora de inicio</th>
+            <th>Hora de término</th>
+            <th>Sesión realizada</th>
+            <th>Pago</th>
+        </tr>
+        {% for appointment in appointments %}
+            
+        <tr>
+            <td>{{ appointment.psicologo.psi_idusuario.user.first_name }} {{ appointment.psicologo.psi_idusuario.user.last_name }}</td>
+            <td>{{ appointment.schedule.start_time }}</td>
+            <td>{{ appointment.schedule.end_time }}</td>
+            {% if appointment.confirmed == True %}
+                <td> Sí</td>
+            {% else %}
+                <td> No </td>
+            {% endif %}
+            <td><button type="button" class="btn-pago" name="pago"><a href="{% url 'init_transaction' %}">realizar pago</a></button></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<style>
+    button .btn-pago {
+        margin-left: 150px;
+        background-color:#8EB859;
+        color: #fff;
+        cursor: pointer;
+        text-align: center;
+        justify-content: center;
+    }
+
+    a {
+        text-decoration: none;
+        font-family: 'Lexend', sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        color: #EAF2E0;
+    }
+
+</style>
+{% endblock content %}

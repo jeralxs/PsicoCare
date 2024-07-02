@@ -66,7 +66,7 @@
         <div class="contenido-home">
             <div class="perfil-home">
                 <div id="icon-home">
-                    fotito
+                    
                 </div>
                 <div id="words-home">
                     <h3>Perfil <br> {{ user.first_name}} {{user.last_name }} </h3> 
@@ -78,9 +78,10 @@
                     </div>
                 </div>
             </div>
+            {% if user.usuario.tipousuario == "paciente" %}
             <div class="agendar-home">
                 <div id="icon-home">
-                    fotito
+                    
                 </div>
                 <div id="words-home">
                     <h3>Agenda una nueva sesión</h3> 
@@ -88,13 +89,13 @@
                     <p>Revisa los horarios disponibles</p> 
                     <br>
                     <div class="botoneshome">
-                        <button class="btn btn-primary" id="perfil-homebtn"><a href="{% url 'crear_sesion' %}">Agendar sesión</a></button>
+                        <button class="btn btn-primary" id="perfil-homebtn"><a href="{% url 'view_schedule' psi.psicologo_idusuario.idpsicologo %}">Agendar sesión</a></button>
                     </div>
                 </div>
             </div>
             <div class="historial-home">
                 <div id="icon-home">
-                    fotito
+                    
                 </div>
                 <div id="words-home">
                     <h3>Historial de sesiones</h3> 
@@ -102,30 +103,31 @@
                     <p>Consulta información de tus sesiones de terapia</p> 
                     <br>
                     <div class="botoneshome">
-                        <button class="btn btn-primary" id="perfil-homebtn"><a href="{% url 'listar_sesiones' %}">Ver historial</a></button>
+                        <button class="btn btn-primary" id="perfil-homebtn"><a href="{% url 'list_appointments' %}">Ver historial</a></button>
                     </div>
                 </div>
             </div>
             <div class="sesion-home">
                 <div id="icon-home">
-                    fotito
+                    
                 </div>
                 <div id="words-home">
                     <h3>Sesión programada para hoy, fecha</h3> 
                     <br>
-                    <p>Hoy tienes sesión a las 10:00 con Sandra Villareal</p> 
+                    <p>Hoy tienes sesión a las 10:00 con {{ psi.psicologo_idusuario.psi_idusuario.user.first_name }} {{ psi.psicologo_idusuario.psi_idusuario.user.last_name }}</p> 
                     <br>
                     <div class="botoneshome">
-                        <button class="btn btn-primary" id="perfil-homebtn"><a href="{% url 'videollamada' %}">Ingresar a la sesión</a></button>
+                        <button class="btn btn-primary" id="perfil-homebtn"><a href="{% url 'index' %}">Ingresar a la sesión</a></button>
                     </div>
                 </div>
             </div>
+            
             <div class="reseña-home">
                 <div id="icon-home">
-                    fotito
+                    
                 </div>
                 <div id="words-home">
-                    <h3>Recuerda dejar una reseña sobre tu atención con Sandra Villareal</h3> 
+                    <h3>Recuerda dejar una reseña sobre tu atención con {{ psi.psicologo_idusuario.psi_idusuario.user.first_name }} {{ psi.psicologo_idusuario.psi_idusuario.user.last_name }}</h3> 
                     <br>
                     <p>Para ayudarle a tener un mejor alcance</p> 
                     <br>
@@ -134,9 +136,72 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
+
+            {% if user.usuario.tipousuario == "psicologo" %}
+            <div class="agendar-home">
+                <div id="icon-home">
+                    
+                </div>
+                <div id="words-home">
+                    <h3>Agendar horario</h3> 
+                    <br>
+                    <p>Programa tus horarios disponibles de la semana</p> 
+                    <br>
+                    <div class="botoneshome">
+                        <button class="btn btn-primary" id="perfil-homebtn"><a href="{% url 'create_schedule' %}">Organizar horario</a></button>
+                    </div>
+                </div>
+            </div>
+            <div class="historial-home">
+                <div id="icon-home">
+                    
+                </div>
+                <div id="words-home">
+                    <h3>Historial de sesiones</h3> 
+                    <br>
+                    <p>Consulta información de tus sesiones de terapia</p> 
+                    <br>
+                    <div class="botoneshome">
+                        <button class="btn btn-primary" id="perfil-homebtn"><a href="{% url 'list_schedule' %}">Ver historial</a></button>
+                    </div>
+                </div>
+            </div>
+            <div class="sesion-home">
+                <div id="icon-home">
+                    
+                </div>
+                <div id="words-home">
+                    <h3>Sesión programada para hoy, fecha</h3> 
+                    <br>
+                    <p>Hoy tienes sesión a las 10:00 con Sandra Villareal</p> 
+                    <br>
+                    <div class="botoneshome">
+                        <button class="btn btn-primary" id="perfil-homebtn"><a href="{% url 'index' %}">Ingresar a la sesión</a></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="reseña-home">
+                <div id="icon-home">
+                    
+                </div>
+                <div id="words-home">
+                    <h3>Revisa las reseñas de tus pacientes</h3> 
+                    <br>
+                    <p>Para ayudarte a mejorar tu atención</p> 
+                    <br>
+                    <div class="botoneshome">
+                        <button class="btn btn-primary" id="perfil-homebtn"><a href="{% url 'resena' %}">Ver reseñas</a></button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+
             <div class="ayuda-home">
                 <div id="icon-home">
-                    fotito
+                    
                 </div>
                 <div id="words-home">
                     <h3>¿Necesitas ayuda?<br> Contáctanos</h3> 
@@ -148,6 +213,7 @@
                     </div>
                 </div>
             </div>
+            
         </div>
     </div>
     <!--Validadores-->

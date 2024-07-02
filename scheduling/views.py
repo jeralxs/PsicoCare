@@ -14,6 +14,8 @@ from googleapiclient.errors import HttpError
 from google.apps import meet_v2
 import pickle
 
+
+
 # Ruta al archivo de credenciales
 CREDENTIALS_FILE = 'credentials.json'
 TOKEN_FILE = 'token.pickle'
@@ -125,34 +127,62 @@ def list_events(request):
 from django.shortcuts import render, redirect
 from .models import Schedule, Appointment
 from django.contrib.auth.decorators import login_required
+from core.models import Psicologo, Usuario, Paciente, Pacientepsicologo
+
+
 
 @login_required
 def create_schedule(request):
     if request.method == 'POST':
         start_time = request.POST.get('start_time')
-        end_time = request.POST.get('end_time')
-        Schedule.objects.create(psicologo=request.user, start_time=start_time, end_time=end_time)
-        return redirect('list_schedule')
+        end_time = request.POST.get('end_time') 
+        usuario = Usuario.objects.get(user=request.user)
+        psico = Psicologo.objects.get(psi_idusuario=usuario)
+        try:
+            Schedule.objects.create(psicologo=psico, start_time=start_time, end_time=end_time)
+            return redirect('list_schedule')
+        except Exception as error:
+            print(f'An error occurred: {error}')
     return render(request, 'scheduling/create_schedule.html')
 
 @login_required
 def list_schedule(request):
-    schedules = Schedule.objects.filter(psicologo=request.user)
+    usuario = Usuario.objects.get(user=request.user)
+    psico = Psicologo.objects.get(psi_idusuario=usuario)
+    schedules = Schedule.objects.filter(psicologo=psico.idpsicologo)
     return render(request, 'scheduling/list_schedule.html', {'schedules': schedules})
+
+def view_schedule(request,psico_id):
+    context = obtener_info_schedule(psico_id)
+    return render(request, 'scheduling/view_schedule.html', context)
+
+def obtener_info_schedule(psico_id):
+
+    schedule = Schedule.objects.filter(psicologo=psico_id)
+    return {
+        'schedules': schedule
+    }
+
 
 @login_required
 def book_appointment(request, schedule_id):
-    schedule = Schedule.objects.get(id=schedule_id)
+    schedule = Schedule.objects.get(schedule_id=schedule_id)
     if request.method == 'POST':
-        Appointment.objects.create(paciente=request.user, psicologo=schedule.psychologist, schedule=schedule)
+        usuario = Usuario.objects.get(user=request.user)
+        paciente = Paciente.objects.get(pac_idusuario=usuario)
+        Appointment.objects.create(paciente=paciente, psicologo=schedule.psicologo, schedule=schedule)
         schedule.available = False
         schedule.save()
+        Pacientepsicologo.objects.create(psicologo_idusuario=schedule.psicologo, paciente_idusuario=paciente)
         return redirect('list_appointments')
     return render(request, 'scheduling/book_appointment.html', {'schedule': schedule})
 
 @login_required
 def list_appointments(request):
-    appointments = Appointment.objects.filter(paciente=request.user)
+    usuario = Usuario.objects.get(user=request.user)
+    paciente = Paciente.objects.get(pac_idusuario=usuario)
+    appointments = Appointment.objects.filter(paciente=paciente)
+
     return render(request, 'scheduling/list_appointments.html', {'appointments': appointments})
 
 # If modifying these scopes, delete the file token.json.

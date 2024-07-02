@@ -2,14 +2,14 @@
 {% load static %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'scheduling/css/stylesheet.css' %}">
 <div class="container">
-    <h1>Tu agenda</h1>
+    <h1>Horarios disponibles</h1>
     <table>
         <tr>
             <th>Hora de inicio</th>
             <th>Hora de término</th>
             <th>Disponibilidad</th>
+            <th>Agendar</th>
         </tr>
         {% for schedule in schedules %}
             
@@ -27,15 +27,16 @@
                 {% if schedule.available == True %}
                     <td> Disponible</td>
                 {% else %}
-                    <td> Agendado </td>
+                    <td> No disponible</td>
                 {% endif %}
+                <td><button id="btnselec" onclick="location.href='{% url 'book_appointment' schedule.schedule_id %}'">Seleccionar</button></td>
 
             </tr>
+            
+          
         {% endfor %}
     </table>
-    <button onclick="history.back()">Volver atrás</button>
-    <button><a href="{% url 'create_schedule' %}">Crea una nueva hora</a></button>
-    
+    <!-- <button><a href="{% url 'create_schedule' %}">Create New Schedule</a></button> -->
 </div>
     <style>
         h1 {
@@ -44,13 +45,10 @@
         table {
             margin-left: 150px;
         }
-        button {
+        button #btnselec {
             margin-left: 150px;
-            background-color:#8EB859;
-            color: #fff;
-            cursor: pointer;
-            text-align: center;
-            justify-content: center;
+            display: flex;
+
         }
     </style>
 {% endblock content %}

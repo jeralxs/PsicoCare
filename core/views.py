@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from .forms import FormRegistro, IngresarForm, EliminarForm, DatosPersonalesForm,DatosProfesionalesForm, ResenaForm,PasswordResetForm,FormTestPaciente,Generopsicologo, FormularioMensaje, FormRegistroPsi, Tiposesion, Corrientepsicologica, Diagnostico, Motivosesion, Rangoprecio, Coberturasalud
 from django.contrib import messages
-from .models import Usuario, Test, Psicologo, puntaje_match
+from .models import Usuario, Test, Psicologo, puntaje_match, Pacientepsicologo, Paciente
 # from .google_meet import main, create_space
 from django.http import JsonResponse
 from django.contrib.auth.views import LoginView
@@ -20,14 +20,16 @@ from .models import Mensaje, Conversation
 
 import os.path
 
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.apps import meet_v2
-from .google_calendar import GoogleCalendarManager, obtener_credenciales
-from googleapiclient.errors import HttpError
-from .google_meet import GoogleMeetManager, obtener_credenciales
+# from google.auth.transport.requests import Request
+# from google.oauth2.credentials import Credentials
+# from google_auth_oauthlib.flow import InstalledAppFlow
+# from google.apps import meet_v2
+# from .google_calendar import GoogleCalendarManager, obtener_credenciales
+# from googleapiclient.errors import HttpError
+# from .google_meet import GoogleMeetManager, obtener_credenciales
 from .models import Conversation
+from scheduling.views import obtener_info_schedule
+from scheduling.models import Appointment
 
 from django.shortcuts import render
 
@@ -57,14 +59,15 @@ def soporte(request):
 
 @login_required
 def perfil(request):
-    try:
-        usuario = Usuario.objects.get(user=request.user)
-        test = [Test.objects.get(idusuariotest=usuario.idusuario)]
-    except Usuario.DoesNotExist:
-        return HttpResponse("Usuario no encontrado", status=404)
-    except Test.DoesNotExist:
-        return HttpResponse("Test no encontrado", status=404)
-    return render(request, 'core/perfil.html')
+    usuario = Usuario.objects.get(user=request.user)
+    if usuario.tipousuario == 'paciente':
+        try:
+            test = Test.objects.get(idusuariotest=usuario.idusuario)
+            return render(request, 'core/perfil.html', {'test': test})
+        except Test.DoesNotExist:
+            return redirect('test')
+    else:
+        return render(request, 'core/perfil.html')
 
 def test(request):
     if request.method == 'POST':
@@ -105,6 +108,7 @@ def obtener_info_psico(psico_id,usu_id):
         'genero': usuario.genero_idgenero.n_genero,
         'foto': usuario.foto,
         'telefono': usuario.telefono,
+        'bio': psicologo.bio_info,
         'corriente': psicologo.corriente_idcorriente.corrientepsicologica,
         'tiposesion': psicologo.tiposesion_idtiposesion.nombre,
         'cobertura': psicologo.coberturasalud_id.coberturasalud,
@@ -234,69 +238,66 @@ def ingresar(request):
 
 @login_required
 def home(request):
-    return render (request, "core/home.html")
+    usuario = Usuario.objects.get(user=request.user)
+    if usuario.tipousuario == 'paciente':
+        try:
+            test = Test.objects.get(idusuariotest=usuario)
+            paciente = Paciente.objects.get(pac_idusuario=usuario)
+            psico = Pacientepsicologo.objects.filter(paciente_idusuario=paciente)
+            psi = []
+            for psico in psico:
+                psi.append(psico)
+                print(psi)
+            psicologo=psi[0]
+            return render(request, 'core/home.html', {'psi': psicologo, 'test': test})
+        except Pacientepsicologo.DoesNotExist:
+            return redirect('index')
+        except Test.DoesNotExist:
+            return redirect('test')
+    else:
+        return render (request, "core/home.html")
 
 def logout_view(request):
     logout(request)
     return redirect('index')
 
 
-def crear_espacio(request):
-    creds = obtener_credenciales()
-    meeting_uri = None
-
-    try:
-        print(f'Credenciales: {creds}')
-        client = meet_v2.SpacesServiceClient(credentials=creds)
-        request_body = meet_v2.CreateSpaceRequest()
-        print(f'Request Body: {request}')
-        response = client.create_space(request=request_body)
-        print(f'Respuesta de la API: {response}')
-        meeting_uri = response.meeting_uri
-        print(f'Space created: {meeting_uri}')
-    except Exception as error:
-        # TODO(developer) - Handle errors from Meet API.
-        print(f'An error occurred: {error}')
-    return meeting_uri
-
-def videollamada(request):
-    response = crear_espacio(request)
-    return render(request, 'core/videollamada.html', {'response': response})
-
-def crear_sesion(request):
-    if request.method == 'POST':
-        summary = request.POST['summary']
-        start_time = request.POST['start_time']
-        end_time = request.POST['end_time']
-        timezone = request.POST['timezone']
-        attendees = request.POST.getlist('attendees')
-
-        # Llama al método para crear el evento
-        calendar = GoogleCalendarManager()
-        calendar.create_event(summary, start_time, end_time, timezone, attendees)
-
-        return HttpResponse('Sesión agendanda con éxito.')
-    else:
-        return render(request, 'core/crear_sesion.html')
 
 
-def listar_sesiones(request):
-    calendar = GoogleCalendarManager()
-    sesiones = calendar.list_upcoming_events()
+# def crear_sesion(request):
+#     if request.method == 'POST':
+#         summary = request.POST['summary']
+#         start_time = request.POST['start_time']
+#         end_time = request.POST['end_time']
+#         timezone = request.POST['timezone']
+#         attendees = request.POST.getlist('attendees')
+
+#         # Llama al método para crear el evento
+#         calendar = GoogleCalendarManager()
+#         calendar.create_event(summary, start_time, end_time, timezone, attendees)
+
+#         return HttpResponse('Sesión agendanda con éxito.')
+#     else:
+#         return render(request, 'core/crear_sesion.html')
+
+
+# def listar_sesiones(request):
+#     calendar = GoogleCalendarManager()
+#     sesiones = calendar.list_upcoming_events()
     
-    # Filtrar las sesiones que aún existen
-    sesiones_validas = []
-    for sesion in sesiones:
-        try:
-            # Intentar acceder a la sesión en Google Calendar
-            calendar.get_event_details(sesion['id'])
-            # Si no se produce una excepción, la sesión aún existe
-            sesiones_validas.append(sesion)
-        except Exception as e:
-            # Si se produce una excepción, la sesión ya no existe
-            pass
+#     # Filtrar las sesiones que aún existen
+#     sesiones_validas = []
+#     for sesion in sesiones:
+#         try:
+#             # Intentar acceder a la sesión en Google Calendar
+#             calendar.get_event_details(sesion['id'])
+#             # Si no se produce una excepción, la sesión aún existe
+#             sesiones_validas.append(sesion)
+#         except Exception as e:
+#             # Si se produce una excepción, la sesión ya no existe
+#             pass
     
-    return render(request, 'core/listar_sesiones.html', {'sesiones': sesiones_validas})
+#     return render(request, 'core/listar_sesiones.html', {'sesiones': sesiones_validas})
 
 
 
@@ -394,3 +395,26 @@ def chat(request):
         form = FormularioMensaje()
 
     return render(request, 'core/chat.html', {'form': form, 'mensajes': mensajes})
+
+
+# def crear_espacio(request):
+#     creds = obtener_credenciales()
+#     meeting_uri = None
+
+#     try:
+#         print(f'Credenciales: {creds}')
+#         client = meet_v2.SpacesServiceClient(credentials=creds)
+#         request_body = meet_v2.CreateSpaceRequest()
+#         print(f'Request Body: {request}')
+#         response = client.create_space(request=request_body)
+#         print(f'Respuesta de la API: {response}')
+#         meeting_uri = response.meeting_uri
+#         print(f'Space created: {meeting_uri}')
+#     except Exception as error:
+#         # TODO(developer) - Handle errors from Meet API.
+#         print(f'An error occurred: {error}')
+#     return meeting_uri
+
+# def videollamada(request):
+#     response = crear_espacio(request)
+#     return render(request, 'core/videollamada.html', {'response': response})

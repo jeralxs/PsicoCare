@@ -28,6 +28,8 @@ class Coberturasalud(models.Model):
     class Meta:
         managed = False
         db_table = 'coberturasalud'
+    def __str__(self):
+        return u'{0}'.format(self.coberturasalud)
 
 
 class Corrientepsicologica(models.Model):
@@ -38,6 +40,8 @@ class Corrientepsicologica(models.Model):
     class Meta:
         managed = False
         db_table = 'corrientepsicologica'
+    def __str__(self):
+        return u'{0}'.format(self.corrientepsicologica)
 
 
 class Diadisponible(models.Model):
@@ -58,6 +62,8 @@ class Diagnostico(models.Model):
     class Meta:
         managed = False
         db_table = 'diagnostico'
+    def __str__(self):
+        return u'{0}'.format(self.diagnostico)
 
 
 class Estadosesion(models.Model):
@@ -94,6 +100,8 @@ class Generopsicologo(models.Model):
     class Meta:
         managed = False
         db_table = 'generopsicologo'
+    def __str__(self):
+        return u'{0}'.format(self.genero)
 
 
 class Mensaje(models.Model):
@@ -126,6 +134,8 @@ class Motivosesion(models.Model):
     class Meta:
         managed = False
         db_table = 'motivosesion'
+    def __str__(self):
+        return u'{0}'.format(self.motivosesion)
 
 
 class Notificacion(models.Model):
@@ -144,13 +154,13 @@ class Notificacion(models.Model):
 
 
 class Pacientepsicologo(models.Model):
-    psicologo_idusuario = models.IntegerField(primary_key=True)  # The composite primary key (psicologo_idusuario, paciente_idusuario) found, that is not supported. The first column is selected.
-    paciente_idusuario = models.IntegerField()
+    idpacpsico = models.AutoField(primary_key=True)
+    psicologo_idusuario = models.ForeignKey('Psicologo', models.DO_NOTHING, db_column='psicologo_idusuario')
+    paciente_idusuario = models.ForeignKey('Paciente', models.DO_NOTHING, db_column='paciente_idusuario')
 
     class Meta:
         managed = False
         db_table = 'pacientepsicologo'
-        unique_together = (('psicologo_idusuario', 'paciente_idusuario'),)
 
 
 class Pago(models.Model):
@@ -173,6 +183,8 @@ class Rangoetario(models.Model):
     class Meta:
         managed = False
         db_table = 'rangoetario'
+    def __str__(self):
+        return u'{0}'.format(self.rangoetario)
 
 
 class Rangoprecio(models.Model):
@@ -183,6 +195,8 @@ class Rangoprecio(models.Model):
     class Meta:
         managed = False
         db_table = 'rangoprecio'
+    def __str__(self):
+        return u'{0}'.format( f'{self.montominimo} - {self.montomaximo}')
 
 
 class Resena(models.Model):
@@ -271,6 +285,8 @@ class Tiposesion(models.Model):
     class Meta:
         managed = False
         db_table = 'tiposesion'
+    def __str__(self):
+        return u'{0}'.format(self.nombre)
 
 
 class Usuario(models.Model):
@@ -289,6 +305,7 @@ class Usuario(models.Model):
 
 class Psicologo(models.Model):
     idpsicologo = models.AutoField(primary_key=True)
+    bio_info = models.CharField(max_length=512)
     psi_idusuario = models.ForeignKey(Usuario, models.DO_NOTHING, db_column='psi_idusuario')
     rangoetario_idrangoetario = models.ForeignKey(Rangoetario, models.DO_NOTHING, db_column='rangoetario_idrangoetario')
     corriente_idcorriente = models.ForeignKey(Corrientepsicologica, models.DO_NOTHING, db_column='corriente_idcorriente')
@@ -317,12 +334,12 @@ class Conversation(models.Model):
 
 class Mensaje(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='mensajes')
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, models.DO_NOTHING, db_column='author')
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
-    # def __str__(self):
-    #     return f'{self.author.username} - {self.timestamp}'
+    def __str__(self):
+        return f'{self.author.username} - {self.timestamp}'
 
 
 def puntaje_match(psicologo, test):
@@ -345,7 +362,7 @@ def puntaje_match(psicologo, test):
     if psicologo.rangoetario_idrangoetario is not None and test.rangoetario_idrangoetario is not None:
         print(f"Comparando rango etario: {psicologo.rangoetario_idrangoetario} vs {test.rangoetario_idrangoetario}")
         if psicologo.rangoetario_idrangoetario == test.rangoetario_idrangoetario:
-            score += 2
+            score += 3
 
     if psicologo.motivosesion_idmotivosesion is not None and test.motivosesion_idmotivosesion is not None:
         print(f"Comparando motivo sesión: {psicologo.motivosesion_idmotivosesion} vs {test.motivosesion_idmotivosesion}")
@@ -374,3 +391,16 @@ def puntaje_match(psicologo, test):
 
     print(f"Score final para psicólogo {psicologo.idpsicologo}: {score}")
     return score
+
+# class Schedule(models.Model):
+#     schedule_id = models.AutoField(primary_key=True) 
+#     psicologo = models.ForeignKey(Psicologo, on_delete=models.CASCADE)
+#     start_time = models.DateTimeField()
+#     end_time = models.DateTimeField()
+#     available = models.BooleanField(default=True)
+
+# class Appointment(models.Model):
+#     paciente = models.ForeignKey(Paciente, models.DO_NOTHING, db_column="paciente")
+#     psicologo = models.ForeignKey(Psicologo, models.DO_NOTHING, db_column="psicologo")
+#     schedule = models.ForeignKey(Schedule, models.DO_NOTHING, db_column="schedule")
+#     confirmed = models.BooleanField(default=False)
