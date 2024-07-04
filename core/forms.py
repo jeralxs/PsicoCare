@@ -293,6 +293,7 @@ from django import forms
 from .models import Mensaje
 
 class SendMessageForm (forms.ModelForm):
+    
     class Meta:
         model = Mensaje
         fields = ['contenido']  # Asumiendo que el campo se llama 'contenido' en tu modelo

@@ -4,15 +4,18 @@
 {% block content %}
 <div class="container">
     <h1>Agendar cita</h1>
-    <p>Psicólogo: {{ schedule.Psicologo.username }}</p>
+    <div class="aaa">
+    <p>Psicólogo: {{ schedule.psicologo.psi_idusuario.user.first_name }} {{ schedule.psicologo.psi_idusuario.user.last_name }}</p>
     <p>Inicio: {{ schedule.start_time }}</p>
     <p>Final: {{ schedule.end_time }}</p>
-    <p> {{ schedule.valor }} </p>
-    <form method="post">
+    <p> Valor: ${{ schedule.valor }} </p>
+    </div>
+    <form method="post" class="formapp">
         {% csrf_token %}
+        <button onclick="history.back()">Volver</button>
         <button type="submit">Agendar</button>
     </form>
-    <button onclick="history.back()">Volver atrás</button>
+    
 </div>
 <style>
     .container {
@@ -32,7 +35,13 @@
             margin-top: 15px;
             margin-bottom: 10px;
     }
-    
+    .formapp {
+        margin-top: 80px;
+        margin-right: 150px;
+    }
+    .aaa {
+        margin-top: 80px;
+    }
     
 </style>
 {% endblock content %}

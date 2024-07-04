@@ -32,7 +32,7 @@
                 {% else %}
                     <td> No disponible</td>
                 {% endif %}
-                <td> $$$$$ </td>
+                <td> ${{ schedule.valor }} </td>
                 <td><button id="btnselec" onclick="location.href='{% url 'book_appointment' schedule.schedule_id %}'">Seleccionar</button></td>
 
             </tr>

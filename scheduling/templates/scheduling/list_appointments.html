@@ -10,6 +10,7 @@
             <th>Hora de inicio</th>
             <th>Hora de término</th>
             <th>Sesión realizada</th>
+            <th>Valor</th>
             <th>Pago</th>
         </tr>
         {% for appointment in appointments %}
@@ -23,7 +24,16 @@
             {% else %}
                 <td> No </td>
             {% endif %}
-            <td><button type="button" class="btn-pago" name="pago"><a href="{% url 'init_transaction' %}">realizar pago</a></button></td>
+            <td>${{ appointment.schedule.valor}}</td>
+
+            <td>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="amount" id="amount" value={{ appointment.schedule.valor}}>
+                    <button type="submit" class="btn-pago" name="pago">Realizar pago</button>
+                </form>
+               
+            </td>
         </tr>
         {% endfor %}
     </table>

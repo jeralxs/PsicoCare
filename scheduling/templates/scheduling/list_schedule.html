@@ -42,6 +42,7 @@
                     {% else %}
                     <form class="schedule"method="post">
                         {% csrf_token %}
+                        <input type="hidden" name="schedule_id" id="schedule_id"  value="{{ schedule.schedule_id }}">
                         <td> <button class="btnlink" type="submit"> Habilitar link </button> </td>
                     </form>
                     {% endif %}
