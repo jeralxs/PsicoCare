@@ -292,7 +292,7 @@ class EliminarForm(Form):
 from django import forms
 from .models import Mensaje
 
-class FormularioMensaje(forms.ModelForm):
+class SendMessageForm (forms.ModelForm):
     class Meta:
         model = Mensaje
         fields = ['contenido']  # Asumiendo que el campo se llama 'contenido' en tu modelo

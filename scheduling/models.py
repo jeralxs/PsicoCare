@@ -13,6 +13,7 @@ class Schedule(models.Model):
     end_time = models.DateTimeField()
     valor = models.IntegerField()
     available = models.BooleanField(default=True)
+    link_h = models.CharField(max_length=1)
     class Meta:
         managed = False
         db_table = 'schedule'

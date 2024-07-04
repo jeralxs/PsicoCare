@@ -4,13 +4,29 @@
 {% block content %}
 <div class="container">
     <h1>Videollamada de Google Meet</h1>
-    <!-- <iframe src="{{ response }}" width="800" height="600" frameborder="0" allowfullscreen></iframe> -->
-    {% if response %}
-    <p><a href="{{ response }}">link: {{ response }}</a></p>
-    {% else %}
-        <p>Error al crear la reunión</p>
-    {% endif %}
 
+    <table class="videollamada">
+        <tr>
+            <th>Psicólogo</th>
+            <th>Paciente</th>
+            <th>Día y hora de inicio</th>
+            <th>Link de la sesión</th>
+        </tr>
+        {% if sesiones %}
+            {% for sesion in sesiones %}
+                
+                <tr>
+                    <td> {{ sesion.psicologo.psi_idusuario.user.first_name }} {{ sesion.psicologo.psi_idusuario.user.last_name }}</td>
+        
+                    <td>{{ sesion.paciente.pac_idusuario.user.first_name }} {{ sesion.paciente.pac_idusuario.user.last_name }}</td>
+
+                    <td>{{ sesion.schedule.start_time }}</td>
+
+                    <td> <a  href="{{ sesion.meeting_uri }} "> Ir a la sesión </a> </td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+    </table>
 </div>
 
     <style>
@@ -25,7 +41,8 @@
         color: black;
         }
         .videollamada {
-            margin-left: 150px;
+            padding: 20px;
+            margin-left: 400px;
         }
         
 

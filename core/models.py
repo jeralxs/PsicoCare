@@ -104,17 +104,6 @@ class Generopsicologo(models.Model):
         return u'{0}'.format(self.genero)
 
 
-class Mensaje(models.Model):
-    idmensaje = models.AutoField(primary_key=True)
-    fechahora = models.DateField()
-    contenido = models.CharField(max_length=512)
-    usuario_idusuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='usuario_idusuario')
-
-    class Meta:
-        managed = False
-        db_table = 'mensaje'
-
-
 class Metodopago(models.Model):
     idmetodopago = models.AutoField(primary_key=True)
     metodopago = models.CharField(max_length=40)
@@ -289,6 +278,8 @@ class Psicologo(models.Model):
     class Meta:
         managed = False
         db_table = 'psicologo'
+    def __str__(self):
+        return f'{self.psi_idusuario.user.username}'
 
 class Paciente(models.Model):
     idpaciente = models.AutoField(primary_key=True)
@@ -297,7 +288,8 @@ class Paciente(models.Model):
     class Meta:
         managed = False
         db_table = 'paciente'
-
+    def __str__(self):
+        return f'{self.pac_idusuario.user.username}'
 
 
 class Resena(models.Model):
@@ -333,21 +325,29 @@ class Pago(models.Model):
 #         return f'{self.author.username} - {self.timestamp}'
 
 class Conversation(models.Model):
-    psicologo = models.ForeignKey(Psicologo, on_delete=models.CASCADE, related_name='conversations')
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='conversations')
+    id = models.AutoField(primary_key=True)
+    psicologo = models.ForeignKey(Psicologo, models.DO_NOTHING, db_column='psicologo')
+    paciente = models.ForeignKey(Paciente, models.DO_NOTHING, db_column='paciente')
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        managed = False
+        db_table = 'core_conversation'
     def __str__(self):
-        return f"Conversación entre {self.psicologo.usuario.user.username} y {self.paciente.usuario.user.username}"
+        return f"Conversación entre {self.psicologo.psi_idusuario.user.username} y {self.paciente.pac_idusuario.user.username}"
 
 class Mensaje(models.Model):
-    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='mensajes')
-    autor = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    idmensaje = models.AutoField(primary_key=True)
+    conversation = models.ForeignKey(Conversation,  models.DO_NOTHING, db_column='conversation')
+    usuario_idusuario = models.ForeignKey(Usuario, models.DO_NOTHING, db_column='usuario_idusuario')
     contenido = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
+    fechahora = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        managed = False
+        db_table = 'mensaje'
 
     def __str__(self):
-        return f'{self.autor.user.username} - {self.timestamp}'
+        return f'{self.usuario_idusuario.user.username} - {self.fechahora}'
 
 
 def puntaje_match(psicologo, test):

@@ -13,6 +13,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.apps import meet_v2
 import pickle
+from google_meet.models import Sesion
 
 
 
@@ -57,7 +58,25 @@ def list_schedule(request):
     usuario = Usuario.objects.get(user=request.user)
     psico = Psicologo.objects.get(psi_idusuario=usuario)
     schedules = Schedule.objects.filter(psicologo=psico.idpsicologo)
-    # method post --- crear_espacio + crear sesion (dejar habilitado link uwu)
+    agenda = schedules.first()
+    if request.method == "POST":
+        meeting_uri= crear_espacio(request)
+        if meeting_uri:
+            appointed = Appointment.objects.get(psicologo=psico)
+            paciente = Paciente.objects.get(idpaciente=appointed.paciente.idpaciente)
+            sesion = Sesion.objects.create(
+                psicologo=psico,
+                paciente=paciente,
+                meeting_uri=meeting_uri,
+                schedule=agenda
+            )
+            agenda.link_h = "Y"
+            agenda.save()
+        
+            return render(request, 'google_meet/videollamada.html', {'sesion': sesion})
+        else:
+            return render(request, 'google_meet/error.html', {'message': 'No se pudo crear la videollamada'})
+        #crear sesion (dejar habilitado link uwu)
     #     calendar = GoogleCalendarManager()
 #     sesiones = calendar.list_upcoming_events()
     return render(request, 'scheduling/list_schedule.html', {'schedules': schedules})

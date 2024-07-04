@@ -1,10 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.apps import meet_v2
 from googleapiclient.errors import HttpError
 from .google_meet import GoogleMeetManager, obtener_credenciales
+from .models import Sesion
+from core.models import Usuario, Psicologo, Paciente
+from scheduling.models import Schedule
 # Create your views here.
 
 def crear_espacio(request):
@@ -26,27 +30,27 @@ def crear_espacio(request):
     return meeting_uri
 
 def videollamada(request):
-    # mostrar si tiene links habilitados
-    response = crear_espacio(request)
-    return render(request, 'google_meet/videollamada.html', {'response': response})
+    usuario = Usuario.objects.get(user=request.user)
+    if usuario.tipousuario == "psicologo":
+        psico = Psicologo.objects.get(psi_idusuario=usuario)
+        try:
+            sesiones = Sesion.objects.filter(psicologo=psico.idpsicologo)
+            return render(request, 'google_meet/videollamada.html',{'sesiones': sesiones})
+        except Sesion.DoesNotExist:
+            messages(request, 'No tienes sesiones programadas')
+            return redirect('home')
+    else:
+        paciente = Paciente.objects.get(pac_idusuario=usuario)
+        try:
+            sesiones = Sesion.objects.filter(paciente=paciente.idpaciente)
+        except Sesion.DoesNotExist:
+            messages(request, 'No tienes sesiones programadas')
+            return redirect('home')
+        return render(request, 'google_meet/videollamada.html',{'sesiones': sesiones})
+        
+           
 
-    # meeting_uri = crear_espacio(request)
-    # if meeting_uri:
-    #     # Obtén el psicólogo y el paciente (puedes pasarlos como parámetros o obtenerlos del request)
-    #     usuario = Usuario.objects.get(user=request.user)
-    #     psicologo = Psicologo.objects.get(psi_idusuario=usuario)
-    #     paciente = Paciente.objects.get(pac_idusuario=usuario)  # Obtén el paciente de alguna manera
-        
-    #     # Crea una nueva sesión con el meeting_uri
-    #     sesion = Sesion.objects.create(
-    #         psicologo=psicologo,
-    #         paciente=paciente,
-    #         meeting_uri=meeting_uri
-    #     )
-        
-    #     return render(request, 'google_meet/videollamada.html', {'sesion': sesion})
-    # else:
-    #     return render(request, 'google_meet/error.html', {'message': 'No se pudo crear la videollamada'})
+    
 
 # def acceder_sesion(request, sesion_id):
 #     sesion = Sesion.objects.get(id=sesion_id)

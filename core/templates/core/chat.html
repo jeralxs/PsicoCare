@@ -3,62 +3,63 @@
 
 {% block content %}
 
+<div class="container">
+    <div class="conversation-list">
+        <h3>Iniciar nueva conversación</h3>
+        <form class="ConversationForm" method="post">
+            {% csrf_token %}
+            {{ conversation_form.as_p }}
+            <button type="submit" name="start_conversation">Iniciar chat</button>
+        </form>
+        
+        <h3>Conversaciones existentes</h3>
+        <ul>
+            {% for conversation in conversations %}
+                <li>
+                    <a href="?conversation_id={{ conversation.id }}">
+                        {% if user.usuario.tipousuario == 'psicologo' %}
+                            {{ conversation.paciente.pac_idusuario.user.username }}
+                        {% else %}
+                            {{ conversation.psicologo.psi_idusuario.user.username }}
+                        {% endif %}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 
-<div class="conversation-list">
-    <h3>Iniciar nueva conversación</h3>
-    <form method="post">
-        {% csrf_token %}
-        {{ conversation_form.as_p }}
-        <button type="submit" name="start_conversation">Iniciar chat</button>
-    </form>
-    
-    <h3>Conversaciones existentes</h3>
-    <ul>
-        {% for conversation in conversations %}
-            <li>
-                <a href="?conversation_id={{ conversation.id }}">
+    <div class="chat-area">
+        {% if current_conversation %}
+            <div class="chat-container">
+                <div class="chat-header">
+                    Chat con 
                     {% if user.usuario.tipousuario == 'psicologo' %}
-                        {{ conversation.paciente.pac_idusuario.user.username }}
+                        {{ current_conversation.paciente.pac_idusuario.user.username }}
                     {% else %}
-                        {{ conversation.psicologo.psi_idusuario.user.username }}
+                        {{ current_conversation.psicologo.psi_idusuario.user.username }}
                     {% endif %}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-</div>
-
-<div class="chat-area">
-    {% if current_conversation %}
-        <div class="chat-container">
-            <div class="chat-header">
-                Chat con 
-                {% if user.usuario.tipousuario == 'psicologo' %}
-                    {{ current_conversation.paciente.pac_idusuario.user.username }}
-                {% else %}
-                    {{ current_conversation.psicologo.psi_idusuario.user.username }}
-                {% endif %}
-            </div>
-            <div id="messages" class="messages-container">
-                {% for message in messages %}
-                    <div class="message {% if message.autor.user == user %}message-sent{% else %}message-received{% endif %}">
-                        <div>{{ message.contenido }}</div>
-                        <div class="message-info">
-                            {{ message.autor.user.username }} - {{ message.timestamp|date:"d/m/Y H:i" }}
+                </div>
+                <div id="messages" class="messages-container">
+                    {% for message in messages %}
+                        <div class="message {% if message.autor.user == user %}message-sent{% else %}message-received{% endif %}">
+                            <div>{{ message.contenido }}</div>
+                            <div class="message-info">
+                                {{ message.autor.user.username }} - {{ message.timestamp|date:"d/m/Y H:i" }}
+                            </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
+                <form id="SendMessageForm" class="SendMessageForm" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="conversation_id" value="{{ current_conversation.id }}">
+                    {{ message_form.contenido }}
+                    <button type="submit" name="send_message" id="sendMessageBtn">Enviar</button>
+                </form>
             </div>
-            <form id="sendMessageForm" class="chat-input" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="conversation_id" value="{{ current_conversation.id }}">
-                {{ message_form.contenido }}
-                <button type="submit" name="send_message" id="sendMessageBtn">Enviar</button>
-            </form>
-        </div>
-    {% else %}
-        <p>Selecciona una conversación existente o inicia una nueva para comenzar a chatear.</p>
-    {% endif %}
+        {% else %}
+            <p>Selecciona una conversación existente o inicia una nueva para comenzar a chatear.</p>
+        {% endif %}
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -73,7 +74,7 @@ $(document).ready(function() {
 
     scrollToBottom();
 
-    $("#sendMessageForm").on('submit', function(e) {
+    $("#SendMessageForm").on('submit', function(e) {
         e.preventDefault();
         var messageContent = $('#{{ message_form.contenido.id_for_label }}').val().trim();
         if (messageContent) {
@@ -166,7 +167,7 @@ $(document).ready(function() {
             color: #888;
             margin-top: 5px;
         }
-    .chat-input {
+    .SendMessageForm {
             display: flex;
             padding: 20px;
             background-color: #f9f9f9;

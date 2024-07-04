@@ -34,14 +34,24 @@
                     <td> Agendado </td>
                 {% endif %}
                 <td> ${{ schedule.valor }}</td>
-                <td> Habilitar link </td>
-
+                {% if schedule.available == True %}
+                <td> No disponible </td>
+                {% else %}
+                    {% if schedule.link_h == "Y" %}
+                    <td><a href="{% url 'videollamada' %}">Habilitado</a></td>
+                    {% else %}
+                    <form class="schedule"method="post">
+                        {% csrf_token %}
+                        <td> <button class="btnlink" type="submit"> Habilitar link </button> </td>
+                    </form>
+                    {% endif %}
+                {% endif %}
             </tr>
         {% endfor %}
     </table>
-    <button onclick="history.back()">Volver atrás</button>
-    <button><a href="{% url 'create_schedule' %}">Crea una nueva hora</a></button>
-    
+    <button onclick="history.back()" class="botoncito">Volver atrás</button>
+    <button class="botoncito"><a href="{% url 'create_schedule' %}">Crea una nueva hora</a></button>
+    <button class="botoncito"> Editar agenda </button>
 </div>
     <style>
     
@@ -49,7 +59,7 @@
             margin-left: 300px;
             margin-top: 50px;
         } 
-        button {
+        .botoncito {
             background-color:#8EB859;
             color: #fff;
             cursor: pointer;
@@ -61,6 +71,17 @@
             transition: background-color 0.3s ease;
             margin-top: 100px;
             margin-bottom: 10px;
+        }
+        .btnlink {
+            background-color:#8EB859;
+            color: #fff;
+            cursor: pointer;
+            text-align: center;
+            justify-content: center;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
         }
         container {justify-content: center}
     </style>
